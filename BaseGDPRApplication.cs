@@ -6,6 +6,7 @@ using GDPR.Util.Classes;
 using GDPR.Util.Data;
 using GDPR.Util.GDPRCore;
 using GDPR.Util.Messages;
+using GDPR.Common.Classes;
 
 namespace GDPR.Applications
 {

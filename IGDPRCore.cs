@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using GDPR.Util.Classes;
 using GDPR.Util.Messages;
+using GDPR.Common.Classes;
 
 namespace GDPR.Util.GDPRCore
 {
