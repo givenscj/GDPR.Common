@@ -1,0 +1,8 @@
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\obj\Debug\GDPR.Common.csproj.CoreCompileInputs.cache
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\bin\Debug\GDPR.Common.dll
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\bin\Debug\GDPR.Common.pdb
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\obj\Debug\GDPR.Common.dll
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\obj\Debug\GDPR.Common.pdb
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\bin\Debug\Newtonsoft.Json.dll
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\bin\Debug\Newtonsoft.Json.xml
+C:\github\givenscj\gdpr-ref-architecture\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
