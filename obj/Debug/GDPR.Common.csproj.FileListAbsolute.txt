@@ -3,3 +3,10 @@ C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.pdb
 C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.dll
 C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.pdb
 C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.csprojResolveAssemblyReference.cache
+C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csprojAssemblyReference.cache
+C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CoreCompileInputs.cache
+C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.dll
+C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.pdb
+C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.pdb
+C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
