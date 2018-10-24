@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Util.Classes
+namespace GDPR.Common.Classes
 {
     public class Record
     {

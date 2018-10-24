@@ -6,6 +6,7 @@ using GDPR.Util.Classes;
 using GDPR.Util.Data;
 using GDPR.Util.GDPRCore;
 using GDPR.Util.Messages;
+using GDPR.Common.Classes;
 
 namespace GDPR.Applications
 {
@@ -389,17 +390,17 @@ namespace GDPR.Applications
                 }, overwrite);
         }
 
-        public virtual void SetProperty(string name, string value)
+        public override void SetProperty(string name, string value)
         {
             base.SetProperty(name, value);
         }
 
-        public virtual string GetProperty(string name)
+        public override string GetProperty(string name)
         {
             return base.GetProperty(name);
         }
 
-        public virtual string ExportData(List<Record> records)
+        public override string ExportData(List<Record> records)
         {
             return base.ExportData(records);
         }

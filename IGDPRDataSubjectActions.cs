@@ -1,4 +1,5 @@
-﻿using GDPR.Util.Classes;
+﻿using GDPR.Common.Classes;
+using GDPR.Util.Classes;
 using GDPR.Util.Messages;
 using System;
 using System.Collections.Generic;
