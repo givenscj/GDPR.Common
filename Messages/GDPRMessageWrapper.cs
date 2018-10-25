@@ -11,6 +11,8 @@ namespace GDPR.Common.Messages
         public string Check { get; set; }
         public int Retries { get; set; }
         public bool IsError { get; set; }
+        public bool IsEncrypted { get; set; }
+        public bool IsSigned { get; set; }
         public string ErrorMessage { get; set; }
         public string Object { get; set; }
         public string OffSet { get; set; }
