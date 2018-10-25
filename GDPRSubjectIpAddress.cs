@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Util.Data
+namespace GDPR.Utililty.Data
 {
     public partial class GDPRSubjectIpAddress
     {

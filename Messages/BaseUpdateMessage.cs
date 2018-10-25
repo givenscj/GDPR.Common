@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Util.Messages
+namespace GDPR.Utililty.Messages
 {
     public class BaseUpdateMessage : BaseApplicationMessage
     {

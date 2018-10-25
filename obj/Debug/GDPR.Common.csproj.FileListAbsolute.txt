@@ -11,3 +11,14 @@ C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.pdb
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
 C:\github\givenscj\GDPR.Common\bin\Debug\libphonenumber.dll
+C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.dll.config
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.ServiceBus.dll
+C:\My Code\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.ServiceBus.xml
+C:\My Code\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.xml

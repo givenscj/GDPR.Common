@@ -1,11 +1,11 @@
-﻿using GDPR.Util.Exceptions;
+﻿using GDPR.Utililty.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Util.Messages
+namespace GDPR.Utililty.Messages
 {
     public partial class BaseApplicationMessage : BaseGDPRMessage
     {        

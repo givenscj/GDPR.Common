@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GDPR.Util.Data;
+using GDPR.Utililty.Data;
 
-namespace GDPR.Util.Messages
+namespace GDPR.Utililty.Messages
 {
     public class BaseExportMessage : BaseApplicationMessage
     {

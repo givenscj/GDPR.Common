@@ -1,12 +1,13 @@
-﻿using GDPR.Util.GDPRCore;
+﻿using GDPR.Utililty.GDPRCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GDPR.Common.Classes;
-using GDPR.Util.Messages;
+using GDPR.Utililty.Messages;
 using System.Collections;
+using System.Configuration;
 
 namespace GDPR.Common
 {
@@ -22,6 +23,12 @@ namespace GDPR.Common
             throw new NotImplementedException();
         }
 
+        public BaseAddress GeocodeAddress(object p, string address)
+        {
+            BaseAddress a = new BaseAddress();
+            return a;
+        }
+
         public string GetConfigurationProperty(string name)
         {
             throw new NotImplementedException();
@@ -29,7 +36,7 @@ namespace GDPR.Common
 
         public Guid GetSystemId()
         {
-            throw new NotImplementedException();
+            return Guid.Parse(ConfigurationManager.AppSettings["SystemId"].ToString());
         }
 
         public bool IsValidEmail(string email)

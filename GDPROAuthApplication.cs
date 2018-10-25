@@ -1,7 +1,7 @@
-﻿using GDPR.Util;
-using GDPR.Util.Classes;
-using GDPR.Util.Data;
-using GDPR.Util.Messages;
+﻿using GDPR.Utililty;
+using GDPR.Utililty.Classes;
+using GDPR.Utililty.Data;
+using GDPR.Utililty.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
