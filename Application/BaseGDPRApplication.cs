@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using GDPR.Utililty;
-using GDPR.Utililty.Classes;
-using GDPR.Utililty.Data;
-using GDPR.Utililty.GDPRCore;
-using GDPR.Utililty.Messages;
+using GDPR.Common;
+using GDPR.Common.Classes;
+using GDPR.Common.Data;
+using GDPR.Common.Core;
+using GDPR.Common.Messages;
 using GDPR.Common.Classes;
 using GDPR.Common;
 using System.Configuration;

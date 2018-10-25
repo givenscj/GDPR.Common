@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.OpenPgp, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\gdpr-ref-architecture\packages\BouncyCastle.OpenPgp.1.8.1.1\lib\net20\BouncyCastle.OpenPgp.dll</HintPath>
+    </Reference>
     <Reference Include="libphonenumber, Version=5.8.606.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\gdpr-ref-architecture\packages\Google.LibPhoneNumber.1.0.0\lib\libphonenumber.dll</HintPath>
     </Reference>
@@ -80,45 +83,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
-    <Compile Include="BaseAddress.cs" />
-    <Compile Include="ApplicationPolicy.cs" />
-    <Compile Include="BaseApplication.cs" />
-    <Compile Include="BaseEntityProperty.cs" />
-    <Compile Include="BaseGDPRApplication.cs" />
-    <Compile Include="BaseDiscoverResponseMessage.cs" />
-    <Compile Include="GDPRApplicationCore.cs" />
+    <Compile Include="Classes\BaseAddress.cs" />
+    <Compile Include="Classes\ApplicationPolicy.cs" />
+    <Compile Include="Application\BaseApplication.cs" />
+    <Compile Include="Classes\BaseEntityProperty.cs" />
+    <Compile Include="Application\BaseGDPRApplication.cs" />
+    <Compile Include="Messages\BaseDiscoverResponseMessage.cs" />
+    <Compile Include="Encryption\EncryptionHelper.cs" />
+    <Compile Include="Application\GDPRApplicationCore.cs" />
     <Compile Include="Core\GDPRCore.cs" />
-    <Compile Include="GDPRMessageWrapper.cs" />
-    <Compile Include="GDPROAuthApplication.cs" />
-    <Compile Include="GeocodeContext.cs" />
-    <Compile Include="HttpHelper.cs" />
+    <Compile Include="Messages\GDPRMessageWrapper.cs" />
+    <Compile Include="Application\GDPROAuthApplication.cs" />
     <Compile Include="Messages\BaseApplicationMessage.cs" />
-    <Compile Include="AzureContext.cs" />
+    <Compile Include="Classes\AzureContext.cs" />
     <Compile Include="Enums\MessageDirection.cs" />
     <Compile Include="Exceptions\GDPRException.cs" />
     <Compile Include="Messages\BaseExportMessage.cs" />
     <Compile Include="Messages\BaseGDPRMessage.cs" />
-    <Compile Include="GDPRSubject.cs" />
+    <Compile Include="Classes\GDPRSubject.cs" />
     <Compile Include="Core\IGDPRCore.cs" />
-    <Compile Include="IGDPRDataSubjectActions.cs" />
+    <Compile Include="Application\IGDPRDataSubjectActions.cs" />
     <Compile Include="Messages\BaseCreateMessage.cs" />
     <Compile Include="Messages\BaseUpdateMessage.cs" />
-    <Compile Include="BasePhone.cs" />
+    <Compile Include="Classes\BasePhone.cs" />
     <Compile Include="Messages\MessageHelper.cs" />
-    <Compile Include="Processor.cs" />
+    <Compile Include="PGP\KeyGeneration\KeysForPGPEncryptionDecryption.cs" />
+    <Compile Include="PGP\Keys\PgpEncryptionKeys.cs" />
+    <Compile Include="PGP\PGPDecryption\PGPDecrypt.cs" />
+    <Compile Include="PGP\PGPEncryption\PgpEncrypt.cs" />
+    <Compile Include="Classes\Processor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Record.cs" />
-    <Compile Include="RecordCollection.cs" />
-    <Compile Include="SecurityContext.cs" />
-    <Compile Include="GDPRSubjectAddress.cs" />
-    <Compile Include="GDPRSubjectEmail.cs" />
-    <Compile Include="GDPRSubjectIdentity.cs" />
-    <Compile Include="GDPRSubjectPhone.cs" />
-    <Compile Include="BaseSubjectRequest.cs" />
-    <Compile Include="BaseSubjectRequestApplication.cs" />
-    <Compile Include="GDPRSubjectIpAddress.cs" />
-    <Compile Include="GDPRSubjectSocialIdentity.cs" />
+    <Compile Include="Classes\Record.cs" />
+    <Compile Include="Classes\RecordCollection.cs" />
+    <Compile Include="Classes\SecurityContext.cs" />
+    <Compile Include="Classes\GDPRSubjectAddress.cs" />
+    <Compile Include="Classes\GDPRSubjectEmail.cs" />
+    <Compile Include="Classes\GDPRSubjectIdentity.cs" />
+    <Compile Include="Classes\GDPRSubjectPhone.cs" />
+    <Compile Include="Classes\BaseSubjectRequest.cs" />
+    <Compile Include="Classes\BaseSubjectRequestApplication.cs" />
+    <Compile Include="Classes\GDPRSubjectIpAddress.cs" />
+    <Compile Include="Classes\GDPRSubjectSocialIdentity.cs" />
     <Compile Include="Storage\AzureStorage.cs" />
     <Compile Include="Storage\Storage.cs" />
     <Compile Include="Utility.cs" />
@@ -128,7 +133,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classes\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

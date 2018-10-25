@@ -1,17 +1,12 @@
-﻿using GDPR.Utililty.GDPRCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GDPR.Common.Classes;
-using GDPR.Utililty.Messages;
-using System.Collections;
-using System.Configuration;
+﻿using GDPR.Common.Classes;
 using GDPR.Common.Messages;
 using GDPR.Common.Storage;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
 
-namespace GDPR.Common
+namespace GDPR.Common.Core
 {
     public class GDPRCore : IGDPRCore
     {

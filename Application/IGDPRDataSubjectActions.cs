@@ -1,13 +1,9 @@
 ﻿using GDPR.Common.Classes;
-using GDPR.Utililty.Classes;
-using GDPR.Utililty.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GDPR.Common.Messages;
 
-namespace GDPR.Utililty
+namespace GDPR.Common
 {
     public interface IGDPRDataSubjectActions
     {

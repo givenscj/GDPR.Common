@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Utililty.Data
+namespace GDPR.Common
 {
-    public partial class GDPRSubjectSocialIdentity
+    public partial class GDPRSubjectIpAddress
     {
     }
 }

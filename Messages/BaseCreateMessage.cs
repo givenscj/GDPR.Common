@@ -1,11 +1,11 @@
-﻿using GDPR.Utililty.Data;
+﻿using GDPR.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Utililty.Messages
+namespace GDPR.Common.Messages
 {
     public class BaseCreateMessage : BaseApplicationMessage
     {

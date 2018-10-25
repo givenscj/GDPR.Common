@@ -27,3 +27,19 @@ C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.dll
 C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.xml
 C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
 C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.dll.config
+C:\github\givenscj\GDPR.Common\bin\Debug\BouncyCastle.OpenPgp.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.ServiceBus.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\BouncyCastle.OpenPgp.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.ServiceBus.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.xml

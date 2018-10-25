@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using GDPR.Utililty.Classes;
-using GDPR.Utililty.Messages;
+using GDPR.Common.Classes;
+using GDPR.Common.Messages;
 using GDPR.Common.Classes;
 using GDPR.Common;
 
-namespace GDPR.Utililty.GDPRCore
+namespace GDPR.Common.Core
 {
     public interface IGDPRCore
     {

@@ -1,9 +1,9 @@
-﻿using GDPR.Utililty.Classes;
-using GDPR.Utililty.Data;
-using GDPR.Utililty.Enums;
+﻿using GDPR.Common.Data;
+using GDPR.Common.Enums;
 using System;
+using GDPR.Common.Classes;
 
-namespace GDPR.Utililty.Messages
+namespace GDPR.Common.Messages
 {
     public partial class BaseGDPRMessage
     {

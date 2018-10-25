@@ -1,9 +1,9 @@
 ﻿using GDPR.Common.Classes;
 using GDPR.Common.Messages;
-using GDPR.Utililty;
-using GDPR.Utililty.Classes;
-using GDPR.Utililty.Data;
-using GDPR.Utililty.Messages;
+using GDPR.Common;
+using GDPR.Common.Classes;
+using GDPR.Common.Data;
+using GDPR.Common.Messages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

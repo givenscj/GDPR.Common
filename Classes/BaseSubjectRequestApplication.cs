@@ -7,31 +7,27 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GDPR.Utililty.Data
+namespace GDPR.Common.Data
 {
     using System;
     using System.Collections.Generic;
 
-    public partial class BaseSubjectRequest
+    public partial class BaseSubjectRequestApplication
     {
-        public BaseSubjectRequest()
-        {
-        }
-
+        public System.Guid SubjectRequestApplicationResultId { get; set; }
         public System.Guid SubjectRequestId { get; set; }
-        public System.Guid SubjectId { get; set; }
-        public string Type { get; set; }
+        public System.Guid ApplicationId { get; set; }
+        public string Status { get; set; }
+        public string DataExportLink { get; set; }
         public bool IsComplete { get; set; }
         public Nullable<System.DateTime> CompletedDate { get; set; }
         public System.DateTime ModifyDate { get; set; }
         public System.DateTime CreateDate { get; set; }
-        public bool IsExternal { get; set; }
-        public string ErrorMessage { get; set; }
-        public string MessageData { get; set; }
-        public string EventHubOffset { get; set; }
-        public int Retries { get; set; }
-        public string SubjectData { get; set; }
-        public bool HasUnverifiedData { get; set; }
-        public Nullable<System.Guid> UserTransactionId { get; set; }
+        public Nullable<System.Guid> AssignedToUserId { get; set; }
+        public string Records { get; set; }
+        public Nullable<System.Guid> ProcessingUserid { get; set; }
+        public Nullable<System.Guid> ApproverUserId { get; set; }
+        public string Message { get; set; }
+        public Nullable<int> SystemKeyVersion { get; set; }
     }
 }

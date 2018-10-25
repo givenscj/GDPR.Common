@@ -1,12 +1,12 @@
 ﻿using GDPR.Applications;
-using GDPR.Utililty.Data;
+using GDPR.Common.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Utililty.Messages
+namespace GDPR.Common.Messages
 {
     public class BaseDiscoverResponsesMessage : BaseApplicationMessage
     {

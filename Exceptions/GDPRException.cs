@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Utililty.Exceptions
+namespace GDPR.Common.Exceptions
 {
     public class GDPRException : Exception
     {

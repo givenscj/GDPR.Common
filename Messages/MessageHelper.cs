@@ -1,12 +1,10 @@
-﻿using GDPR.Utililty.Messages;
-using Microsoft.ServiceBus.Messaging;
+﻿using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
+using GDPR.Common.Core;
 
 namespace GDPR.Common.Messages
 {
