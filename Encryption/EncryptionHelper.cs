@@ -334,5 +334,9 @@ namespace GDPR.Common.Encryption
                 outputStream.Close();
         }
 
+        internal static string DecryptPGP(string publicKey, string check)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

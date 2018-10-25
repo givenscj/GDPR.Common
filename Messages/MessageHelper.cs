@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Net.Http;
 using System.Text;
 using GDPR.Common.Core;
+using System.IO;
 
 namespace GDPR.Common.Messages
 {
@@ -18,7 +19,13 @@ namespace GDPR.Common.Messages
             string publicKey = message.Source.ApiEndPoint + "/GetPublicKey?applicationid=" + message.ApplicationId;
 
             //message
+            string check = Encryption.EncryptionHelper.DecryptPGP(publicKey, message.Check);
 
+            //check signer...
+            bool validSigner = true;
+
+            if (check == "GDPRISEASY")
+                return true;
 
             return true;
         }
@@ -29,7 +36,7 @@ namespace GDPR.Common.Messages
             SendMessage(msg, mode);
         }
 
-            static public void SendMessage(BaseGDPRMessage msg, string mode)
+        static public void SendMessage(BaseGDPRMessage msg, string mode)
         {
             //send the message...
             switch (mode)
@@ -43,28 +50,62 @@ namespace GDPR.Common.Messages
             }
         }
 
-        static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message)
+        static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message, bool encrypt)
         {
             GDPRMessageWrapper w = new GDPRMessageWrapper();
             w.ApplicationId = message.ApplicationId.ToString();
             BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
             w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
-            //encrypt the message
-
-            //sign the message
-
+            string toSend = "";
 
             string msg = Utility.SerializeObject(message, 1);
+            toSend = msg;
+
+            if (encrypt)
+            {
+                //encrypt the message
+                string encKey = GetSystemKey();
+                string enc = Encryption.EncryptionHelper.EncryptPGP3(encKey, msg);
+
+                //sign the message
+                string signingKey = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKey"]);
+                string signed = Encryption.EncryptionHelper.EncryptPGP3(signingKey, enc);
+
+                toSend = signed;
+            }
+
+            //finish up
             w.Type = message.GetType().Name;
-            w.Object = msg;
+            w.Object = toSend;
             w.MessageDate = DateTime.Now;
             return w;
         }
 
+        private static string GetSystemKey()
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(ConfigurationManager.AppSettings["SystemUrl"]);
+            var result = client.GetAsync("/GetSystemKey");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent;
+        }
+
+        private static string GetPrivateKey(string filePath)
+        {
+            return File.ReadAllText(filePath);
+        }
+
+        private static string GetApplicationKey(GDPRMessageWrapper message)
+        {
+            string publicKey = message.Source.ApiEndPoint + "/GetPublicKey?applicationid=" + message.ApplicationId;
+            return publicKey;
+        }
+
         static public void SendMessageViaHttp(BaseGDPRMessage message)
         {
-            GDPRMessageWrapper w = CreateWrapper(message);
+            GDPRMessageWrapper w = CreateWrapper(message, true);
             string msgWrapper = Common.Utility.SerializeObject(w, 1);
 
             string post = "=" + msgWrapper.ToString();

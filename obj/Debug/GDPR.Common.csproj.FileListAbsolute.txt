@@ -2,7 +2,6 @@ C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.dll
 C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.pdb
 C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.dll
 C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.pdb
-C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.csprojResolveAssemblyReference.cache
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csprojAssemblyReference.cache
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CoreCompileInputs.cache
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.dll
@@ -43,5 +42,9 @@ C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.ServiceBus.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.xml
+<<<<<<< HEAD
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.dll
+=======
+C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.csprojResolveAssemblyReference.cache
+>>>>>>> a292cb84d8d48a07df541de887d86bba30cbf17a
