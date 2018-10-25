@@ -10,3 +10,4 @@ C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.pdb
 C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.pdb
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
+C:\github\givenscj\GDPR.Common\bin\Debug\libphonenumber.dll
