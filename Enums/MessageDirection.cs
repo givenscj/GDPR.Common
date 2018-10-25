@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDPR.Util.Enums
+namespace GDPR.Utililty.Enums
 {
     public enum MessageDirection
     {

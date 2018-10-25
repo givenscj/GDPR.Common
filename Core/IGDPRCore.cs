@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using GDPR.Util.Classes;
-using GDPR.Util.Messages;
+using GDPR.Utililty.Classes;
+using GDPR.Utililty.Messages;
 using GDPR.Common.Classes;
+using GDPR.Common;
 
-namespace GDPR.Util.GDPRCore
+namespace GDPR.Utililty.GDPRCore
 {
     public interface IGDPRCore
     {
@@ -22,5 +23,6 @@ namespace GDPR.Util.GDPRCore
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);
         void SendMessage(BaseGDPRMessage cm);
+        BaseAddress GeocodeAddress(object p, string address);
     }
 }

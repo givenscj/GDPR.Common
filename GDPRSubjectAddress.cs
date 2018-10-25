@@ -1,4 +1,4 @@
-﻿namespace GDPR.Util.Data
+﻿namespace GDPR.Utililty.Data
 {
     using System;
     using System.Collections.Generic;

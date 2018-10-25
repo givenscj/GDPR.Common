@@ -1,4 +1,4 @@
-﻿using GDPR.Util.Data;
+﻿using GDPR.Utililty.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GDPR.Common;
 
-namespace GDPR.Util.Messages
+namespace GDPR.Utililty.Messages
 {
     public class GDPRMessageWrapper
     {
