@@ -4,7 +4,7 @@ namespace GDPR.Common.Messages
 {
     public class GDPRMessageWrapper
     {
-        public Processor Source { get; set; }
+        public BaseProcessor Source { get; set; }
         public string ApplicationId { get; set; }
         public string Authentication { get; set; }
         public string Type { get; set; }

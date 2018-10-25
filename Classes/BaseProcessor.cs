@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GDPR.Common
 {
-    public partial class Processor
+    public class BaseProcessor
     {
         public System.Guid ProcessorId { get; set; }
         public string ShortName { get; set; }

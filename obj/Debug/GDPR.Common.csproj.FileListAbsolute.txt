@@ -43,3 +43,5 @@ C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.ServiceBus.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.dll

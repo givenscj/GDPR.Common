@@ -47,8 +47,8 @@ namespace GDPR.Common.Messages
         {
             GDPRMessageWrapper w = new GDPRMessageWrapper();
             w.ApplicationId = message.ApplicationId.ToString();
-            Common.Processor p = Utility.GetProcessor<Common.Processor>(core.GetSystemId());
-            w.Source = Utility.TrimObject<Common.Processor>(p, 1);
+            BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
+            w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
             //encrypt the message
 
