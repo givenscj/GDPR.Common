@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.cs" />
     <Compile Include="ApplicationPolicy.cs" />
     <Compile Include="BaseApplication.cs" />
     <Compile Include="BaseEntityProperty.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="GDPRApplicationCore.cs" />
     <Compile Include="GDPRMessageWrapper.cs" />
     <Compile Include="GDPROAuthApplication.cs" />
+    <Compile Include="GeocodeContext.cs" />
+    <Compile Include="HttpHelper.cs" />
     <Compile Include="Messages\BaseApplicationMessage.cs" />
     <Compile Include="AzureContext.cs" />
     <Compile Include="Enums\MessageDirection.cs" />
