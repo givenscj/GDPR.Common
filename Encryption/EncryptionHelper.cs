@@ -26,7 +26,7 @@ namespace GDPR.Common.Encryption
             AsymmetricCipherKeyPair kp = kpg.GenerateKeyPair();
             FileStream out1 = new FileInfo(string.Format("{0}/{1}_PGPPrivateKey.asc", keyStoreUrl, applicationId)).OpenWrite();
             FileStream out2 = new FileInfo(string.Format("{0}/{1}_PGPPublicKey.asc", keyStoreUrl, applicationId)).OpenWrite();
-            ExportKeyPair(out1, out2, kp.Public, kp.Private, username, password.ToCharArray(), true);
+            ExportKeyPair(out1, out2, true, kp.Public, kp.Private, username, password.ToCharArray(), true);
             out1.Close();
             out2.Close();
         }
@@ -36,12 +36,10 @@ namespace GDPR.Common.Encryption
             IAsymmetricCipherKeyPairGenerator kpg = new RsaKeyPairGenerator();
             kpg.Init(new RsaKeyGenerationParameters(BigInteger.ValueOf(0x13), new SecureRandom(), 1024, 8));
             AsymmetricCipherKeyPair kp = kpg.GenerateKeyPair();
-            ExportKeyPair(out1, out2, kp.Public, kp.Private, username, password.ToCharArray(), true);
-            out1.Close();
-            out2.Close();
+            ExportKeyPair(out1, out2, false, kp.Public, kp.Private, username, password.ToCharArray(), true);
         }
 
-        private static void ExportKeyPair(Stream secretOut, Stream publicOut, AsymmetricKeyParameter publicKey, AsymmetricKeyParameter privateKey, string identity, char[] passPhrase, bool armor)
+        private static void ExportKeyPair(Stream secretOut, Stream publicOut, bool close, AsymmetricKeyParameter publicKey, AsymmetricKeyParameter privateKey, string identity, char[] passPhrase, bool armor)
         {
             if (armor)
             {
@@ -54,7 +52,8 @@ namespace GDPR.Common.Encryption
 
             secretKey.Encode(secretOut);
 
-            secretOut.Close();
+            if (close)
+                secretOut.Close();
 
             if (armor)
             {
@@ -65,7 +64,8 @@ namespace GDPR.Common.Encryption
 
             key.Encode(publicOut);
 
-            publicOut.Close();
+            if (close)
+                publicOut.Close();
         }
         /*
         public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileName, bool withIntegrityCheck, bool armor)
