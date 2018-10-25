@@ -7,6 +7,7 @@ using GDPR.Utililty.Messages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,26 +34,6 @@ namespace GDPR.Applications
         public List<BaseApplicationPolicy> GetPolicies()
         {
             return new List<BaseApplicationPolicy>();
-        }
-
-        public void SendMessage(BaseGDPRMessage msg)
-        {
-            //encrypt the message
-
-            //sign the message
-
-            //send the message...
-            string mode = "Http";
-
-            switch(mode)
-            {
-                case "Http":
-                    MessageHelper.SendMessageViaHttp(msg);
-                    break;
-                case "Queue":
-                    MessageHelper.SendMessageViaQueue(msg);
-                    break;
-            }
         }
 
         public void SendDiscoveryMessage(BaseGDPRMessage msg)

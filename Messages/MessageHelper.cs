@@ -13,6 +13,38 @@ namespace GDPR.Common.Messages
     public class MessageHelper
     {
         static public GDPRCore core;
+
+        static public bool ValidateMessage(GDPRMessageWrapper message)
+        {
+            //download the public key
+            string publicKey = message.Source.ApiEndPoint + "/GetPublicKey?applicationid=" + message.ApplicationId;
+
+            //message
+
+
+            return true;
+        }
+
+        static public void SendMessage(BaseGDPRMessage msg)
+        {
+            string mode = ConfigurationManager.AppSettings["Mode"];
+            SendMessage(msg, mode);
+        }
+
+            static public void SendMessage(BaseGDPRMessage msg, string mode)
+        {
+            //send the message...
+            switch (mode)
+            {
+                case "Http":
+                    MessageHelper.SendMessageViaHttp(msg);
+                    break;
+                case "Queue":
+                    MessageHelper.SendMessageViaQueue(msg);
+                    break;
+            }
+        }
+
         static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message)
         {
             GDPRMessageWrapper w = new GDPRMessageWrapper();

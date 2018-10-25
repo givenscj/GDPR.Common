@@ -8,6 +8,8 @@ using GDPR.Common.Classes;
 using GDPR.Utililty.Messages;
 using System.Collections;
 using System.Configuration;
+using GDPR.Common.Messages;
+using GDPR.Common.Storage;
 
 namespace GDPR.Common
 {
@@ -15,12 +17,12 @@ namespace GDPR.Common
     {
         public string Encrypt(string input)
         {
-            throw new NotImplementedException();
+            return input;
         }
 
-        public string Encrypt(string v, int systemKeyVersion)
+        public string Encrypt(string input, int systemKeyVersion)
         {
-            throw new NotImplementedException();
+            return input;
         }
 
         public BaseAddress GeocodeAddress(object p, string address)
@@ -31,7 +33,7 @@ namespace GDPR.Common
 
         public string GetConfigurationProperty(string name)
         {
-            throw new NotImplementedException();
+            return "";
         }
 
         public Guid GetSystemId()
@@ -41,7 +43,7 @@ namespace GDPR.Common
 
         public bool IsValidEmail(string email)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public Hashtable LoadProperties()
@@ -51,7 +53,7 @@ namespace GDPR.Common
 
         public void Log(Exception ex, string type)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public bool ProcessApplicationMessage(BaseApplicationMessage am)
@@ -61,12 +63,12 @@ namespace GDPR.Common
 
         public void SaveApplicationRequest(Guid subjectRequestApplicationId, string v)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records)
@@ -76,12 +78,14 @@ namespace GDPR.Common
 
         public void SendMessage(BaseGDPRMessage cm)
         {
-            throw new NotImplementedException();
+            string mode = ConfigurationManager.AppSettings["Mode"];
+            MessageHelper.SendMessage(cm, mode);
         }
 
         public string UploadBlob(Guid applicationId, string filePath)
         {
-            throw new NotImplementedException();
+            AzureStorage s = new AzureStorage();
+            return s.UploadBlob(applicationId, filePath);
         }
     }
 }

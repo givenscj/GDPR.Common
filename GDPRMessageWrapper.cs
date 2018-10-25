@@ -14,6 +14,7 @@ namespace GDPR.Utililty.Messages
         public string ApplicationId { get; set; }
         public string Authentication { get; set; }
         public string Type { get; set; }
+        public string Check { get; set; }
         public int Retries { get; set; }
         public bool IsError { get; set; }
         public string ErrorMessage { get; set; }

@@ -8,6 +8,8 @@ using GDPR.Utililty.GDPRCore;
 using GDPR.Utililty.Messages;
 using GDPR.Common.Classes;
 using GDPR.Common;
+using System.Configuration;
+using GDPR.Common.Messages;
 
 namespace GDPR.Applications
 {
@@ -134,7 +136,7 @@ namespace GDPR.Applications
                         em.Subject = Request.Subject;
                         em.BlobUrl = core.Encrypt("http://empty");
                         Response = em;
-                        SendMessage(em);
+                        MessageHelper.SendMessage(em);
                         return;
                     }
                     else
@@ -153,7 +155,7 @@ namespace GDPR.Applications
                         em.BlobUrl = core.Encrypt(storageLocation);
                         Response = em;
 
-                        SendMessage(em);
+                        MessageHelper.SendMessage(em);
                     }
 
                     return;
@@ -453,7 +455,8 @@ namespace GDPR.Applications
                 discoverMsg.Subjects = subjects;
                 discoverMsg.SystemId = core.GetSystemId();
                 discoverMsg.ProcessorId = core.GetSystemId();
-                SendMessage(discoverMsg);
+
+                MessageHelper.SendMessage(discoverMsg);
             }
         }
 

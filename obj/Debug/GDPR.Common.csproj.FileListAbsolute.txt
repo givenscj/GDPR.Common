@@ -22,3 +22,8 @@ C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory
 C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
 C:\My Code\GDPR.Common\bin\Debug\Microsoft.ServiceBus.xml
 C:\My Code\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.xml
