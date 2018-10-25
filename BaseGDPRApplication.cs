@@ -7,6 +7,7 @@ using GDPR.Util.Data;
 using GDPR.Util.GDPRCore;
 using GDPR.Util.Messages;
 using GDPR.Common.Classes;
+using GDPR.Common;
 
 namespace GDPR.Applications
 {
@@ -31,6 +32,8 @@ namespace GDPR.Applications
         public BaseGDPRApplication()
         {
             _version = "1.0.0.0";
+
+            core = new GDPRCore();
         }
 
         public BaseApplicationMessage Request { get; set; }

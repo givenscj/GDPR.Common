@@ -50,6 +50,7 @@
     <Compile Include="BaseGDPRApplication.cs" />
     <Compile Include="BaseDiscoverResponseMessage.cs" />
     <Compile Include="GDPRApplicationCore.cs" />
+    <Compile Include="GDPRCore.cs" />
     <Compile Include="GDPRMessageWrapper.cs" />
     <Compile Include="GDPROAuthApplication.cs" />
     <Compile Include="Messages\BaseApplicationMessage.cs" />
