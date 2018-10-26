@@ -15,11 +15,12 @@ namespace GDPR.Common.Messages
 
         static public bool ValidateMessage(GDPRMessageWrapper message)
         {
-            //download the public key
-            string publicKey = message.Source.ApiEndPoint + "/GetPublicKey?applicationid=" + message.ApplicationId;
+            //download the application public key
+            string applicationPublicKey = message.Source.ApiEndPoint + "/GetApplicationPublicKey?applicationid=" + message.ApplicationId;
+            string systemPublicKey = message.Source.ApiEndPoint + "/GetSystemPublicKey";
 
             //message
-            string check = Encryption.EncryptionHelper.DecryptPGP(publicKey, message.Check);
+            string check = Encryption.EncryptionHelper.DecryptPGP(systemPublicKey, message.Check);
 
             //check signer...
             bool validSigner = true;
