@@ -88,11 +88,41 @@ namespace PGPSnippet.PGPEncryption
 
         }
 
+        public void EncryptAndSign(Stream outputStream, Stream unencryptedData)
+        {
+
+            if (outputStream == null)
+
+                throw new ArgumentNullException("outputStream", "outputStream is null.");
+
+            if (unencryptedData == null)
+
+                throw new ArgumentNullException("unencryptedData", "unencryptedData is null.");
+
+            using (Stream encryptedOut = ChainEncryptedOut(outputStream))
+
+            using (Stream compressedOut = ChainCompressedOut(encryptedOut))
+            {
+
+                PgpSignatureGenerator signatureGenerator = InitSignatureGenerator(compressedOut);
+
+                using (Stream literalOut = ChainLiteralOut(compressedOut, unencryptedData))
+
+                {
+
+                    WriteOutputAndSign(compressedOut, literalOut, unencryptedData, signatureGenerator);
+
+                }
+
+            }
+
+        }
+
         private static void WriteOutputAndSign(Stream compressedOut,
 
             Stream literalOut,
 
-            FileStream inputFile,
+            Stream inputFile,
 
             PgpSignatureGenerator signatureGenerator)
         {
@@ -143,11 +173,24 @@ namespace PGPSnippet.PGPEncryption
 
         private static Stream ChainLiteralOut(Stream compressedOut, FileInfo file)
         {
-
             PgpLiteralDataGenerator pgpLiteralDataGenerator = new PgpLiteralDataGenerator();
-
             return pgpLiteralDataGenerator.Open(compressedOut, PgpLiteralData.Binary, file);
 
+        }
+
+        private static Stream ChainLiteralOut(Stream compressedOut, Stream input)
+        {
+            PgpLiteralDataGenerator pgpLiteralDataGenerator = new PgpLiteralDataGenerator();
+
+            byte[] data;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                input.CopyTo(memoryStream);
+                data = memoryStream.ToArray();
+            }
+
+            return pgpLiteralDataGenerator.Open(compressedOut, PgpLiteralData.Binary, "Data", DateTime.Now, data);
         }
 
         private PgpSignatureGenerator InitSignatureGenerator(Stream compressedOut)

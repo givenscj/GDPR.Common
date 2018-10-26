@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,25 @@ namespace GDPR.Common
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             settings.NullValueHandling = NullValueHandling.Ignore;
             return Newtonsoft.Json.JsonConvert.SerializeObject(o, settings);
+        }
+
+        public static string StreamToString(Stream stream)
+        {
+            stream.Position = 0;
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s.ToCharArray());
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
         internal static T GetProcessor<T>(object p)

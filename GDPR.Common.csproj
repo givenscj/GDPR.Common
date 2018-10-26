@@ -125,6 +125,7 @@
     <Compile Include="Messages\BaseUpdateMessage.cs" />
     <Compile Include="Classes\BasePhone.cs" />
     <Compile Include="Messages\MessageHelper.cs" />
+    <Compile Include="Messages\PingMessage.cs" />
     <Compile Include="PGP\KeyGeneration\KeysForPGPEncryptionDecryption.cs" />
     <Compile Include="PGP\Keys\PgpEncryptionKeys.cs" />
     <Compile Include="PGP\PGPDecryption\PGPDecrypt.cs" />

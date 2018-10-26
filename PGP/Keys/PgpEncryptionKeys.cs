@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using GDPR.Common;
 using GDPR.Common.Encryption;
 
 namespace PGPSnippet.Keys
@@ -14,6 +15,15 @@ namespace PGPSnippet.Keys
          public PgpPrivateKey PrivateKey { get; private set; }
 
          public PgpSecretKey SecretKey { get; private set; }
+
+        public PgpEncryptionKeys(PgpPublicKey publicKey, PgpSecretKey secretKey, string passPhrase)
+        {
+            PublicKey = publicKey;
+
+            SecretKey = secretKey;
+
+            PrivateKey = ReadPrivateKey(passPhrase);
+        }
 
         public PgpEncryptionKeys(string publicKeyPath, string privateKeyPath, string passPhrase)
         {
@@ -65,7 +75,7 @@ namespace PGPSnippet.Keys
         static public PgpSecretKey ReadSecretKeyFromString(string privateKey)
         {
 
-            using (Stream keyIn = EncryptionHelper.GenerateStreamFromString(privateKey))
+            using (Stream keyIn = Utility.GenerateStreamFromString(privateKey))
 
             using (Stream inputStream = PgpUtilities.GetDecoderStream(keyIn))
             {
@@ -113,10 +123,10 @@ namespace PGPSnippet.Keys
 
         #region Public Key
 
-        private PgpPublicKey ReadPublicKey(string publicKeyPath)
+        private PgpPublicKey ReadPublicKey(string filePath)
         {
 
-            using (Stream keyIn = File.OpenRead(publicKeyPath))
+            using (Stream keyIn = File.OpenRead(filePath))
 
             using (Stream inputStream = PgpUtilities.GetDecoderStream(keyIn))
             {
@@ -135,10 +145,11 @@ namespace PGPSnippet.Keys
 
         }
 
+
         static public PgpPublicKey ReadPublicKeyFromString(string publicKey)
         {
 
-            using (Stream keyIn = EncryptionHelper.GenerateStreamFromString(publicKey))
+            using (Stream keyIn = Utility.GenerateStreamFromString(publicKey))
 
             using (Stream inputStream = PgpUtilities.GetDecoderStream(keyIn))
             {

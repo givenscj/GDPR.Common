@@ -6,6 +6,11 @@ using System.Net.Http;
 using System.Text;
 using GDPR.Common.Core;
 using System.IO;
+using GDPR.Common.Encryption;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+using PGPSnippet.Keys;
+using PGPSnippet.PGPDecryption;
+using PGPSnippet.PGPEncryption;
 
 namespace GDPR.Common.Messages
 {
@@ -51,29 +56,57 @@ namespace GDPR.Common.Messages
             }
         }
 
+        static public string DecryptMessage(string message, string id)
+        {
+            Stream inputStream = Utility.GenerateStreamFromString(message);
+            string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+            string privateKeyStr = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], id);
+            Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
+            //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+            Stream outputStream = new MemoryStream();
+            PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
+            return Utility.StreamToString(outputStream);
+        }
+
+        static public string SignAndEncryptMessage(BaseGDPRMessage message)
+        {
+            string msg = Utility.SerializeObject(message, 1);
+
+            string publicKeyStr = GetSystemKey();
+            string privateKeyStr = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], ConfigurationManager.AppSettings["ApplicationId"]);
+
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+
+            string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+
+            PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+
+            PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
+
+            Stream inputData = Utility.GenerateStreamFromString(msg);
+            Stream encryptedMessageStream = new MemoryStream();
+            encrypter.EncryptAndSign(encryptedMessageStream, inputData);
+
+            string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
+            
+            return encryptedMessage;
+        }
+
         static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message, bool encrypt)
         {
             GDPRMessageWrapper w = new GDPRMessageWrapper();
+            w.IsEncrypted = encrypt;
+            //w.Check = EncryptionHelper.Encrypt();
             w.ApplicationId = message.ApplicationId.ToString();
-            BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
-            w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
+            //BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
+            //w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
             string toSend = "";
 
-            string msg = Utility.SerializeObject(message, 1);
-            toSend = msg;
-
             if (encrypt)
             {
-                //encrypt the message
-                string encKey = GetSystemKey();
-                string enc = Encryption.EncryptionHelper.EncryptPGP3(encKey, msg);
-
-                //sign the message
-                string signingKey = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKey"]);
-                string signed = Encryption.EncryptionHelper.EncryptPGP3(signingKey, enc);
-
-                toSend = signed;
+                toSend = SignAndEncryptMessage(message);
             }
 
             //finish up
@@ -88,13 +121,14 @@ namespace GDPR.Common.Messages
             //send the message to the processor endpoint...
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(ConfigurationManager.AppSettings["SystemUrl"]);
-            var result = client.GetAsync("/GetSystemKey");
+            var result = client.GetAsync("/Home/GetSystemPublicKey");
             string resultContent = result.Result.Content.ReadAsStringAsync().Result;
-            return resultContent;
+            return resultContent.Trim();
         }
 
-        private static string GetPrivateKey(string filePath)
+        private static string GetPrivateKey(string filePath, string id)
         {
+            filePath = string.Format("{0}\\{1}.key", filePath, id);
             return File.ReadAllText(filePath);
         }
 
@@ -131,8 +165,11 @@ namespace GDPR.Common.Messages
             }
         }
 
-        static public void SendMessageViaQueue(BaseGDPRMessage message)
+        static public void SendMessageViaQueue(BaseGDPRMessage inMsg)
         {
+            bool encrypt = true;
+            GDPRMessageWrapper message = CreateWrapper(inMsg, encrypt);
+
             string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + ConfigurationManager.AppSettings["EventHubName"];
 
             EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());

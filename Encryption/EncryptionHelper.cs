@@ -26,7 +26,7 @@ namespace GDPR.Common.Encryption
             AsymmetricCipherKeyPair kp = kpg.GenerateKeyPair();
             FileStream out1 = new FileInfo(string.Format("{0}/{1}_PGPPrivateKey.asc", keyStoreUrl, applicationId)).OpenWrite();
             FileStream out2 = new FileInfo(string.Format("{0}/{1}_PGPPublicKey.asc", keyStoreUrl, applicationId)).OpenWrite();
-            ExportKeyPair(out1, out2, true, kp.Public, kp.Private, username, password.ToCharArray(), true);
+            ExportKeyPair(out1, out2, true, kp.Public, kp.Private, username, password.ToCharArray(), true, null);
             out1.Close();
             out2.Close();
         }
@@ -35,18 +35,27 @@ namespace GDPR.Common.Encryption
         {
             IAsymmetricCipherKeyPairGenerator kpg = new RsaKeyPairGenerator();
             kpg.Init(new RsaKeyGenerationParameters(BigInteger.ValueOf(0x13), new SecureRandom(), 1024, 8));
+            
             AsymmetricCipherKeyPair kp = kpg.GenerateKeyPair();
-            ExportKeyPair(out1, out2, false, kp.Public, kp.Private, username, password.ToCharArray(), true);
+
+            double secondsToExpire = (DateTime.Now.AddYears(1) - DateTime.Now).TotalSeconds;
+
+            PgpSignatureSubpacketGenerator subpacketGenerator = new PgpSignatureSubpacketGenerator();
+            PgpSignatureSubpacketVector subpacketVector = null;
+            subpacketGenerator.SetKeyExpirationTime(false, (long)secondsToExpire);
+            subpacketVector = subpacketGenerator.Generate();
+
+            ExportKeyPair(out1, out2, true, kp.Public, kp.Private, username, password.ToCharArray(), true, subpacketVector);
         }
 
-        private static void ExportKeyPair(Stream secretOut, Stream publicOut, bool close, AsymmetricKeyParameter publicKey, AsymmetricKeyParameter privateKey, string identity, char[] passPhrase, bool armor)
+        private static void ExportKeyPair(Stream secretOut, Stream publicOut, bool close, AsymmetricKeyParameter publicKey, AsymmetricKeyParameter privateKey, string identity, char[] passPhrase, bool armor, PgpSignatureSubpacketVector vector)
         {
             if (armor)
             {
                 secretOut = new ArmoredOutputStream(secretOut);
             }
 
-            PgpSecretKey secretKey = new PgpSecretKey(PgpSignature.DefaultCertification, PublicKeyAlgorithmTag.RsaGeneral, publicKey, privateKey, DateTime.Now, identity, SymmetricKeyAlgorithmTag.Cast5, passPhrase, null, null, new SecureRandom()
+            PgpSecretKey secretKey = new PgpSecretKey(PgpSignature.DefaultCertification, PublicKeyAlgorithmTag.RsaGeneral, publicKey, privateKey, DateTime.Now, identity, SymmetricKeyAlgorithmTag.Cast5, passPhrase, vector, null, new SecureRandom()
                 //                ,"BC"
             );
 
@@ -225,26 +234,6 @@ namespace GDPR.Common.Encryption
 
             return File.ReadAllText(@"c:\temp\encrypted_code.txt");
         }
-
-        public static string StreamToString(Stream stream)
-        {
-            stream.Position = 0;
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        public static Stream GenerateStreamFromString(string s)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
-
 
         internal static string EncryptPGP(string key, string code)
         {
