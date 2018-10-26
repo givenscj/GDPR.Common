@@ -86,7 +86,8 @@ namespace GDPR.Common.Messages
 
             Stream inputData = Utility.GenerateStreamFromString(msg);
             Stream encryptedMessageStream = new MemoryStream();
-            encrypter.EncryptAndSign(encryptedMessageStream, inputData);
+
+            encrypter.EncryptAndSign(encryptedMessageStream, inputData, true);
 
             string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
             

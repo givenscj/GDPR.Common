@@ -3,11 +3,7 @@ using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Security;
 using PGPSnippet.Keys;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PGPSnippet.PGPEncryption
 {
@@ -88,7 +84,7 @@ namespace PGPSnippet.PGPEncryption
 
         }
 
-        public void EncryptAndSign(Stream outputStream, Stream unencryptedData)
+        public void EncryptAndSign(Stream outputStream, Stream unencryptedData, bool armor)
         {
 
             if (outputStream == null)
@@ -98,6 +94,9 @@ namespace PGPSnippet.PGPEncryption
             if (unencryptedData == null)
 
                 throw new ArgumentNullException("unencryptedData", "unencryptedData is null.");
+
+            if (armor)
+                outputStream = new ArmoredOutputStream(outputStream);
 
             using (Stream encryptedOut = ChainEncryptedOut(outputStream))
 
