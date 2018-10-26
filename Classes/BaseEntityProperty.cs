@@ -16,6 +16,7 @@
         public string Description { get; set; }
         public string DisplayName { get; set; }
         public string Type { get; set; }
+        public int? SystemPinVersion { get; set; }
         public string Category { get; set; }
     }
 }

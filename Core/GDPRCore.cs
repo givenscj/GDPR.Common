@@ -10,6 +10,13 @@ namespace GDPR.Common.Core
 {
     public class GDPRCore : IGDPRCore
     {
+        public static IGDPRCore Current;
+
+        public string Decrypt(string input, int systemKeyVersion)
+        {
+            return input;
+        }
+
         public string Encrypt(string input)
         {
             return input;
@@ -41,7 +48,7 @@ namespace GDPR.Common.Core
             return true;
         }
 
-        public Hashtable LoadProperties()
+        public Hashtable LoadProperties(Guid entityId)
         {
             return new Hashtable();
         }

@@ -31,7 +31,7 @@ namespace GDPR.Common.Encryption
             out2.Close();
         }
 
-        public static void GenerateKeys(string username, string password, string keyStoreUrl, string applicationId, Stream out1, Stream out2)
+        public static void GenerateKeys(string username, string password, string applicationId, Stream out1, Stream out2)
         {
             IAsymmetricCipherKeyPairGenerator kpg = new RsaKeyPairGenerator();
             kpg.Init(new RsaKeyGenerationParameters(BigInteger.ValueOf(0x13), new SecureRandom(), 1024, 8));

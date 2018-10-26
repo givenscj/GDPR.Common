@@ -1,65 +1,117 @@
-﻿using System;
+﻿using GDPR.Common;
+using GDPR.Common.Classes;
+using GDPR.Common.Core;
+using GDPR.Common.Data;
+using GDPR.Common.Messages;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using GDPR.Common;
-using GDPR.Common.Classes;
-using GDPR.Common.Data;
-using GDPR.Common.Core;
-using GDPR.Common.Messages;
-using GDPR.Common.Classes;
-using GDPR.Common;
-using System.Configuration;
-using GDPR.Common.Messages;
 
 namespace GDPR.Applications
 {
     public abstract class BaseGDPRApplication : GDPRApplicationCore, IGDPRDataSubjectActions
     {
+        protected bool _supportsPersonalSearch;
+        protected bool _supportsEmailSearch;
+        protected bool _supportsPhoneSearch;
+        protected bool _supportsAddressSearch;
+        protected bool _supportsIdentitySearch;
+        protected bool _supportsSocialSearch;
+        protected bool _supportsIpAddressSearch;
+
+        protected bool _supportsGDPRUpdate;
+        protected bool _supportsGDPRHold;
+        protected bool _supportsGDPRInsert;
+
         protected bool _manualApprovalOnly;
         protected bool _manualDataExportOnly;
-        protected bool _supportsAddressSearch;
 
         protected bool _supportsAnonymization;
 
-        protected bool _supportsEmailSearch;
-        protected bool _supportsIdentitySearch;
-
         //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
-        protected bool _supportsPersonalSearch = false;
-        protected bool _supportsPhoneSearch;
-        protected bool _supportsSocialSearch;
         protected string _version;
         protected IGDPRCore core;
+
+        protected BaseApplicationMessage _request;
+        protected BaseApplicationMessage _response;
+
+        public bool SupportsGDPRUpdate { get { return this._supportsGDPRUpdate; } }
+        public bool SupportsGDPRHold { get { return this._supportsGDPRHold; } }
+        public bool SupportsGDPRInsert { get { return this._supportsGDPRInsert; } }
+
+        public bool SupportsEmailSearch { get { return this._supportsEmailSearch; } }
+        public bool SupportsPersonalSearch { get { return this._supportsPersonalSearch; } }
+        public bool SupportsPhoneSearch { get { return this._supportsPhoneSearch; } }
+        public bool SupportsAddressSearch { get { return this._supportsAddressSearch; } }
+        public bool SupportsIdentitySearch { get { return this._supportsIdentitySearch; } }
+        public bool SupportsSocialSearch { get { return this._supportsSocialSearch; } }
+        public bool SupportsIpAddressSearch { get { return this._supportsIpAddressSearch; } }
+
+        public bool SupportsAnonymization { get { return this._supportsAnonymization; } }
+
+        public string Version
+        {
+            get
+            {
+                return this._version;
+            }
+        }
+
+        public bool ManualApprovalOnly
+        {
+            get
+            {
+                return this._manualApprovalOnly;
+            }
+        }
+
+        public bool ManualDataExportOnly
+        {
+            get
+            {
+                return this._manualDataExportOnly;
+            }
+        }
+
+        public BaseApplicationMessage Request
+        {
+            get
+            {
+                return this._request;
+            }
+            set
+            {
+                this.Context = value.Context;
+                this._request = value;
+            }
+        }
+
+        public BaseApplicationMessage Response
+        {
+            get
+            {
+                return this._response;
+            }
+            set
+            {
+                this._response = value;
+            }
+        }
 
         public BaseGDPRApplication()
         {
             _version = "1.0.0.0";
-
-            core = new GDPRCore();
         }
 
-        public BaseApplicationMessage Request { get; set; }
-        public BaseApplicationMessage Response { get; set; }
+        public bool SupportsOAuth { get; set; }
+        public bool IsOnpremises { get; set; }
+        public bool ZipAndLockExport { get; set; }
+        public SecurityContext Context { get; set; }
         public Guid ApplicationId { get; set; }
         public Guid TemplateId { get; set; }
         public Hashtable Properties { get; set; }
         public int BatchSize { get; set; }
         public string AuthCookie { get; set; }
-        public bool SupportsEmailSearch => _supportsEmailSearch;
-
-        public bool SupportsPersonalSearch => _supportsPersonalSearch;
-        public bool SupportsPhoneSearch => _supportsPhoneSearch;
-        public bool SupportsAddressSearch => _supportsAddressSearch;
-        public bool SupportsIdentitySearch => _supportsIdentitySearch;
-        public bool SupportsSocialSearch => _supportsSocialSearch;
-
-        public bool SupportsAnonymization => _supportsAnonymization;
-
-        public string Version => _version;
-
-        public bool ManualApprovalOnly => _manualApprovalOnly;
-
-        public bool ManualDataExportOnly => _manualDataExportOnly;
 
         public virtual void Consent()
         {
@@ -318,7 +370,7 @@ namespace GDPR.Applications
 
         public virtual void Init()
         {
-            Properties = core.LoadProperties();
+            Properties = GDPRCore.Current.LoadProperties(this.ApplicationId);
         }
 
         public virtual void Install(bool overwrite)
@@ -400,9 +452,26 @@ namespace GDPR.Applications
             base.SetProperty(name, value);
         }
 
-        public override string GetProperty(string name)
+        override public string GetProperty(string name)
         {
-            return base.GetProperty(name);
+            if (this.Properties == null)
+                this.Properties = new Hashtable();
+
+            string ret = null;
+
+            BaseEntityProperty ep = (BaseEntityProperty)this.Properties[name];
+
+            if (ep != null)
+            {
+                if (ep.IsSecure && ep.SystemPinVersion.HasValue)
+                    ret = GDPRCore.Current.Decrypt(ep.Value, ep.SystemPinVersion.Value);
+                else
+                    ret = ep.Value;
+
+                return ret;
+            }
+
+            return ret;
         }
 
         public override string ExportData(List<Record> records)
