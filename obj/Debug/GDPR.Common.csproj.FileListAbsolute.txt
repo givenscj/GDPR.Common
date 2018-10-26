@@ -46,3 +46,17 @@ C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.dll
 =======
 C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.csprojResolveAssemblyReference.cache
 >>>>>>> a292cb84d8d48a07df541de887d86bba30cbf17a
+C:\github\givenscj\GDPR.Common\bin\Debug\BouncyCastle.OpenPgp.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\libphonenumber.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Logging.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Tokens.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Newtonsoft.Json.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.pdb
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Logging.pdb
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Logging.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Tokens.pdb
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Tokens.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Newtonsoft.Json.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.pdb

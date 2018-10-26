@@ -9,6 +9,26 @@
             Interface for Keys
             </summary>
         </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultEncryptionAlgorithm">
+            <summary>
+            The default encryption algorithm for this key
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultKeyWrapAlgorithm">
+            <summary>
+            The default key wrap algorithm for this key
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultSignatureAlgorithm">
+            <summary>
+            The default signature algorithm for this key
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.Kid">
+            <summary>
+            The key identifier
+            </summary>
+        </member>
         <member name="M:Microsoft.Azure.KeyVault.Core.IKey.DecryptAsync(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.String,System.Threading.CancellationToken)">
             <summary>
             Decrypts the specified cipher text.
@@ -74,26 +94,6 @@
             <param name="algorithm">The algorithm to use</param>
             <param name="token">Cancellation token</param>
             <returns>A bool indicating whether the signature was successfully verified</returns>
-        </member>
-        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultEncryptionAlgorithm">
-            <summary>
-            The default encryption algorithm for this key
-            </summary>
-        </member>
-        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultKeyWrapAlgorithm">
-            <summary>
-            The default key wrap algorithm for this key
-            </summary>
-        </member>
-        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultSignatureAlgorithm">
-            <summary>
-            The default signature algorithm for this key
-            </summary>
-        </member>
-        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.Kid">
-            <summary>
-            The key identifier
-            </summary>
         </member>
         <member name="T:Microsoft.Azure.KeyVault.Core.IKeyResolver">
             <summary>
