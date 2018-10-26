@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.dll.config
 C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\GDPR.Common.pdb
@@ -36,3 +37,37 @@ C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CoreCompileInputs.ca
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.dll
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.pdb
+=======
+C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.dll.config
+C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.dll
+C:\My Code\GDPR.Common\bin\Debug\GDPR.Common.pdb
+C:\My Code\GDPR.Common\bin\Debug\BouncyCastle.OpenPgp.dll
+C:\My Code\GDPR.Common\bin\Debug\libphonenumber.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Logging.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Tokens.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.ServiceBus.dll
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.dll
+C:\My Code\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.dll
+C:\My Code\GDPR.Common\bin\Debug\BouncyCastle.OpenPgp.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.pdb
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Logging.pdb
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Logging.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Tokens.pdb
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Tokens.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.ServiceBus.xml
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
+C:\My Code\GDPR.Common\bin\Debug\Microsoft.WindowsAzure.Storage.xml
+C:\My Code\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.pdb
+C:\My Code\GDPR.Common\bin\Debug\System.IdentityModel.Tokens.Jwt.xml
+C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.csprojResolveAssemblyReference.cache
+C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.dll
+C:\My Code\GDPR.Common\obj\Debug\GDPR.Common.pdb
+>>>>>>> abee12be30c8c7b898beff8d6e8020553b28af19
