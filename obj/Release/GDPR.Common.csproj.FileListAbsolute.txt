@@ -1,6 +1,0 @@
-C:\My Code\GDPR.Common\bin\Release\GDPR.Common.dll
-C:\My Code\GDPR.Common\bin\Release\GDPR.Common.pdb
-C:\My Code\GDPR.Common\bin\Release\Newtonsoft.Json.xml
-C:\My Code\GDPR.Common\obj\Release\GDPR.Common.csprojResolveAssemblyReference.cache
-C:\My Code\GDPR.Common\obj\Release\GDPR.Common.dll
-C:\My Code\GDPR.Common\obj\Release\GDPR.Common.pdb

@@ -246,26 +246,6 @@ namespace GDPR.Common.Encryption
         }
 
 
-        internal static string EncryptPGP2(string key, string code)
-        {
-            string filePath = @"c:\temp\code.txt";
-
-            //create temp file...
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-
-            File.AppendAllText(filePath, code);
-
-            //create the PGPKey object
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(File.ReadAllText(@"c:\KeyBase\publickey.txt"));
-            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(File.ReadAllText(@"c:\KeyBase\privatekey.txt"));
-            PgpPrivateKey privKey = PgpEncryptionKeys.ReadPrivateKey(secretKey, "Seattle123");
-
-            SignAndEncryptFile(@"c:\temp\code.txt", @"c:\temp\encrypted_code.txt", true, true, publicKey, privKey);
-
-            return File.ReadAllText(@"c:\temp\encrypted_code.txt");
-        }
-
         internal static string EncryptPGP(string key, string code)
         {
             string filePath = @"c:\temp\code.txt";
@@ -282,6 +262,26 @@ namespace GDPR.Common.Encryption
             PgpPrivateKey privKey = PgpEncryptionKeys.ReadPrivateKey(secretKey, "Seattle123");
 
             EncryptPgpFile(@"c:\temp\code.txt", @"c:\temp\encrypted_code.txt", publicKey, privKey, true, true);
+
+            return File.ReadAllText(@"c:\temp\encrypted_code.txt");
+        }
+
+        internal static string EncryptPGP2(string key, string code)
+        {
+            string filePath = @"c:\temp\code.txt";
+
+            //create temp file...
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+
+            File.AppendAllText(filePath, code);
+
+            //create the PGPKey object
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(File.ReadAllText(@"c:\KeyBase\publickey.txt"));
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(File.ReadAllText(@"c:\KeyBase\privatekey.txt"));
+            PgpPrivateKey privKey = PgpEncryptionKeys.ReadPrivateKey(secretKey, "Seattle123");
+
+            SignAndEncryptFile(@"c:\temp\code.txt", @"c:\temp\encrypted_code.txt", true, true, publicKey, privKey);
 
             return File.ReadAllText(@"c:\temp\encrypted_code.txt");
         }
