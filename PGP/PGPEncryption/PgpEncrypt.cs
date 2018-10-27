@@ -84,6 +84,64 @@ namespace PGPSnippet.PGPEncryption
 
         }
 
+        public void SignAndEncryptStream(Stream messageData, Stream outputStream,
+            char[] password, bool armor, bool withIntegrityCheck, PgpPublicKey encKey, PgpSecretKey pgpSecKey)
+        {
+            const int BUFFER_SIZE = 1 << 16; // should always be power of 2
+
+            if (armor)
+                outputStream = new ArmoredOutputStream(outputStream);
+
+            // Init encrypted data generator
+            PgpEncryptedDataGenerator encryptedDataGenerator =
+                new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+            encryptedDataGenerator.AddMethod(encKey);
+            Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
+ 
+            // Init compression
+            PgpCompressedDataGenerator compressedDataGenerator = new PgpCompressedDataGenerator(CompressionAlgorithmTag.Zip);
+            Stream compressedOut = compressedDataGenerator.Open(encryptedOut);
+
+            // Init signature
+            PgpPrivateKey pgpPrivKey = pgpSecKey.ExtractPrivateKey(password);
+
+            PgpSignatureGenerator signatureGenerator = new PgpSignatureGenerator(pgpSecKey.PublicKey.Algorithm, HashAlgorithmTag.Sha1);
+            signatureGenerator.InitSign(PgpSignature.BinaryDocument, pgpPrivKey);
+            foreach (string userId in pgpSecKey.PublicKey.GetUserIds())
+            {
+                PgpSignatureSubpacketGenerator spGen = new PgpSignatureSubpacketGenerator();
+                spGen.SetSignerUserId(false, userId);
+                signatureGenerator.SetHashedSubpackets(spGen.Generate());
+                // Just the first one!
+                break;
+            }
+            signatureGenerator.GenerateOnePassVersion(false).Encode(compressedOut);
+
+            // Create the Literal Data generator output stream
+            PgpLiteralDataGenerator literalDataGenerator = new PgpLiteralDataGenerator();
+
+            Stream literalOut = literalDataGenerator.Open(compressedOut, PgpLiteralData.Binary, "Data", DateTime.Now, new byte[BUFFER_SIZE]);
+            
+            byte[] buf = new byte[BUFFER_SIZE];
+            int len;
+            while ((len = messageData.Read(buf, 0, buf.Length)) > 0)
+            {
+                literalOut.Write(buf, 0, len);
+                signatureGenerator.Update(buf, 0, len);
+            }
+
+            literalOut.Close();
+            literalDataGenerator.Close();
+            signatureGenerator.Generate().Encode(compressedOut);
+            compressedOut.Close();
+            compressedDataGenerator.Close();
+            encryptedOut.Close();
+            encryptedDataGenerator.Close();
+
+            if (armor)
+                outputStream.Close();
+        }
+
         public void EncryptAndSign(Stream outputStream, Stream unencryptedData, bool armor)
         {
 
@@ -125,6 +183,7 @@ namespace PGPSnippet.PGPEncryption
 
             PgpSignatureGenerator signatureGenerator)
         {
+            inputFile.Position = 0;
 
             int length = 0;
 

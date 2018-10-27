@@ -397,34 +397,30 @@ namespace PGPSnippet.PGPDecryption
                     {
                         message = of.NextPgpObject();
                         PgpLiteralData Ld = null;
-                        Ld = (PgpLiteralData)message;
-                        using (Stream output = outputFile)
-                        {
-                            Stream unc = Ld.GetInputStream();
-                            Streams.PipeAll(unc, output);
-                        }
+                        Ld = (PgpLiteralData) message;
+                        Stream output = outputFile;
+                        Stream unc = Ld.GetInputStream();
+                        Streams.PipeAll(unc, output);
                     }
                     else
                     {
                         PgpLiteralData Ld = null;
                         Ld = (PgpLiteralData)message;
-                        using (Stream output = outputFile)
-                        {
-                            Stream unc = Ld.GetInputStream();
-                            Streams.PipeAll(unc, output);
-                        }
+                        Stream output = outputFile;
+                        Stream unc = Ld.GetInputStream();
+                        Streams.PipeAll(unc, output);
                     }
                 }
                 else if (message is PgpLiteralData)
                 {
-                    PgpLiteralData ld = (PgpLiteralData)message;
+                    PgpLiteralData ld = (PgpLiteralData) message;
                     string outFileName = ld.FileName;
 
-                    using (Stream fOut = outputFile)
-                    {
-                        Stream unc = ld.GetInputStream();
-                        Streams.PipeAll(unc, fOut);
-                    }
+                    Stream fOut = outputFile;
+
+                    Stream unc = ld.GetInputStream();
+                    Streams.PipeAll(unc, fOut);
+
                 }
                 else if (message is PgpOnePassSignatureList)
                     throw new PgpException("Encrypted message contains a signed message - not literal data.");

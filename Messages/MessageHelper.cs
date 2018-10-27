@@ -81,13 +81,14 @@ namespace GDPR.Common.Messages
             string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
 
             PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
-
             PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
 
             Stream inputData = Utility.GenerateStreamFromString(msg);
             Stream encryptedMessageStream = new MemoryStream();
 
-            encrypter.EncryptAndSign(encryptedMessageStream, inputData, true);
+            encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
+
+            //encrypter.EncryptAndSign(encryptedMessageStream, inputData, true);
 
             string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
             
@@ -111,7 +112,7 @@ namespace GDPR.Common.Messages
             }
 
             //finish up
-            w.Type = message.GetType().Name;
+            w.Type = message.GetType().FullName;
             w.Object = toSend;
             w.MessageDate = DateTime.Now;
             return w;
