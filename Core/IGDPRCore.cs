@@ -15,7 +15,6 @@ namespace GDPR.Common.Core
         void Log(Exception ex, string type);
         Hashtable LoadProperties(Guid entityId);
         void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite);
-        string GetConfigurationProperty(string name);
         void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records);
         void SaveApplicationRequest(Guid subjectRequestApplicationId, string v);
         string Encrypt(string v, int systemKeyVersion);

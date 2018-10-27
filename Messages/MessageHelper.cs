@@ -60,7 +60,7 @@ namespace GDPR.Common.Messages
         {
             Stream inputStream = Utility.GenerateStreamFromString(message);
             string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
-            string privateKeyStr = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], id);
+            string privateKeyStr = EncryptionHelper.GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], id);
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
             //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();
@@ -72,8 +72,8 @@ namespace GDPR.Common.Messages
         {
             string msg = Utility.SerializeObject(message, 1);
 
-            string publicKeyStr = GetSystemKey();
-            string privateKeyStr = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], ConfigurationManager.AppSettings["ApplicationId"]);
+            string publicKeyStr = EncryptionHelper.GetSystemKey();
+            string privateKeyStr = EncryptionHelper.GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], ConfigurationManager.AppSettings["ApplicationId"]);
 
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
@@ -87,11 +87,7 @@ namespace GDPR.Common.Messages
             Stream encryptedMessageStream = new MemoryStream();
 
             encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
-
-            //encrypter.EncryptAndSign(encryptedMessageStream, inputData, true);
-
             string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
-            
             return encryptedMessage;
         }
 
@@ -99,7 +95,7 @@ namespace GDPR.Common.Messages
         {
             GDPRMessageWrapper w = new GDPRMessageWrapper();
             w.IsEncrypted = encrypt;
-            //w.Check = EncryptionHelper.Encrypt();
+            w.Check = EncryptionHelper.Encrypt("GDPRISEASY");
             w.ApplicationId = message.ApplicationId.ToString();
             //BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
             //w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
@@ -116,22 +112,6 @@ namespace GDPR.Common.Messages
             w.Object = toSend;
             w.MessageDate = DateTime.Now;
             return w;
-        }
-
-        private static string GetSystemKey()
-        {
-            //send the message to the processor endpoint...
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(ConfigurationManager.AppSettings["SystemUrl"]);
-            var result = client.GetAsync("/Home/GetSystemPublicKey");
-            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
-            return resultContent.Trim();
-        }
-
-        private static string GetPrivateKey(string filePath, string id)
-        {
-            filePath = string.Format("{0}\\{1}.key", filePath, id);
-            return File.ReadAllText(filePath);
         }
 
         private static string GetApplicationKey(GDPRMessageWrapper message)

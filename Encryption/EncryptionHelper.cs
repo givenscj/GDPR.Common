@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +16,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
 using PGPSnippet.Keys;
+using PGPSnippet.PGPEncryption;
 
 namespace GDPR.Common.Encryption
 {
@@ -76,51 +79,52 @@ namespace GDPR.Common.Encryption
             if (close)
                 publicOut.Close();
         }
+
         /*
-        public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileName, bool withIntegrityCheck, bool armor)
-        {
+public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileName, bool withIntegrityCheck, bool armor)
+{
 
-            if (fileName == null) {
-                fileName = PgpLiteralData.Console;
-            }
+   if (fileName == null) {
+       fileName = PgpLiteralData.Console;
+   }
 
-            Stream encOut = new MemoryStream();
+   Stream encOut = new MemoryStream();
 
-            Stream out1 = encOut;
-            if (armor) {
-                out1 = new ArmoredOutputStream(out1);
-            }
+   Stream out1 = encOut;
+   if (armor) {
+       out1 = new ArmoredOutputStream(out1);
+   }
 
-            Stream bOut = new MemoryStream();
+   Stream bOut = new MemoryStream();
 
-            PgpCompressedDataGenerator comData = new PgpCompressedDataGenerator(CompressionAlgorithmTag.Zip);
-            Stream cos = comData.Open(bOut); // open it with the final
-                                             // destination
-            PgpLiteralDataGenerator lData = new PgpLiteralDataGenerator();
+   PgpCompressedDataGenerator comData = new PgpCompressedDataGenerator(CompressionAlgorithmTag.Zip);
+   Stream cos = comData.Open(bOut); // open it with the final
+                                    // destination
+   PgpLiteralDataGenerator lData = new PgpLiteralDataGenerator();
 
-            // we want to generate compressed data. This might be a user option
-            // later,
-            // in which case we would pass in bOut.
-            Stream pOut = lData.Open(cos, PgpLiteralData.Binary, fileName, clearData.Length, DateTime.Now);
-            pOut.Write(clearData, 0, clearData.Length);
+   // we want to generate compressed data. This might be a user option
+   // later,
+   // in which case we would pass in bOut.
+   Stream pOut = lData.Open(cos, PgpLiteralData.Binary, fileName, clearData.Length, DateTime.Now);
+   pOut.Write(clearData, 0, clearData.Length);
 
-            lData.Close();
-            comData.Close();
+   lData.Close();
+   comData.Close();
 
-            PgpEncryptedDataGenerator cPk = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom(),"BC");
+   PgpEncryptedDataGenerator cPk = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom(),"BC");
 
-            cPk.AddMethod(encKey);
+   cPk.AddMethod(encKey);
 
-            byte[] bytes = bOut.ToByteArray();
+   byte[] bytes = bOut.ToByteArray();
 
-            Stream cOut = cPk.Open(out1, bytes.Length);
-            cOut.Write(bytes); // obtain the actual bytes from the compressed stream
-            cOut.Close();
-            out1.Close();
+   Stream cOut = cPk.Open(out1, bytes.Length);
+   cOut.Write(bytes); // obtain the actual bytes from the compressed stream
+   cOut.Close();
+   out1.Close();
 
-            return encOut.ToByteArray();
-        }
-        */
+   return encOut.ToByteArray();
+}
+*/
 
         public static void EncryptPgpFile(string inputFile, string outputFile, PgpPublicKey pubKey, PgpPrivateKey privKey, bool armor, bool withIntegrityCheck)
         {
@@ -233,6 +237,43 @@ namespace GDPR.Common.Encryption
             outputStream.Close();
 
             return File.ReadAllText(@"c:\temp\encrypted_code.txt");
+        }
+
+        public static string GetSystemKey()
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(ConfigurationManager.AppSettings["SystemUrl"]);
+            var result = client.GetAsync("/Home/GetSystemPublicKey");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public static string GetPrivateKey(string filePath, string id)
+        {
+            filePath = string.Format("{0}\\{1}.key", filePath, id);
+            return File.ReadAllText(filePath);
+        }
+
+        public static string Encrypt(string data)
+        {
+            string publicKeyStr = GetSystemKey();
+            string privateKeyStr = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], ConfigurationManager.AppSettings["ApplicationId"]);
+
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+
+            string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+
+            PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+            PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
+
+            Stream inputData = Utility.GenerateStreamFromString(data);
+            Stream encryptedMessageStream = new MemoryStream();
+
+            encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
+            string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
+            return encryptedMessage;
         }
 
         internal static string EncryptPGP(string key, string code)
