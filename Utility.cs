@@ -1,15 +1,97 @@
-﻿using Newtonsoft.Json;
+﻿using GDPR.Util.Enums;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GDPR.Common
 {
     public class Utility
     {
+        private const string ValidUrlCharacters =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+
+        public static string UrlEncode(string data)
+        {
+            StringBuilder encoded = new StringBuilder();
+            foreach (char symbol in Encoding.UTF8.GetBytes(data))
+            {
+                if (ValidUrlCharacters.IndexOf(symbol) != -1)
+                {
+                    encoded.Append(symbol);
+                }
+                else
+                {
+                    encoded.Append("%").Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (int)symbol));
+                }
+            }
+            return encoded.ToString();
+        }
+
+        public static byte[] Hash(string value)
+        {
+
+            return new SHA256CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(value));
+        }
+
+
+        public static byte[] GetKeyedHash(string key, string value)
+        {
+            return GetKeyedHash(Encoding.UTF8.GetBytes(key), value);
+        }
+
+        public static byte[] GetKeyedHash(byte[] key, string value)
+        {
+            KeyedHashAlgorithm mac = new HMACSHA256(key);
+            mac.Initialize();
+            return mac.ComputeHash(Encoding.UTF8.GetBytes(value));
+        }
+
+        public static string ToHex(byte[] data)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sb.Append(data[i].ToString("x2", CultureInfo.InvariantCulture));
+            }
+            return sb.ToString();
+        }
+        static public String ParseValue(String line, String startToken, String endToken)
+        {
+            if (startToken == null)
+            {
+                return "";
+            }
+
+            try
+            {
+                if (startToken == "")
+                {
+                    return line.Substring(0, line.IndexOf(endToken));
+                }
+                else
+                {
+
+                    String rtn = line.Substring(line.IndexOf(startToken));
+
+                    if (endToken == "")
+                        return line.Substring(line.IndexOf(startToken) + startToken.Length);
+                    else
+                        return rtn.Substring(startToken.Length, rtn.IndexOf(endToken, startToken.Length) - startToken.Length).Replace("\n", "").Replace("\t", "");
+                }
+            }
+            catch (Exception)
+            {
+                //Logger.LogGeneralMessage("Tried to find [" + startToken + "] in [" + line + "]");
+            }
+            finally
+            {
+            }
+
+            return "";
+        }
         public static string SerializeObject(object o, int depth)
         {
             //trim the request down...
@@ -67,6 +149,11 @@ namespace GDPR.Common
             {
                 return false;
             }
+        }
+
+        public static void Log(string v, LogLevel information)
+        {
+            return;
         }
     }
 }

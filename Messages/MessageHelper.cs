@@ -123,6 +123,11 @@ namespace GDPR.Common.Messages
         static public void SendMessageViaHttp(BaseGDPRMessage message)
         {
             GDPRMessageWrapper w = CreateWrapper(message, true);
+            SendMessageViaHttp(w);
+        }
+
+        static public void SendMessageViaHttp(GDPRMessageWrapper w)
+        {
             string msgWrapper = Common.Utility.SerializeObject(w, 1);
 
             string post = "=" + msgWrapper.ToString();
@@ -138,7 +143,7 @@ namespace GDPR.Common.Messages
             var result = client.PostAsync("/Admin/Request", content);
             string resultContent = result.Result.Content.ReadAsStringAsync().Result;
 
-            switch(resultContent)
+            switch (resultContent)
             {
                 case "success":
                     break;
@@ -147,17 +152,37 @@ namespace GDPR.Common.Messages
             }
         }
 
-        static public void SendMessageViaQueue(BaseGDPRMessage inMsg)
+        static public void SendMessageViaQueue(BaseGDPRMessage inMsg, string connectionString)
         {
             bool encrypt = true;
             GDPRMessageWrapper message = CreateWrapper(inMsg, encrypt);
 
-            string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + ConfigurationManager.AppSettings["EventHubName"];
-
-            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
 
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
             eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
         }
+
+        static public void SendMessageViaQueue(GDPRMessageWrapper message, string connectionString)
+        {
+            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
+            string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+            eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+        }
+
+        static public void SendMessageViaQueue(BaseGDPRMessage inMsg)
+        {
+            string hubName = ConfigurationManager.AppSettings["EventHubName"];
+            string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + hubName;
+            SendMessageViaQueue(inMsg, connectionStringBuilder);
+        }
+
+        static public void SendMessageViaQueue(GDPRMessageWrapper inMsg)
+        {
+            string hubName = ConfigurationManager.AppSettings["EventHubName"];
+            string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + hubName;
+            SendMessageViaQueue(inMsg, connectionStringBuilder);
+        }
+
     }
 }
