@@ -255,15 +255,13 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             return File.ReadAllText(filePath);
         }
 
-        public static string Encrypt(string data)
+        public static string Encrypt(string data, string keyPath, string id, string passPhrase)
         {
             string publicKeyStr = GetSystemKey();
-            string privateKeyStr = GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], ConfigurationManager.AppSettings["ApplicationId"]);
+            string privateKeyStr = GetPrivateKey(keyPath, id);
 
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
-
-            string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
 
             PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
             PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
@@ -274,6 +272,19 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
             string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
             return encryptedMessage;
+        }
+
+        public static string Encrypt(string data, EncryptionContext ctx)
+        {
+            return Encrypt(data, ctx.Path, ctx.Id, ctx.Password);
+        }
+
+        public static string Encrypt(string data)
+        {
+            return Encrypt(data, ConfigurationManager.AppSettings["PrivateKeyPath"],
+                ConfigurationManager.AppSettings["ApplicationId"],
+                ConfigurationManager.AppSettings["PrivateKeyPassword"]
+                );
         }
 
         internal static string EncryptPGP(string key, string code)

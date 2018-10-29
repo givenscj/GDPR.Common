@@ -5,18 +5,18 @@
 
     public partial class BaseEntityProperty
     {
-        public System.Guid EntityPropertyId { get; set; }
-        public System.Guid EntityId { get; set; }
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public System.DateTime ModifyDate { get; set; }
-        public System.DateTime CreateDate { get; set; }
-        public bool IsSecure { get; set; }
-        public bool IsMasked { get; set; }
-        public string Description { get; set; }
-        public string DisplayName { get; set; }
-        public string Type { get; set; }
-        public int? SystemPinVersion { get; set; }
-        public string Category { get; set; }
+        virtual public System.Guid EntityPropertyId { get; set; }
+        virtual public System.Guid EntityId { get; set; }
+        virtual public string Name { get; set; }
+        virtual public string Value { get; set; }
+        virtual public System.DateTime ModifyDate { get; set; }
+        virtual public System.DateTime CreateDate { get; set; }
+        virtual public bool IsSecure { get; set; }
+        virtual public bool IsMasked { get; set; }
+        virtual public string Description { get; set; }
+        virtual public string DisplayName { get; set; }
+        virtual public string Type { get; set; }
+        virtual public int? SystemPinVersion { get; set; }
+        virtual public string Category { get; set; }
     }
 }

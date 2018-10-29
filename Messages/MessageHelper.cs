@@ -36,31 +36,31 @@ namespace GDPR.Common.Messages
             return true;
         }
 
-        static public void SendMessage(BaseGDPRMessage msg)
+        static public void SendMessage(BaseGDPRMessage msg, EncryptionContext ctx)
         {
             string mode = ConfigurationManager.AppSettings["Mode"];
-            SendMessage(msg, mode);
+            SendMessage(msg, mode, ctx);
         }
 
-        static public void SendMessage(BaseGDPRMessage msg, string mode)
+        static public void SendMessage(BaseGDPRMessage msg, string mode, EncryptionContext ctx)
         {
             //send the message...
             switch (mode)
             {
                 case "Http":
-                    MessageHelper.SendMessageViaHttp(msg);
+                    MessageHelper.SendMessageViaHttp(msg, ctx);
                     break;
                 case "Queue":
-                    MessageHelper.SendMessageViaQueue(msg);
+                    MessageHelper.SendMessageViaQueue(msg, ctx);
                     break;
             }
         }
 
-        static public string DecryptMessage(string message, string id)
+        static public string DecryptMessage(string message, EncryptionContext ctx)
         {
             Stream inputStream = Utility.GenerateStreamFromString(message);
-            string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
-            string privateKeyStr = EncryptionHelper.GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], id);
+            string passPhrase = ctx.Password;
+            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id);
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
             //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();
@@ -68,17 +68,17 @@ namespace GDPR.Common.Messages
             return Utility.StreamToString(outputStream);
         }
 
-        static public string SignAndEncryptMessage(BaseGDPRMessage message)
+        static public string SignAndEncryptMessage(BaseGDPRMessage message, EncryptionContext ctx)
         {
             string msg = Utility.SerializeObject(message, 1);
 
             string publicKeyStr = EncryptionHelper.GetSystemKey();
-            string privateKeyStr = EncryptionHelper.GetPrivateKey(ConfigurationManager.AppSettings["PrivateKeyPath"], ConfigurationManager.AppSettings["ApplicationId"]);
+            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id);
 
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
 
-            string passPhrase = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+            string passPhrase = ctx.Password;
 
             PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
             PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
@@ -91,20 +91,25 @@ namespace GDPR.Common.Messages
             return encryptedMessage;
         }
 
-        static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message, bool encrypt)
+        static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message, EncryptionContext ctx)
         {
             GDPRMessageWrapper w = new GDPRMessageWrapper();
-            w.IsEncrypted = encrypt;
-            w.Check = EncryptionHelper.Encrypt("GDPRISEASY");
+            w.IsEncrypted = ctx.Encrypt;
+
+            if (message.IsSystem)
+                w.Check = EncryptionHelper.Encrypt("GDPRISEASY", ctx);
+            else
+                w.Check = EncryptionHelper.Encrypt("GDPRISEASY", ctx);
+
             w.ApplicationId = message.ApplicationId.ToString();
             //BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
             //w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
             string toSend = "";
 
-            if (encrypt)
+            if (ctx.Encrypt)
             {
-                toSend = SignAndEncryptMessage(message);
+                toSend = SignAndEncryptMessage(message, ctx);
             }
 
             //finish up
@@ -120,9 +125,9 @@ namespace GDPR.Common.Messages
             return publicKey;
         }
 
-        static public void SendMessageViaHttp(BaseGDPRMessage message)
+        static public void SendMessageViaHttp(BaseGDPRMessage message, EncryptionContext ctx)
         {
-            GDPRMessageWrapper w = CreateWrapper(message, true);
+            GDPRMessageWrapper w = CreateWrapper(message, ctx);
             SendMessageViaHttp(w);
         }
 
@@ -152,10 +157,9 @@ namespace GDPR.Common.Messages
             }
         }
 
-        static public void SendMessageViaQueue(BaseGDPRMessage inMsg, string connectionString)
+        static public void SendMessageViaQueue(BaseGDPRMessage inMsg, string connectionString, EncryptionContext ctx)
         {
-            bool encrypt = true;
-            GDPRMessageWrapper message = CreateWrapper(inMsg, encrypt);
+            GDPRMessageWrapper message = CreateWrapper(inMsg, ctx);
 
             EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
 
@@ -170,11 +174,11 @@ namespace GDPR.Common.Messages
             eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
         }
 
-        static public void SendMessageViaQueue(BaseGDPRMessage inMsg)
+        static public void SendMessageViaQueue(BaseGDPRMessage inMsg, EncryptionContext ctx)
         {
             string hubName = ConfigurationManager.AppSettings["EventHubName"];
             string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + hubName;
-            SendMessageViaQueue(inMsg, connectionStringBuilder);
+            SendMessageViaQueue(inMsg, connectionStringBuilder, ctx);
         }
 
         static public void SendMessageViaQueue(GDPRMessageWrapper inMsg)

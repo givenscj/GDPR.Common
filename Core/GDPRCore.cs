@@ -78,10 +78,11 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
-        public void SendMessage(BaseGDPRMessage cm)
+        public void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx)
         {
             string mode = ConfigurationManager.AppSettings["Mode"];
-            MessageHelper.SendMessage(cm, mode);
+
+            MessageHelper.SendMessage(cm, mode, ctx);
         }
 
         public string UploadBlob(Guid applicationId, string filePath)

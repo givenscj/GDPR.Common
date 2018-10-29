@@ -44,3 +44,4 @@ C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CoreCompileInputs.ca
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.dll
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.pdb
+C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csprojAssemblyReference.cache

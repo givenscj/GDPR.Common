@@ -19,7 +19,7 @@ namespace GDPR.Common.Core
         void SaveApplicationRequest(Guid subjectRequestApplicationId, string v);
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);
-        void SendMessage(BaseGDPRMessage cm);
+        void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx);
         BaseAddress GeocodeAddress(object p, string address);
         string Decrypt(string value1, int value2);
     }

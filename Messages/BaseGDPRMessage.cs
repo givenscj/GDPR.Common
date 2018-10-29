@@ -13,6 +13,7 @@ namespace GDPR.Common.Messages
             this.CreateDate = DateTime.Now;
         }
 
+        public bool IsSystem { get; set; }
         public int Retries { get; set; }
         public GDPRSubject Subject { get; set; }
         public SecurityContext Context { get; set; }

@@ -6,6 +6,7 @@ using GDPR.Common.Messages;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace GDPR.Applications
 {
@@ -34,6 +35,8 @@ namespace GDPR.Applications
 
         protected BaseApplicationMessage _request;
         protected BaseApplicationMessage _response;
+
+        public EncryptionContext ctx { get; set; }
 
         public bool SupportsGDPRUpdate { get { return this._supportsGDPRUpdate; } }
         public bool SupportsGDPRHold { get { return this._supportsGDPRHold; } }
@@ -163,6 +166,12 @@ namespace GDPR.Applications
             Request = message;
             GDPRSubject s = null;
 
+            EncryptionContext ctx = new EncryptionContext();
+            ctx.Encrypt = true;
+            ctx.Path = ConfigurationManager.AppSettings["PrivateKeyPath"];
+            ctx.Id = ConfigurationManager.AppSettings["ApplicationId"];
+            ctx.Password = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+
             if (message.Subject != null)
                 s = new GDPRSubject(message.Subject);
 
@@ -188,7 +197,8 @@ namespace GDPR.Applications
                         em.Subject = Request.Subject;
                         em.BlobUrl = core.Encrypt("http://empty");
                         Response = em;
-                        MessageHelper.SendMessage(em);
+
+                        MessageHelper.SendMessage(em, ctx);
                         return;
                     }
                     else
@@ -207,7 +217,7 @@ namespace GDPR.Applications
                         em.BlobUrl = core.Encrypt(storageLocation);
                         Response = em;
 
-                        MessageHelper.SendMessage(em);
+                        MessageHelper.SendMessage(em, ctx);
                     }
 
                     return;
@@ -481,6 +491,12 @@ namespace GDPR.Applications
 
         public virtual void Discover(DateTime? checkPoint)
         {
+            EncryptionContext ctx = new EncryptionContext();
+            ctx.Encrypt = true;
+            ctx.Path = ConfigurationManager.AppSettings["PrivateKeyPath"];
+            ctx.Id = ConfigurationManager.AppSettings["ApplicationId"];
+            ctx.Password = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+
             try
             {
                 BatchSize = int.Parse(GetProperty("BatchSize"));
@@ -525,7 +541,7 @@ namespace GDPR.Applications
                 discoverMsg.SystemId = core.GetSystemId();
                 discoverMsg.ProcessorId = core.GetSystemId();
 
-                MessageHelper.SendMessage(discoverMsg);
+                MessageHelper.SendMessage(discoverMsg, ctx);
             }
         }
 
