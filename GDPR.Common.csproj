@@ -126,6 +126,7 @@
     <Compile Include="Application\BaseGDPRApplication.cs" />
     <Compile Include="Classes\GoogleTranslation.cs" />
     <Compile Include="Classes\HttpHelper.cs" />
+    <Compile Include="Classes\ImportSubject.cs" />
     <Compile Include="Enums\LogLevel.cs" />
     <Compile Include="Messages\BaseDiscoverResponseMessage.cs" />
     <Compile Include="Encryption\EncryptionHelper.cs" />
