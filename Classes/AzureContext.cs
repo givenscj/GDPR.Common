@@ -1,13 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GDPR.Common.Classes
+﻿namespace GDPR.Common.Classes
 {
     public class AzureContext
     {
+        public AzureContext(string clientId, string clientSecret)
+        {
+            if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
+            {
+                this.ClientId = clientId;
+                this.ClientSecret = clientSecret;
+            }
+            else
+            {
+                //fall back to the system application...
+                this.ClientId = Configuration.AzureClientId;
+                this.ClientSecret = Configuration.AzureClientSecret;
+            }
+        }
         public string TenantId { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
