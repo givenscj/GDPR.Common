@@ -38,19 +38,19 @@ namespace GDPR.Common.Messages
 
         static public void SendMessage(BaseGDPRMessage msg, EncryptionContext ctx)
         {
-            string mode = ConfigurationManager.AppSettings["Mode"];
+            string mode = Utility.GetConfigurationValue("Mode");
             SendMessage(msg, mode, ctx);
         }
 
         static public void SendMessage(BaseGDPRMessage msg, string mode, EncryptionContext ctx)
         {
             //send the message...
-            switch (mode)
+            switch (mode.ToLower())
             {
-                case "Http":
+                case "http":
                     MessageHelper.SendMessageViaHttp(msg, ctx);
                     break;
-                case "Queue":
+                case "queue":
                     MessageHelper.SendMessageViaQueue(msg, ctx);
                     break;
             }
@@ -176,15 +176,15 @@ namespace GDPR.Common.Messages
 
         static public void SendMessageViaQueue(BaseGDPRMessage inMsg, EncryptionContext ctx)
         {
-            string hubName = ConfigurationManager.AppSettings["EventHubName"];
-            string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + hubName;
+            string hubName = Utility.GetConfigurationValue("EventHubName");
+            string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
             SendMessageViaQueue(inMsg, connectionStringBuilder, ctx);
         }
 
         static public void SendMessageViaQueue(GDPRMessageWrapper inMsg)
         {
-            string hubName = ConfigurationManager.AppSettings["EventHubName"];
-            string connectionStringBuilder = ConfigurationManager.AppSettings["EventHubConnectionString"] + ";EntityPath=" + hubName;
+            string hubName = Utility.GetConfigurationValue("EventHubName");
+            string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
             SendMessageViaQueue(inMsg, connectionStringBuilder);
         }
 

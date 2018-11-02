@@ -19,7 +19,6 @@ C:\github\givenscj\GDPR.Common\bin\Debug\System.Net.Http.Primitives.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\System.Web.Http.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\System.Web.Http.WebHost.dll
 C:\github\givenscj\GDPR.Common\bin\Debug\BouncyCastle.OpenPgp.xml
-C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.Services.AppAuthentication.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
 C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.pdb
@@ -45,3 +44,14 @@ C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csproj.CopyComplete
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.dll
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.pdb
 C:\github\givenscj\GDPR.Common\obj\Debug\GDPR.Common.csprojAssemblyReference.cache
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.WebKey.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Rest.ClientRuntime.Azure.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Rest.ClientRuntime.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\PayPal.dll
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.WebKey.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Rest.ClientRuntime.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Rest.ClientRuntime.Azure.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\PayPal.xml
+C:\github\givenscj\GDPR.Common\bin\Debug\Microsoft.Azure.KeyVault.Core.xml

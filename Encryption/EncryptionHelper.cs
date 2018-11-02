@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-
-using Org.BouncyCastle.Bcpg;
+﻿using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
-
 using PGPSnippet.Keys;
 using PGPSnippet.PGPEncryption;
+using System;
+using System.IO;
+using System.Net.Http;
 
 namespace GDPR.Common.Encryption
 {
@@ -243,7 +236,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         {
             //send the message to the processor endpoint...
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(ConfigurationManager.AppSettings["SystemUrl"]);
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
             var result = client.GetAsync("/Home/GetSystemPublicKey");
             string resultContent = result.Result.Content.ReadAsStringAsync().Result;
             return resultContent.Trim();
@@ -260,8 +253,8 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             string publicKeyStr = GetSystemKey();
             string privateKeyStr = GetPrivateKey(keyPath, id);
 
-            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);     
 
             PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
             PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
@@ -281,9 +274,9 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
 
         public static string Encrypt(string data)
         {
-            return Encrypt(data, ConfigurationManager.AppSettings["PrivateKeyPath"],
-                ConfigurationManager.AppSettings["ApplicationId"],
-                ConfigurationManager.AppSettings["PrivateKeyPassword"]
+            return Encrypt(data, Utility.GetConfigurationValue("PrivateKeyPath"),
+                Utility.GetConfigurationValue("ApplicationId"),
+                    Utility.GetConfigurationValue("PrivateKeyPassword")
                 );
         }
 

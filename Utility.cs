@@ -1,15 +1,54 @@
-﻿using GDPR.Util.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using LogLevel = GDPR.Util.Enums.LogLevel;
+using System.Threading.Tasks;
 
 namespace GDPR.Common
 {
     public class Utility
     {
+        public static async Task<string> GetToken(string authority, string resource, string scope)
+        {
+            var authContext = new AuthenticationContext(authority);
+            ClientCredential clientCred = new ClientCredential(Configuration.AzureClientId, Configuration.AzureClientSecret);
+            AuthenticationResult result = await authContext.AcquireTokenAsync(resource, clientCred);
+
+            if (result == null)
+                throw new InvalidOperationException("Failed to obtain the JWT token");
+
+            return result.AccessToken;
+        }
+
+        public static string GetToken(string authority, string clientId, string appKey, string resource)
+        {
+            var httpClient = new HttpClient();
+            var authContext = new AuthenticationContext(authority);
+            var clientCredential = new ClientCredential(clientId, appKey);
+            var result = authContext.AcquireTokenAsync(resource, clientCredential);
+            return result.Result.AccessToken;
+        }
+
+        public static string GetConfigurationValue(string v)
+        {
+            string value = "";
+
+           object val = Configuration.GetProperty(v);
+
+            if (val == null)
+                value = ConfigurationManager.AppSettings[v];
+            else
+                value = val.ToString();
+
+            return value;
+        }
+
         private const string ValidUrlCharacters =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
 
