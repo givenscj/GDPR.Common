@@ -1,8 +1,10 @@
-﻿namespace GDPR.Common.Classes
+﻿using GDPR.Common.Core;
+
+namespace GDPR.Common.Classes
 {
-    public class AzureContext
+    public class OAuthContext
     {
-        public AzureContext(string clientId, string clientSecret)
+        public OAuthContext(string clientId, string clientSecret, bool allowFallback, string type)
         {
             if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
             {
@@ -11,9 +13,10 @@
             }
             else
             {
-                //fall back to the system application...
-                this.ClientId = Configuration.AzureClientId;
-                this.ClientSecret = Configuration.AzureClientSecret;
+                if (allowFallback)
+                {
+                    GDPRCore.Current.SetSystemOAuth(this, type);
+                }
             }
         }
         public string TenantId { get; set; }

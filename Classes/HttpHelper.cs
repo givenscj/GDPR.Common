@@ -40,7 +40,7 @@ namespace GDPR.Util
 
         public String cookies = "";
         public String location = "";
-        String statusCode = "";
+        public String statusCode = "";
 
         bool isAmazon = false;
         AwsV4SignatureHelper amazonHelper;

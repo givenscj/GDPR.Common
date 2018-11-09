@@ -1,14 +1,4 @@
-﻿using GDPR.Common;
-using GDPR.Common.Classes;
-using GDPR.Common.Data;
-using GDPR.Common.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GDPR.Applications
+﻿namespace GDPR.Applications
 {
     public abstract class BaseGDPROAuthApplication : BaseGDPRApplication
     {

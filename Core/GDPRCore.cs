@@ -85,6 +85,18 @@ namespace GDPR.Common.Core
             MessageHelper.SendMessage(cm, mode, ctx);
         }
 
+        public void SetSystemOAuth(OAuthContext ctx, string type)
+        {
+            switch (type)
+            {
+                case "Azure":
+                    //fall back to the system application...
+                    ctx.ClientId = Configuration.AzureClientId;
+                    ctx.ClientSecret = Configuration.AzureClientSecret;
+                    break;
+            }
+        }
+
         public string UploadBlob(Guid applicationId, string filePath)
         {
             AzureStorage s = new AzureStorage();

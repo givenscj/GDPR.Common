@@ -144,6 +144,7 @@
     <Compile Include="Classes\GoogleTranslation.cs" />
     <Compile Include="Classes\HttpHelper.cs" />
     <Compile Include="Classes\ImportSubject.cs" />
+    <Compile Include="Enums\Authentication.cs" />
     <Compile Include="Enums\LogLevel.cs" />
     <Compile Include="Messages\BaseDiscoverResponseMessage.cs" />
     <Compile Include="Encryption\EncryptionHelper.cs" />
@@ -152,7 +153,7 @@
     <Compile Include="Messages\GDPRMessageWrapper.cs" />
     <Compile Include="Application\GDPROAuthApplication.cs" />
     <Compile Include="Messages\BaseApplicationMessage.cs" />
-    <Compile Include="Classes\AzureContext.cs" />
+    <Compile Include="Classes\OAuthContext.cs" />
     <Compile Include="Enums\MessageDirection.cs" />
     <Compile Include="Exceptions\GDPRException.cs" />
     <Compile Include="Messages\BaseExportMessage.cs" />

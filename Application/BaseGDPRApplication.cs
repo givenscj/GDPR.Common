@@ -20,6 +20,9 @@ namespace GDPR.Applications
         protected bool _supportsSocialSearch;
         protected bool _supportsIpAddressSearch;
 
+        protected bool _enableNameSearch;
+        protected bool _enablePhoneFormatsSearch;
+
         protected bool _supportsGDPRUpdate;
         protected bool _supportsGDPRHold;
         protected bool _supportsGDPRInsert;
@@ -115,6 +118,18 @@ namespace GDPR.Applications
         public Hashtable Properties { get; set; }
         public int BatchSize { get; set; }
         public string AuthCookie { get; set; }
+
+        protected bool EnableNameSearch
+        {
+            get { return _enableNameSearch; }
+            set { _enableNameSearch = value; }
+        }
+
+        protected bool EnablePhoneFormatsSearch
+        {
+            get { return _enablePhoneFormatsSearch; }
+            set { _enablePhoneFormatsSearch = value; }
+        }
 
         public virtual void Consent()
         {
