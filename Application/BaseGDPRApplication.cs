@@ -183,7 +183,7 @@ namespace GDPR.Applications
 
             EncryptionContext ctx = new EncryptionContext();
             ctx.Encrypt = true;
-            ctx.Path = ConfigurationManager.AppSettings["PrivateKeyPath"];
+            ctx.Path = Utility.GetConfigurationValue("PrivateKeyPath"); // ConfigurationManager.AppSettings["PrivateKeyPath"];
             ctx.Id = ConfigurationManager.AppSettings["ApplicationId"];
             ctx.Password = ConfigurationManager.AppSettings["PrivateKeyPassword"];
 
@@ -390,7 +390,7 @@ namespace GDPR.Applications
 
         public virtual string Authorize()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public virtual void Init()
