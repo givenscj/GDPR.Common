@@ -1,9 +1,8 @@
 ﻿namespace GDPR.Common
 {
     using System;
-    using System.Collections.Generic;
 
-    public partial class GDPRSubjectAddress
+    public class GDPRSubjectAddress : BaseAddress
     {
         public System.Guid AddressId { get; set; }
         public string Raw { get; set; }

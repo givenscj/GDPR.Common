@@ -161,7 +161,7 @@ namespace GDPR.Applications
             return new List<BaseGDPRMessage>();
         }
 
-        public virtual List<GDPRSubject> SubjectSearch(GDPRSubject subject, bool allowNameSearch)
+        public virtual List<GDPRSubject> SubjectSearch(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
@@ -184,8 +184,8 @@ namespace GDPR.Applications
             EncryptionContext ctx = new EncryptionContext();
             ctx.Encrypt = true;
             ctx.Path = Utility.GetConfigurationValue("PrivateKeyPath"); // ConfigurationManager.AppSettings["PrivateKeyPath"];
-            ctx.Id = ConfigurationManager.AppSettings["ApplicationId"];
-            ctx.Password = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+            ctx.Id = message.ApplicationId.ToString();
+            ctx.Password = Utility.GetConfigurationValue("PrivateKeyPassword");
 
             if (message.Subject != null)
                 s = new GDPRSubject(message.Subject);
@@ -210,7 +210,7 @@ namespace GDPR.Applications
                         em.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
                         em.SubjectRequestId = Request.SubjectRequestId;
                         em.Subject = Request.Subject;
-                        em.BlobUrl = core.Encrypt("http://empty");
+                        em.BlobUrl = GDPRCore.Current.Encrypt("http://empty");
                         Response = em;
 
                         MessageHelper.SendMessage(em, ctx);
@@ -244,7 +244,7 @@ namespace GDPR.Applications
             throw new NotImplementedException();
         }
 
-        public bool RecordCreateOut(GDPRSubject subject)
+        public virtual bool RecordCreateOut(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
@@ -254,17 +254,17 @@ namespace GDPR.Applications
             throw new NotImplementedException();
         }
 
-        public bool RecordDeleteOut(GDPRSubject subject)
+        public virtual bool RecordDeleteOut(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public void RecordHold(GDPRSubject subject)
+        public virtual void RecordHold(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public void RecordNotify(GDPRSubject subject)
+        public virtual void RecordNotify(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
@@ -275,17 +275,17 @@ namespace GDPR.Applications
             return results;
         }
 
-        public bool RecordUpdateIn(GDPRSubject subject)
+        public virtual bool RecordUpdateIn(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool RecordUpdateOut(GDPRSubject subject)
+        public virtual bool RecordUpdateOut(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public void ValidateSubject(GDPRSubject subject)
+        public virtual void ValidateSubject(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }

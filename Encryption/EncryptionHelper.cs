@@ -211,6 +211,20 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
 
         public static string EncryptPGP3(string key, string code)
         {
+            //create the PGPKey object
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(key);
+            
+            Stream inputData = Utility.GenerateStreamFromString(code);
+            Stream encryptedMessageStream = new MemoryStream();
+
+            EncryptStream(encryptedMessageStream, inputData, publicKey, true, true);
+            
+            string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
+            return encryptedMessage;
+        }
+
+        public static string EncryptPGP4(string key, string code)
+        {
             string filePath = @"c:\temp\code.txt";
 
             //create temp file...
@@ -263,6 +277,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             Stream encryptedMessageStream = new MemoryStream();
 
             encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
+            
             string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
             return encryptedMessage;
         }
@@ -347,6 +362,50 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             }
 
             if (armor) outputStream.Close();
+        }
+
+        private static void EncryptStream(Stream outputStream, Stream data, PgpPublicKey pubKey, bool armor, bool withIntegrityCheck)
+        {
+            const int BUFFER_SIZE = 1 << 16; // should always be power of 2
+
+            if (armor)
+                outputStream = new ArmoredOutputStream(outputStream);
+
+            // Init encrypted data generator
+            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+            encryptedDataGenerator.AddMethod(pubKey);
+            Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
+
+            // Init compression
+            PgpCompressedDataGenerator compressedDataGenerator = new PgpCompressedDataGenerator(CompressionAlgorithmTag.Zip);
+            Stream compressedOut = compressedDataGenerator.Open(encryptedOut);
+
+            // Create the Literal Data generator output stream
+            PgpLiteralDataGenerator literalDataGenerator = new PgpLiteralDataGenerator();
+
+            Stream literalOut = literalDataGenerator.Open(compressedOut,
+                PgpLiteralData.Binary,
+                "Code",
+                DateTime.Now,
+                new byte[BUFFER_SIZE]);
+            // Open the input file
+
+            byte[] buf = new byte[BUFFER_SIZE];
+            int len;
+            while ((len = data.Read(buf, 0, buf.Length)) > 0)
+            {
+                literalOut.Write(buf, 0, len);
+            }
+
+            literalOut.Close();
+            literalDataGenerator.Close();
+            compressedOut.Close();
+            compressedDataGenerator.Close();
+            encryptedOut.Close();
+            encryptedDataGenerator.Close();
+
+            if (armor)
+                outputStream.Close();
         }
 
 

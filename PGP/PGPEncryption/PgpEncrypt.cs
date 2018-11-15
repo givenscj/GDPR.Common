@@ -175,6 +175,53 @@ namespace PGPSnippet.PGPEncryption
 
         }
 
+        public void EncryptA(Stream outputStream, Stream unencryptedData, bool armor)
+        {
+
+            if (outputStream == null)
+
+                throw new ArgumentNullException("outputStream", "outputStream is null.");
+
+            if (unencryptedData == null)
+
+                throw new ArgumentNullException("unencryptedData", "unencryptedData is null.");
+
+            if (armor)
+                outputStream = new ArmoredOutputStream(outputStream);
+
+            using (Stream encryptedOut = ChainEncryptedOut(outputStream))
+
+            using (Stream compressedOut = ChainCompressedOut(encryptedOut))
+            {
+
+                using (Stream literalOut = ChainLiteralOut(compressedOut, unencryptedData))
+
+                {
+
+                    WriteOutput(compressedOut, literalOut, unencryptedData);
+
+                }
+
+            }
+
+        }
+
+        private static void WriteOutput(Stream compressedOut,
+            Stream literalOut,
+            Stream inputFile)
+        {
+            inputFile.Position = 0;
+
+            int length = 0;
+
+            byte[] buf = new byte[BufferSize];
+
+            while ((length = inputFile.Read(buf, 0, buf.Length)) > 0)
+            {
+                literalOut.Write(buf, 0, length);
+            }
+        }
+
         private static void WriteOutputAndSign(Stream compressedOut,
 
             Stream literalOut,

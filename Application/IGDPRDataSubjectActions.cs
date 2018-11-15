@@ -1,7 +1,7 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Messages;
 using System;
 using System.Collections.Generic;
-using GDPR.Common.Messages;
 
 namespace GDPR.Common
 {
@@ -13,7 +13,7 @@ namespace GDPR.Common
         bool RecordCreateOut(GDPRSubject subject);
         void AnonymizeRecord(Record r);
         List<Record> GetAllRecords(GDPRSubject search);
-        List<GDPRSubject> SubjectSearch(GDPRSubject search, bool allowNameSearch);
+        List<GDPRSubject> SubjectSearch(GDPRSubject search);
         void RecordNotify(GDPRSubject subject);
         bool RecordDeleteIn(GDPRSubject subject);
         bool RecordDeleteOut(GDPRSubject subject);
