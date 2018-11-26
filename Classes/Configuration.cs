@@ -564,6 +564,12 @@ namespace GDPR.Common
             set { _coreSystemUrl = value; }
         }
 
+        public static Guid CoreApplicationId
+        {
+            get { return _coreApplicationId; }
+            set { _coreApplicationId = value; }
+        }
+
         public static string ConsoleLogLevel
         {
             get { return _consoleLogLevel; }
@@ -1014,6 +1020,7 @@ namespace GDPR.Common
         private static string _noReplyEmailAddress;
 
         private static string _coreSystemUrl;
+        private static Guid _coreApplicationId;
         private static string _tenantSystemUrl;
 
         /* captcha */

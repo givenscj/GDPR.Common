@@ -203,38 +203,32 @@ namespace GDPR.Applications
 
                     var records = GetAllRecords(s);
 
+                    //need to save to a blog storage area if too large...
+                    //GDPRCore.Current.SaveRequestRecords(Request.SubjectRequestApplicationId, records);
+
+                    em = new BaseExportMessage();
+
                     if (records.Count == 0)
                     {
-                        em = new BaseExportMessage();
-                        em.ApplicationId = Request.ApplicationId;
                         em.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
-                        em.SubjectRequestId = Request.SubjectRequestId;
-                        em.Subject = Request.Subject;
                         em.BlobUrl = GDPRCore.Current.Encrypt("http://empty");
-                        Response = em;
-
-                        MessageHelper.SendMessage(em, ctx);
-                        return;
                     }
                     else
                     {
                         var storageLocation = ExportData(records);
-
-                        //need to save to a blog storage area if too large...
-                        core.SaveRequestRecords(Request.SubjectRequestApplicationId, records);
-
-                        //send a export message...
-                        em = new BaseExportMessage();
-                        em.Status = "Export Processed";
-                        em.ApplicationId = Request.ApplicationId;
-                        em.SubjectRequestId = Request.SubjectRequestId;
-                        em.Subject = Request.Subject;
-                        em.BlobUrl = core.Encrypt(storageLocation);
-                        Response = em;
-
-                        MessageHelper.SendMessage(em, ctx);
+                        em.BlobUrl = GDPRCore.Current.Encrypt(storageLocation);                        
                     }
 
+                    em.Status = "Export Processed";
+                    em.ApplicationId = Request.ApplicationId;
+                    em.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
+                    em.SubjectRequestId = Request.SubjectRequestId;
+                    em.Subject = Request.Subject;
+                    em.ProcessorId = Request.ProcessorId;
+                    em.SystemId = Request.SystemId;
+                    Response = em;
+
+                    MessageHelper.SendMessage(em, ctx);
                     return;
             }
         }
