@@ -141,6 +141,7 @@
     <Compile Include="Classes\BaseEntityProperty.cs" />
     <Compile Include="Application\BaseGDPRApplication.cs" />
     <Compile Include="Classes\Configuration.cs" />
+    <Compile Include="Classes\ExportInfo.cs" />
     <Compile Include="Classes\GoogleTranslation.cs" />
     <Compile Include="Classes\HttpHelper.cs" />
     <Compile Include="Classes\ImportSubject.cs" />

@@ -17,9 +17,9 @@ namespace GDPR.Applications
             return "";
         }
 
-        virtual public string ExportData(List<Record> records)
+        virtual public ExportInfo ExportData(List<Record> records)
         {
-            return "";
+            return null;
         }
 
         public List<BaseApplicationPolicy> GetPolicies()

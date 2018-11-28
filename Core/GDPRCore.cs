@@ -63,6 +63,11 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public bool ProcessMessage(BaseGDPRMessage am)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SaveApplicationRequest(Guid subjectRequestApplicationId, string v)
         {
             return;

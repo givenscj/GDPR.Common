@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GDPR.Common.Classes
 {
@@ -16,7 +13,9 @@ namespace GDPR.Common.Classes
         public string LinkUrl { get; set; }
         public string Message { get; set; }
         public bool CanDelete { get; set; }
-
+        [JsonIgnore]
         public bool AnonymizeOnDelete { get; set; }
+        [JsonIgnore]
+        public string AdminLinkUrl { get; set; }
     }
 }

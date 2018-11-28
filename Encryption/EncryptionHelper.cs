@@ -6,6 +6,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 using PGPSnippet.Keys;
+using PGPSnippet.PGPDecryption;
 using PGPSnippet.PGPEncryption;
 using System;
 using System.IO;
@@ -482,6 +483,18 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         internal static string DecryptPGP(string publicKey, string check)
         {
             throw new NotImplementedException();
+        }
+
+        public static string Decrypt(string data, EncryptionContext ctx)
+        {
+            Stream inputStream = Utility.GenerateStreamFromString(data);
+            string passPhrase = ctx.Password;
+            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id);
+            Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
+            //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+            Stream outputStream = new MemoryStream();
+            PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
+            return Utility.StreamToString(outputStream);
         }
     }
 }

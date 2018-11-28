@@ -8,6 +8,7 @@ namespace GDPR.Common.Core
 {
     public interface IGDPRCore
     {
+        bool ProcessMessage(BaseGDPRMessage am);
         bool ProcessApplicationMessage(BaseApplicationMessage am);
         Guid GetSystemId();
         bool IsValidEmail(string email);

@@ -113,7 +113,7 @@ namespace GDPR.Common.Messages
             }
 
             //finish up
-            w.Type = message.GetType().FullName;
+            w.Type = message.GetType().AssemblyQualifiedName;
             w.Object = toSend;
             w.MessageDate = DateTime.Now;
             return w;

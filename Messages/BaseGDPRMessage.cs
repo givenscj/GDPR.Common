@@ -2,6 +2,7 @@
 using GDPR.Common.Enums;
 using System;
 using GDPR.Common.Classes;
+using GDPR.Common.Core;
 
 namespace GDPR.Common.Messages
 {
@@ -31,18 +32,21 @@ namespace GDPR.Common.Messages
 
         public virtual bool Process()
         {
-            return true;
+            return GDPRCore.Current.ProcessMessage(this);
         }
 
         public void CreateSecurityContext()
         {
-            this.Context = new SecurityContext();
-            this.Context.ProcessorId = this.ProcessorId;
-            this.Context.TenantId = this.TenantId;
-            this.Context.ApplicationId = this.ApplicationId;
+            if (this.Context == null)
+            {
+                this.Context = new SecurityContext();
+                this.Context.ProcessorId = this.ProcessorId;
+                this.Context.TenantId = this.TenantId;
+                this.Context.ApplicationId = this.ApplicationId;
 
-            if (this.Subject != null)
-                this.Context.SubjectId = this.Subject.SubjectId;
+                if (this.Subject != null)
+                    this.Context.SubjectId = this.Subject.SubjectId;
+            }
         }
     }
 }

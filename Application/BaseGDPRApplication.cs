@@ -141,12 +141,12 @@ namespace GDPR.Applications
             throw new NotImplementedException();
         }
 
-        public virtual string ExportData(string applicationSubjectId, GDPRSubject s)
+        public virtual ExportInfo ExportData(string applicationSubjectId, GDPRSubject s)
         {
             throw new NotImplementedException();
         }
 
-        public virtual string ExportData(string applicationSubjectId)
+        public virtual ExportInfo ExportData(string applicationSubjectId)
         {
             throw new NotImplementedException();
         }
@@ -176,16 +176,20 @@ namespace GDPR.Applications
             Discover(null);
         }
 
-        public void ProcessRequest(BaseApplicationMessage message)
+        public virtual void ProcessRequest(BaseApplicationMessage message, EncryptionContext ctx)
         {
             Request = message;
             GDPRSubject s = null;
 
-            EncryptionContext ctx = new EncryptionContext();
-            ctx.Encrypt = true;
-            ctx.Path = Utility.GetConfigurationValue("PrivateKeyPath"); // ConfigurationManager.AppSettings["PrivateKeyPath"];
-            ctx.Id = message.ApplicationId.ToString();
-            ctx.Password = Utility.GetConfigurationValue("PrivateKeyPassword");
+            if (ctx == null)
+            {
+                ctx = new EncryptionContext();
+                ctx.Encrypt = true;
+                ctx.Path = Utility.GetConfigurationValue(
+                    "PrivateKeyPath"); // ConfigurationManager.AppSettings["PrivateKeyPath"];
+                ctx.Id = message.ApplicationId.ToString();
+                ctx.Password = Utility.GetConfigurationValue("PrivateKeyPassword");
+            }
 
             if (message.Subject != null)
                 s = new GDPRSubject(message.Subject);
@@ -211,12 +215,15 @@ namespace GDPR.Applications
                     if (records.Count == 0)
                     {
                         em.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
-                        em.BlobUrl = GDPRCore.Current.Encrypt("http://empty");
+
+                        ExportInfo ei = new ExportInfo();
+                        ei.Url = "http://empty";
+                        em.Info = ei;
                     }
                     else
                     {
-                        var storageLocation = ExportData(records);
-                        em.BlobUrl = GDPRCore.Current.Encrypt(storageLocation);                        
+                        ExportInfo storageLocation = ExportData(records);
+                        em.Info = storageLocation;
                     }
 
                     em.Status = "Export Processed";
@@ -493,7 +500,7 @@ namespace GDPR.Applications
             return ret;
         }
 
-        public override string ExportData(List<Record> records)
+        public override ExportInfo ExportData(List<Record> records)
         {
             return base.ExportData(records);
         }
