@@ -13,9 +13,11 @@ namespace GDPR.Util
 {
     public class HttpHelper
     {
+
         HttpWebRequest req;
         System.Net.WebProxy proxy;
 
+        public String downloadLocation = "c:\\temp";
         public String certificateName = "";
         public String certificatePassword = "";
         public String fileName = "";
@@ -397,8 +399,15 @@ namespace GDPR.Util
                 try
                 {
                     fileName = res.Headers["Content-Disposition"].ToString();
+
+                    if (fileName.Contains("inline"))
+                        fileName = "";
+
                     fileName = fileName.Replace("attachment; filename=", "");
-                    fileName = Utility.ParseValue(fileName, "\"", "\"");
+
+                    if (fileName.Contains("\""))
+                        fileName = Utility.ParseValue(fileName, "\"", "\"");
+
                     length = res.ContentLength;
                 }
                 catch (Exception) { }
@@ -417,7 +426,7 @@ namespace GDPR.Util
 
                     // Read from response and write to file
                     Stream strm = res.GetResponseStream();
-                    FileStream fileStream = System.IO.File.Create(@"c:\temp\" + fileName);
+                    FileStream fileStream = System.IO.File.Create($@"{downloadLocation}\{fileName}");
                     while ((bytesRead = strm.Read(buffer, 0, bufferSize)) != 0)
                     {
                         fileStream.Write(buffer, 0, bytesRead);
