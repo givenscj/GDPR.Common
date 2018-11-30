@@ -62,7 +62,6 @@ namespace GDPR.Common.Messages
             string passPhrase = ctx.Password;
             string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
-            //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();
             PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
             return Utility.StreamToString(outputStream);
@@ -71,8 +70,13 @@ namespace GDPR.Common.Messages
         static public string SignAndEncryptMessage(BaseGDPRMessage message, EncryptionContext ctx)
         {
             string msg = Utility.SerializeObject(message, 1);
+            string publicKeyStr = "";
 
-            string publicKeyStr = EncryptionHelper.GetSystemKey();
+            if (ctx.IsApplication)
+                publicKeyStr = EncryptionHelper.GetApplicationKey(message.ApplicationId.ToString(), ctx.Version.ToString());
+            else
+                publicKeyStr = EncryptionHelper.GetSystemKey(message.SystemId.ToString(), ctx.Version.ToString());
+
             string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
 
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
@@ -97,6 +101,7 @@ namespace GDPR.Common.Messages
             w.IsEncrypted = ctx.Encrypt;
             w.IsSystem = message.IsSystem;
             w.KeyVersion = ctx.Version;
+            w.SystemId = message.SystemId.ToString();
 
             if (ctx.Encrypt)
             {

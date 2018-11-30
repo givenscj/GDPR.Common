@@ -183,7 +183,7 @@ namespace GDPR.Applications
 
             if (ctx == null)
             {
-                ctx = EncryptionContext.CreateForApplication(message.ApplicationId);
+                ctx = EncryptionContext.CreateForApplication(message.ApplicationId, message.Version);
             }
 
             if (message.Subject != null)
@@ -502,7 +502,7 @@ namespace GDPR.Applications
 
         public virtual void Discover(DateTime? checkPoint)
         {
-            EncryptionContext ctx = EncryptionContext.CreateForApplication(Guid.Parse(ConfigurationManager.AppSettings["ApplicationId"]));
+            EncryptionContext ctx = EncryptionContext.CreateForApplication(Guid.Parse(ConfigurationManager.AppSettings["ApplicationId"]), int.Parse(ConfigurationManager.AppSettings["ApplicationKeyVersion"]));
 
             try
             {

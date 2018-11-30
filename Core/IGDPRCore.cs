@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Enums;
 using GDPR.Common.Messages;
 using System;
 using System.Collections;
@@ -13,7 +14,8 @@ namespace GDPR.Common.Core
         Guid GetSystemId();
         bool IsValidEmail(string email);
         string Encrypt(string input);
-        void Log(Exception ex, string type);
+        void Log(Exception ex, LogLevel level);
+        void Log(Exception ex, string level);
         Hashtable LoadProperties(Guid entityId);
         void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite);
         void SetSystemOAuth(OAuthContext oAuthContext, string type);
@@ -26,5 +28,7 @@ namespace GDPR.Common.Core
         void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx);
         BaseAddress GeocodeAddress(object p, string address);
         string Decrypt(string value1, int value2);
+        int GetApplicationKeyVersion(Guid applicationId);
+        int GetSystemKeyVersion(Guid systemId);
     }
 }

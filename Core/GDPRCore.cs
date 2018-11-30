@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Enums;
 using GDPR.Common.Messages;
 using GDPR.Common.Storage;
 using System;
@@ -33,9 +34,19 @@ namespace GDPR.Common.Core
             return a;
         }
 
+        public string GetApplicationKey(string applicationId)
+        {
+            return "GDPRISEASY";
+        }
+
         public string GetApplicationKey(string applicationId, int keyVersion)
         {
             return "GDPRISEASY";
+        }
+
+        public int GetApplicationKeyVersion(Guid applicationId)
+        {
+            return -1;
         }
 
         public string GetConfigurationProperty(string name)
@@ -53,6 +64,16 @@ namespace GDPR.Common.Core
             return "GDPRISEASY";
         }
 
+        public string GetSystemKey(string systemId)
+        {
+            return "GDPRISEASY";
+        }
+
+        public int GetSystemKeyVersion(Guid systemId)
+        {
+            return Configuration.SystemKeyVersion;
+        }
+
         public bool IsValidEmail(string email)
         {
             return true;
@@ -64,6 +85,11 @@ namespace GDPR.Common.Core
         }
 
         public void Log(Exception ex, string type)
+        {
+            return;
+        }
+
+        public void Log(Exception ex, LogLevel level)
         {
             return;
         }

@@ -1,4 +1,6 @@
 ﻿using GDPR.Common.Core;
+using GDPR.Common.Enums;
+using GDPR.Common.Exceptions;
 using Microsoft.Azure.KeyVault;
 using Newtonsoft.Json;
 using PayPal.Api;
@@ -50,18 +52,35 @@ namespace GDPR.Common
 
         static public string LoadFromKeyVault(string name)
         {
-            string uri = AzureKeyVaultUrl + "/secrets/" + name;
-            var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-            string keyValue = result.Value;
-            return keyValue;
+            try
+            {
+                string uri = AzureKeyVaultUrl + "/secrets/" + name;
+                var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
+                string keyValue = result.Value;
+                return keyValue;
+            }
+            catch (Exception ex)
+            {
+                //GDPRCore.Current.Log(new GDPRException($"{name} was not found in {AzureKeyVaultUrl}"), LogLevel.Error);
+                return null;
+            }
         }
 
         static public string LoadFromKeyVault(string name, string version)
         {
-            string uri = AzureKeyVaultUrl + "/secrets/" + name + "/" + version;
-            var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-            string keyValue = result.Value;
-            return keyValue;
+            try
+            {
+                string uri = AzureKeyVaultUrl + "/secrets/" + name + "/" + version;
+                var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
+                string keyValue = result.Value;
+                return keyValue;
+            }
+            catch (Exception e)
+            {
+                //GDPRCore.Current.Log(new GDPRException($"{name} was not found in {AzureKeyVaultUrl}"), LogLevel.Error);
+                return null;
+            }
+            
         }
 
         static public string SaveToKeyVault(string name, string value)

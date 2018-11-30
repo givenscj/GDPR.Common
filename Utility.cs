@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using GDPR.Common.Enums;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Newtonsoft.Json;
 using System;
 using System.Configuration;
 using System.Globalization;
@@ -6,8 +8,6 @@ using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using LogLevel = GDPR.Util.Enums.LogLevel;
 using System.Threading.Tasks;
 
 namespace GDPR.Common
@@ -190,7 +190,7 @@ namespace GDPR.Common
             }
         }
 
-        public static void Log(string v, LogLevel information)
+        public static void Log(string v, Enums.LogLevel information)
         {
             return;
         }

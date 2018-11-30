@@ -1,4 +1,5 @@
-﻿using GDPR.Common.Exceptions;
+﻿using GDPR.Common.Core;
+using GDPR.Common.Exceptions;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Crypto;
@@ -248,12 +249,22 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             return File.ReadAllText(@"c:\temp\encrypted_code.txt");
         }
 
-        public static string GetSystemKey()
+        public static string GetSystemKey(string id, string version)
         {
             //send the message to the processor endpoint...
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
-            var result = client.GetAsync("/Home/GetSystemPublicKey");
+            var result = client.GetAsync($"/Home/GetSystemPublicKey?SystemId={id}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public static string GetApplicationKey(string applicationId, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetApplicationPublicKey?ApplicationId={applicationId}&Version={version}");
             string resultContent = result.Result.Content.ReadAsStringAsync().Result;
             return resultContent.Trim();
         }
@@ -264,9 +275,15 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             return File.ReadAllText(filePath);
         }
 
-        public static string Encrypt(string data, string keyPath, string id, string passPhrase, string version)
+        public static string Encrypt(string data, string keyPath, string id, string passPhrase, bool isSystem, string version)
         {
-            string publicKeyStr = GetSystemKey();
+            string publicKeyStr = "";
+
+            if (isSystem)
+                publicKeyStr = GetSystemKey(id, version);
+            else
+                publicKeyStr = GetApplicationKey(id, version);
+
             string privateKeyStr = GetPrivateKey(keyPath, id, version);
 
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
@@ -296,7 +313,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
 
         public static string Encrypt(string data, EncryptionContext ctx)
         {
-            return Encrypt(data, ctx.Path, ctx.Id, ctx.Password, ctx.Version.ToString());
+            return Encrypt(data, ctx.Path, ctx.Id, ctx.Password, !ctx.IsApplication, ctx.Version.ToString());
         }
 
         public static string Encrypt(string data)
@@ -304,6 +321,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             return Encrypt(data, Utility.GetConfigurationValue("PrivateKeyPath"),
                     Utility.GetConfigurationValue("ApplicationId"),
                     Utility.GetConfigurationValue("PrivateKeyPassword"),
+                    true,
                     Utility.GetConfigurationValue("SystemKeyVersion")
                 );
         }

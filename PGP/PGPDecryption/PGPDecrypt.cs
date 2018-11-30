@@ -371,7 +371,7 @@ namespace PGPSnippet.PGPDecryption
                 }
 
                 if (sKey == null)
-                    throw new ArgumentException("Secret key for message not found.");
+                    throw new ArgumentException("Secret key for message not found, wrong public/private key combo?");
 
                 PgpObjectFactory plainFact = null;
 

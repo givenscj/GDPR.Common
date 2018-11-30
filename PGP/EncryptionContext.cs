@@ -32,11 +32,11 @@ namespace GDPR.Common
             else
             {
                 this.Id = msg.ApplicationId;
-                this.Password = GDPRCore.Current.GetApplicationKey(msg.SystemId, msg.KeyVersion);
+                this.Password = GDPRCore.Current.GetApplicationKey(msg.ApplicationId, msg.KeyVersion);
                 this.IsApplication = true;
             }
 
-            this.Path = Configuration.CertKeyPath;
+            this.Path = GetPath();
         }
 
         public static EncryptionContext Default
@@ -45,22 +45,43 @@ namespace GDPR.Common
             {
                 EncryptionContext ctx = new EncryptionContext();
                 ctx.Encrypt = true;
-                ctx.Path = Configuration.GetProperty("PrivateKeyPath").ToString();
-                ctx.Id = Configuration.GetProperty("SystemId").ToString();
-                ctx.Password = Configuration.GetProperty("PrivateKeyPassword").ToString();
+                ctx.Id = Configuration.SystemId.ToString();
+                int version = GDPRCore.Current.GetSystemKeyVersion(Configuration.SystemId);
+                ctx.Version = version;
+                ctx.Password = GDPRCore.Current.GetSystemKey(Configuration.SystemId.ToString(), version);
+                ctx.IsApplication = false;
+                ctx.Path = GetPath();
+                
                 return ctx;
             }
         }
 
         public static EncryptionContext CreateForApplication(Guid applicationId)
         {
+            //get the lastest version...
+            int version = GDPRCore.Current.GetApplicationKeyVersion(applicationId);
+            return CreateForApplication(applicationId, version);
+
+        }
+
+        public static EncryptionContext CreateForApplication(Guid applicationId, int version)
+        {
             EncryptionContext ctx = new EncryptionContext();
-            ctx.Encrypt = true;
-            ctx.Path = Configuration.GetProperty("PrivateKeyPath").ToString();
-            ctx.Id = applicationId.ToString();
-            ctx.Password = Configuration.GetProperty("PrivateKeyPassword").ToString();
             ctx.IsApplication = true;
+            ctx.Id = applicationId.ToString();
+            ctx.Encrypt = true;
+            ctx.Path = GetPath();
+            ctx.Version = version;
+            ctx.Password = GDPRCore.Current.GetApplicationKey(applicationId.ToString(), version);
             return ctx;
+        }
+
+        public static string GetPath()
+        {
+            if (System.Web.HttpContext.Current != null)
+                return System.Web.HttpContext.Current.Server.MapPath(Configuration.CertKeyPath);
+            else
+                return Configuration.CertKeyDirectory + "\\" + Configuration.CertKeyPath;
         }
     }
 
