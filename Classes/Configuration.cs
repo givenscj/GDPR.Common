@@ -48,6 +48,32 @@ namespace GDPR.Common
             }
         }
 
+        static public string LoadFromKeyVault(string name)
+        {
+            string uri = AzureKeyVaultUrl + "/secrets/" + name;
+            var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
+            string keyValue = result.Value;
+            return keyValue;
+        }
+
+        static public string LoadFromKeyVault(string name, string version)
+        {
+            string uri = AzureKeyVaultUrl + "/secrets/" + name + "/" + version;
+            var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
+            string keyValue = result.Value;
+            return keyValue;
+        }
+
+        static public string SaveToKeyVault(string name, string value)
+        {
+            var result = Task.Run(async () =>
+            {
+                return await kv.SetSecretAsync(AzureKeyVaultUrl, name, value);
+            }).Result;
+
+            return result.Id.Replace(Configuration.AzureKeyVaultUrl + "/secrets/" + name + "/", "");
+        }
+
         static public void LoadFromKeyVault()
         {
             PropertyInfo[] props = typeof(Configuration).GetProperties();
@@ -62,10 +88,7 @@ namespace GDPR.Common
 
                         if (val == null || val.ToString() == "")
                         {
-                            string uri = AzureKeyVaultUrl + "/secrets/" + pi.Name;
-                            var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                            string keyValue = result.Value;
-
+                            string keyValue = LoadFromKeyVault(pi.Name);
                             pi.SetValue(null, keyValue);
                         }
                     }
@@ -126,6 +149,10 @@ namespace GDPR.Common
 
                         switch (pi.PropertyType.FullName)
                         {
+                            case "System.Int32":
+                                value = int.Parse(ht[key].ToString());
+                                pi.SetValue(null, value);
+                                break;
                             case "System.Guid":
                                 value = Guid.Parse(ht[key].ToString());
                                 pi.SetValue(null, value);
@@ -338,6 +365,12 @@ namespace GDPR.Common
         {
             get { return _certKeyPath; }
             set { _certKeyPath = value; }
+        }
+
+        public static string CertKeyDirectory
+        {
+            get { return _certKeyDirectory; }
+            set { _certKeyDirectory = value; }
         }
 
         public static string TenantId
@@ -949,6 +982,7 @@ namespace GDPR.Common
         private static string _systemPassword;
         private static string _hashSalt;
         private static string _certKeyPath;
+        private static string _certKeyDirectory;
         private static string _registrationPassword;
 
         private static string _tenantId;

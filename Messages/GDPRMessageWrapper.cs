@@ -6,12 +6,15 @@ namespace GDPR.Common.Messages
     {
         public BaseProcessor Source { get; set; }
         public string ApplicationId { get; set; }
+        public string SystemId { get; set; }
         public string Authentication { get; set; }
         public string Type { get; set; }
         public string Check { get; set; }
         public int Retries { get; set; }
+        public bool IsSystem { get; set; }
         public bool IsError { get; set; }
         public bool IsEncrypted { get; set; }
+        public int KeyVersion { get; set; }
         public bool IsSigned { get; set; }
         public string ErrorMessage { get; set; }
         public string Object { get; set; }

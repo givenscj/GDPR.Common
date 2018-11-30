@@ -18,6 +18,8 @@ namespace GDPR.Common.Core
         void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite);
         void SetSystemOAuth(OAuthContext oAuthContext, string type);
         void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records);
+        string GetSystemKey(string systemId, int keyVersion);
+        string GetApplicationKey(string applicationId, int keyVersion);
         void SaveApplicationRequest(Guid subjectRequestApplicationId, string v);
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);

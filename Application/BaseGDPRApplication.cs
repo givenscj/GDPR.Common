@@ -183,12 +183,7 @@ namespace GDPR.Applications
 
             if (ctx == null)
             {
-                ctx = new EncryptionContext();
-                ctx.Encrypt = true;
-                ctx.Path = Utility.GetConfigurationValue(
-                    "PrivateKeyPath"); // ConfigurationManager.AppSettings["PrivateKeyPath"];
-                ctx.Id = message.ApplicationId.ToString();
-                ctx.Password = Utility.GetConfigurationValue("PrivateKeyPassword");
+                ctx = EncryptionContext.CreateForApplication(message.ApplicationId);
             }
 
             if (message.Subject != null)
@@ -507,11 +502,7 @@ namespace GDPR.Applications
 
         public virtual void Discover(DateTime? checkPoint)
         {
-            EncryptionContext ctx = new EncryptionContext();
-            ctx.Encrypt = true;
-            ctx.Path = ConfigurationManager.AppSettings["PrivateKeyPath"];
-            ctx.Id = ConfigurationManager.AppSettings["ApplicationId"];
-            ctx.Password = ConfigurationManager.AppSettings["PrivateKeyPassword"];
+            EncryptionContext ctx = EncryptionContext.CreateForApplication(Guid.Parse(ConfigurationManager.AppSettings["ApplicationId"]));
 
             try
             {

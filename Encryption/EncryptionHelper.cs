@@ -1,4 +1,5 @@
-﻿using Org.BouncyCastle.Bcpg;
+﻿using GDPR.Common.Exceptions;
+using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
@@ -257,83 +258,54 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             return resultContent.Trim();
         }
 
-        public static string GetPrivateKey(string filePath, string id)
+        public static string GetPrivateKey(string filePath, string id, string version)
         {
-            filePath = string.Format("{0}\\{1}.key", filePath, id);
+            filePath = string.Format("{0}\\{1}_{2}.key", filePath, id, version);
             return File.ReadAllText(filePath);
         }
 
-        public static string Encrypt(string data, string keyPath, string id, string passPhrase)
+        public static string Encrypt(string data, string keyPath, string id, string passPhrase, string version)
         {
             string publicKeyStr = GetSystemKey();
-            string privateKeyStr = GetPrivateKey(keyPath, id);
+            string privateKeyStr = GetPrivateKey(keyPath, id, version);
 
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
-            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);     
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
 
-            PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
-            PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
+            try
+            {
+                PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+                PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
 
-            Stream inputData = Utility.GenerateStreamFromString(data);
-            Stream encryptedMessageStream = new MemoryStream();
+                Stream inputData = Utility.GenerateStreamFromString(data);
+                Stream encryptedMessageStream = new MemoryStream();
 
-            encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
-            
-            string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
-            return encryptedMessage;
+                encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
+
+                string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
+                return encryptedMessage;
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("Checksum mismatch"))
+                    throw new GDPRException("Private Key Password is invalid");
+            }
+
+            return null;
         }
 
         public static string Encrypt(string data, EncryptionContext ctx)
         {
-            return Encrypt(data, ctx.Path, ctx.Id, ctx.Password);
+            return Encrypt(data, ctx.Path, ctx.Id, ctx.Password, ctx.Version.ToString());
         }
 
         public static string Encrypt(string data)
         {
             return Encrypt(data, Utility.GetConfigurationValue("PrivateKeyPath"),
-                Utility.GetConfigurationValue("ApplicationId"),
-                    Utility.GetConfigurationValue("PrivateKeyPassword")
+                    Utility.GetConfigurationValue("ApplicationId"),
+                    Utility.GetConfigurationValue("PrivateKeyPassword"),
+                    Utility.GetConfigurationValue("SystemKeyVersion")
                 );
-        }
-
-        internal static string EncryptPGP(string key, string code)
-        {
-            string filePath = @"c:\temp\code.txt";
-
-            //create temp file...
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-
-            File.AppendAllText(filePath, code);
-
-            //create the PGPKey object
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(File.ReadAllText(@"c:\KeyBase\publickey.txt"));
-            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(File.ReadAllText(@"c:\KeyBase\privatekey.txt"));
-            PgpPrivateKey privKey = PgpEncryptionKeys.ReadPrivateKey(secretKey, "Seattle123");
-
-            EncryptPgpFile(@"c:\temp\code.txt", @"c:\temp\encrypted_code.txt", publicKey, privKey, true, true);
-
-            return File.ReadAllText(@"c:\temp\encrypted_code.txt");
-        }
-
-        internal static string EncryptPGP2(string key, string code)
-        {
-            string filePath = @"c:\temp\code.txt";
-
-            //create temp file...
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-
-            File.AppendAllText(filePath, code);
-
-            //create the PGPKey object
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(File.ReadAllText(@"c:\KeyBase\publickey.txt"));
-            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(File.ReadAllText(@"c:\KeyBase\privatekey.txt"));
-            PgpPrivateKey privKey = PgpEncryptionKeys.ReadPrivateKey(secretKey, "Seattle123");
-
-            SignAndEncryptFile(@"c:\temp\code.txt", @"c:\temp\encrypted_code.txt", true, true, publicKey, privKey);
-
-            return File.ReadAllText(@"c:\temp\encrypted_code.txt");
         }
 
         private static void EncryptFile(Stream outputStream, FileInfo fileInfo, PgpPublicKey encKey, bool armor, bool withIntegrityCheck)
@@ -489,7 +461,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         {
             Stream inputStream = Utility.GenerateStreamFromString(data);
             string passPhrase = ctx.Password;
-            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id);
+            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
             //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();

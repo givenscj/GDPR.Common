@@ -33,6 +33,11 @@ namespace GDPR.Common.Core
             return a;
         }
 
+        public string GetApplicationKey(string applicationId, int keyVersion)
+        {
+            return "GDPRISEASY";
+        }
+
         public string GetConfigurationProperty(string name)
         {
             return "";
@@ -41,6 +46,11 @@ namespace GDPR.Common.Core
         public Guid GetSystemId()
         {
             return Guid.Parse(ConfigurationManager.AppSettings["SystemId"].ToString());
+        }
+
+        public string GetSystemKey(string systemId, int keyVersion)
+        {
+            return "GDPRISEASY";
         }
 
         public bool IsValidEmail(string email)
