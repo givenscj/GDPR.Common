@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GDPR.Common.Classes;
+using System;
 
 namespace GDPR.Common.Exceptions
 {
     public class GDPRException : Exception
     {
+        public SecurityContext SecurityContext { get; set; }
+        public EncryptionContext EncryptionContext { get; set; }
         public string Url { get; set; }
 
         public GDPRException(string message)
