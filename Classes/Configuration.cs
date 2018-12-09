@@ -286,6 +286,10 @@ namespace GDPR.Common
 
                 return _aesKey;
             }
+            set
+            {
+                _aesKey = value;
+            }
         }
 
         public static string StorageAccountKey
@@ -414,12 +418,6 @@ namespace GDPR.Common
         {
             get { return _sqlUsername; }
             set { _sqlUsername = value; }
-        }
-
-        public static string SystemPassword
-        {
-            get { return _systemPassword; }
-            set { _systemPassword = value; }
         }
 
         public static string RegistrationPassword
@@ -998,7 +996,6 @@ namespace GDPR.Common
         private static string _gitHubUrl;
         private static Guid _systemId;
         private static string _externalDns;
-        private static string _systemPassword;
         private static string _hashSalt;
         private static string _certKeyPath;
         private static string _certKeyDirectory;
