@@ -384,6 +384,12 @@ namespace GDPR.Common
             set { _hashSalt = value; }
         }
 
+        public static int HashVersion
+        {
+            get { return _hashVersion; }
+            set { _hashVersion = value; }
+        }
+
         public static string CertKeyPath
         {
             get { return _certKeyPath; }
@@ -997,6 +1003,7 @@ namespace GDPR.Common
         private static Guid _systemId;
         private static string _externalDns;
         private static string _hashSalt;
+        private static int _hashVersion;
         private static string _certKeyPath;
         private static string _certKeyDirectory;
         private static string _registrationPassword;
