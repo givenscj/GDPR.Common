@@ -149,6 +149,7 @@
     <Compile Include="Classes\Validation.cs" />
     <Compile Include="Enums\Authentication.cs" />
     <Compile Include="Enums\LogLevel.cs" />
+    <Compile Include="Enums\SocialPlatformId.cs" />
     <Compile Include="Messages\BaseDiscoverResponseMessage.cs" />
     <Compile Include="Encryption\EncryptionHelper.cs" />
     <Compile Include="Application\GDPRApplicationCore.cs" />

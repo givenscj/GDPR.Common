@@ -17,6 +17,7 @@ namespace GDPR.Common.Classes
         public Guid ApplicationId { get; set; }
         public Guid ProcessorId { get; set; }
         public Guid SubjectId { get; set; }
+        public Guid ParentSubjectId { get; set; }
         public string WebType { get; set; }
         public EncryptionContext Encryption { get; set; }
     }

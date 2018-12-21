@@ -12,10 +12,12 @@ namespace GDPR.Common
         public List<GDPRSubjectSocialIdentity> SocialIdentities { get; set; }
         public List<GDPRSubjectIpAddress> IpAddresses { get; set; }
         public string ApplicationSubjectId { get; set; }
+        public string ProcessorId { get; set; }
         public bool IsLocked { get; set; }
         public DateTime LockedDate { get; set; }
         public Guid SubjectId { get; set; }
         public bool IsMinor { get; set; }
+        public bool IsEmployee { get; set; }
         public DateTime BirthDate { get; set; }
         public string TimeZone { get; set; }
         public string Gender { get; set; }
