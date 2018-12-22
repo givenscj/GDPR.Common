@@ -139,6 +139,11 @@ namespace GDPR.Common
             settings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             settings.NullValueHandling = NullValueHandling.Ignore;
+            settings.Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args) 
+            {
+                Console.WriteLine(args.ErrorContext.Error.Message);
+                args.ErrorContext.Handled = true;
+            };
             return Newtonsoft.Json.JsonConvert.SerializeObject(o, settings);
         }
 

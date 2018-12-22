@@ -56,6 +56,7 @@ namespace GDPR.Common
             this.Phones = subject.Phones;
             this.Identities = subject.Identities;
             this.Addresses = subject.Addresses;
+            this.SocialIdentities = subject.SocialIdentities;
 
         }
     }
