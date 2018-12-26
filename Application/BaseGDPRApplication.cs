@@ -301,18 +301,6 @@ namespace GDPR.Applications
                     DisplayName = "Password", Category = "Security", Name = "Password", Value = "", IsMasked = true,
                     IsSecure = true
                 }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
-                {
-                    DisplayName = "TenantId", Category = "Security", Name = "TenantId", Value = "", IsMasked = true,
-                    IsSecure = true
-                }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
-                {
-                    DisplayName = "TenantDomain", Category = "Security", Name = "TenantDomain", Value = "",
-                    IsMasked = true, IsSecure = true
-                }, overwrite);
         }
 
         public void CreateOAuthProperties(bool overwrite)
@@ -484,7 +472,7 @@ namespace GDPR.Applications
 
             if (ep != null)
             {
-                if (ep.IsSecure && ep.SystemPinVersion.HasValue)
+                if (ep.IsSecure && ep.SystemPinVersion.HasValue && ep.IsEncrypted)
                     ret = GDPRCore.Current.Decrypt(ep.Value, ep.SystemPinVersion.Value);
                 else
                     ret = ep.Value;

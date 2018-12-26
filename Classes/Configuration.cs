@@ -307,6 +307,29 @@ namespace GDPR.Common
             }
         }
 
+        public static string StorageService
+        {
+            get
+            {
+                return _storageService;
+            }
+            set
+            {
+                _storageService = value;
+            }
+        }
+
+        public static string StorageRegion
+        {
+            get
+            {
+                return _storageRegion;
+            }
+            set
+            {
+                _storageRegion = value;
+            }
+        }
 
         public static string EventHubConnectionStringWithPath
         {
@@ -576,6 +599,12 @@ namespace GDPR.Common
         {
             get { return _twilioNumber; }
             set { _twilioNumber = value; }
+        }
+
+        public static string EmailTemplatesDirectory
+        {
+            get { return _emailTemplatesDirectory; }
+            set { _emailTemplatesDirectory = value; }
         }
 
         public static string MailServer
@@ -989,6 +1018,8 @@ namespace GDPR.Common
         private static string _aesKey;
         private static string _eventHubConnectionStringWithPath;
         private static string _storageAccountKey;
+        private static string _storageService;
+        private static string _storageRegion;
         private static string _azureKeyVaultUrl;
 
         private static string _eventLogLevel;
@@ -1069,6 +1100,7 @@ namespace GDPR.Common
         private static string _twilioNumber;
 
         /* mail settings */
+        private static string _emailTemplatesDirectory;
         private static string _mailServer;
         private static string _mailServerPort;
         private static string _useSecurity;

@@ -24,6 +24,7 @@ namespace GDPR.Common.Classes
         public string ClientSecret { get; set; }
         public string Resource { get; set; }
         public string Code { get; set; }
+        public string State { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
         public string RedirectUri { get; set; }

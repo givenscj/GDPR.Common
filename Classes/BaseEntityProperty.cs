@@ -12,6 +12,7 @@
         virtual public System.DateTime ModifyDate { get; set; }
         virtual public System.DateTime CreateDate { get; set; }
         virtual public bool IsSecure { get; set; }
+        virtual public bool IsEncrypted { get; set; }
         virtual public bool IsMasked { get; set; }
         virtual public string Description { get; set; }
         virtual public string DisplayName { get; set; }

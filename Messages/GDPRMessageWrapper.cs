@@ -19,6 +19,7 @@ namespace GDPR.Common.Messages
         public string ErrorMessage { get; set; }
         public string Object { get; set; }
         public string OffSet { get; set; }
+        public string QueueUrl { get; set; }
         public DateTime MessageDate { get; set; }
         public DateTime OriginalMessageDate { get; set; }
     }
