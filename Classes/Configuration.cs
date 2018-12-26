@@ -307,6 +307,21 @@ namespace GDPR.Common
             }
         }
 
+        public static string StorageAccountSecret
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_storageAccountSecret))
+                {
+                    string uri = KeyVaultStorageAccountKeyUri;
+                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
+                    _storageAccountSecret = result.Value;
+
+                }
+                return _storageAccountSecret;
+            }
+        }
+
         public static string StorageService
         {
             get
@@ -1018,6 +1033,7 @@ namespace GDPR.Common
         private static string _aesKey;
         private static string _eventHubConnectionStringWithPath;
         private static string _storageAccountKey;
+        private static string _storageAccountSecret;
         private static string _storageService;
         private static string _storageRegion;
         private static string _azureKeyVaultUrl;

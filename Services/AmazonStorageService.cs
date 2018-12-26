@@ -1,5 +1,8 @@
 ﻿using Amazon;
+using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using GDPR.Common.Core;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -60,25 +63,45 @@ namespace GDPR.Common.Services
         public string UploadBlob(string containerName, byte[] fileBytes, string name)
         {
             RegionEndpoint endpoint = RegionEndpoint.GetBySystemName(Configuration.StorageRegion);
-            AmazonS3Client s3Client = new AmazonS3Client(endpoint);
-            var fileTransferUtility = new TransferUtility(s3Client);
-            fileTransferUtility.Upload(name, containerName);
 
-            /*
+            var options = new CredentialProfileOptions
+            {
+                AccessKey = Configuration.StorageAccountKey,
+                SecretKey = Configuration.StorageAccountSecret
+            };
+
+            CredentialProfile profile = new Amazon.Runtime.CredentialManagement.CredentialProfile("basic_profile", options);
+            profile.Region = endpoint;
+
+            var netSDKFile = new NetSDKCredentialsFile();
+            netSDKFile.RegisterProfile(profile);
+
+            AWSCredentials awsCredentials = profile.GetAWSCredentials(profile.CredentialProfileStore);
+            AmazonS3Client s3Client = new AmazonS3Client(awsCredentials, endpoint);
+            
+            var fileTransferUtility = new TransferUtility(s3Client);
+
+            var bucket = s3Client.PutBucket(new PutBucketRequest { BucketName = containerName });
+            s3Client.DeleteObject(new DeleteObjectRequest() { BucketName = containerName, Key = name });
+
+            MemoryStream ms = new MemoryStream();
+            ms.Read(fileBytes, 0, fileBytes.Length);
+           
             var fileTransferUtilityRequest = new TransferUtilityUploadRequest
             {
                 BucketName = containerName,
-                FilePath = filePath,
+                InputStream = ms,
+                ContentType = "application/octet-stream",
                 StorageClass = S3StorageClass.StandardInfrequentAccess,
                 PartSize = 6291456, // 6 MB.
-                Key = keyName,
+                Key = name,
                 CannedACL = S3CannedACL.PublicRead
             };
-            fileTransferUtilityRequest.Metadata.Add("param1", "Value1");
-            fileTransferUtilityRequest.Metadata.Add("param2", "Value2");
+
+            //fileTransferUtilityRequest.Metadata.Add("param1", "Value1");
+            //fileTransferUtilityRequest.Metadata.Add("param2", "Value2");
 
             fileTransferUtility.Upload(fileTransferUtilityRequest);
-            */
 
             return "";
         }

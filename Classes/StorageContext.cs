@@ -11,6 +11,7 @@ namespace GDPR.Common.Classes
         public string Type { get; set; }
         public string Url { get; set; }
         public string Key { get; set; }
+        public string Secret { get; set; }
 
         static StorageContext()
         {
