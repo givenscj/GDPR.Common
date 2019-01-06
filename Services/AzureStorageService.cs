@@ -1,4 +1,6 @@
-﻿using GDPR.Common.Core;
+﻿using GDPR.Common.Classes;
+using GDPR.Common.Core;
+using GDPR.Common.Exceptions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -70,12 +72,7 @@ namespace GDPR.Common.Services
             return null;
         }
 
-        public string UploadBlob(FileInfo fi)
-        {
-            return UploadBlob(GDPRCore.Current.GetSystemId().ToString(), File.ReadAllBytes(fi.FullName), fi.Name);
-        }
-
-        public string UploadBlob(string containerName, byte[] fileBytes, string name)
+        public string UploadBlob(BlobContext ctx)
         {
             CloudStorageAccount storageAccount = GetStorageAccount();
 
@@ -89,14 +86,14 @@ namespace GDPR.Common.Services
                     try
                     {
                         // Create a container called 'quickstartblobs' and append a GUID value to it to make the name unique. 
-                        cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
+                        cloudBlobContainer = cloudBlobClient.GetContainerReference(ctx.TenantId.ToString());
 
                         if (!cloudBlobContainer.Exists())
                             cloudBlobContainer.Create();
                     }
                     catch (Exception ex)
                     {
-                        GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Warning);
+                        throw new GDPRException($"Container creation failed: {ex.Message}");
                     }
 
                     // Set the permissions so the blobs are public. 
@@ -107,8 +104,21 @@ namespace GDPR.Common.Services
 
                     cloudBlobContainer.SetPermissions(permissions);
 
+                    byte[] data = ctx.Data;
+                    string name = ctx.Name;
+
+                    if (ctx.FileInfo != null)
+                    {
+                        name = ctx.Name;
+                        data = File.ReadAllBytes(ctx.FileInfo.FullName);
+                    }
+
+                    //tenantid is the container...
+                    //name should be in format of tenantid\applicationid\subjectrequestid.blah...
+                    name = string.Format("{0}\\{1}.{2}", ctx.ApplicationId, ctx.ApplicationRequestId, ctx.Type);
+
                     CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(name);
-                    cloudBlockBlob.UploadFromByteArray(fileBytes, 0, fileBytes.Length);
+                    cloudBlockBlob.UploadFromByteArray(data, 0, data.Length);
                     return cloudBlockBlob.Uri.ToString();
                 }
                 else
@@ -117,22 +127,51 @@ namespace GDPR.Common.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new GDPRException($"Blob upload failed: {ex.Message}");
             }
 
             return null;
         }
 
-        public string UploadBlob(Guid applicationId, string fileName)
+        public string UploadBlob(FileInfo fi)
         {
-            FileInfo fi = new FileInfo(fileName);
+            BlobContext ctx = new BlobContext();
+            ctx.FileInfo = fi;
+            ctx.TenantId = GDPRCore.Current.GetSystemId();
+            ctx.Type = "General";
+            return UploadBlob(ctx);
+        }
 
-            return UploadBlob(applicationId.ToString(), File.ReadAllBytes(fi.FullName), fi.Name);
+        public string UploadBlob(string containerName, byte[] fileBytes, string name)
+        {
+            BlobContext ctx = new BlobContext();
+            ctx.Data = fileBytes;
+            ctx.Name = name;
+            ctx.TenantId = GDPRCore.Current.GetSystemId();
+            ctx.Type = containerName;
+            return UploadBlob(ctx);
+        }
+
+        public string UploadExportBlob(Guid applicationId, string fileName)
+        {
+            Guid TenantId = GDPRCore.Current.GetApplicationTenantId(applicationId);
+
+            FileInfo fi = new FileInfo(fileName);
+            BlobContext ctx = new BlobContext();
+            ctx.ApplicationId = applicationId;
+            ctx.TenantId = TenantId;
+            ctx.Type = "Export";
+            return UploadBlob(ctx);
         }
 
         public string UploadBlob(string name, byte[] data)
         {
-            return UploadBlob(GDPRCore.Current.GetSystemId().ToString(), data, name);
+            BlobContext ctx = new BlobContext();
+            ctx.Data = data;
+            ctx.Name = name;
+            ctx.TenantId = GDPRCore.Current.GetSystemId();
+            ctx.Type = "General";
+            return UploadBlob(ctx);
         }
     }
 }

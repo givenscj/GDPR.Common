@@ -305,6 +305,10 @@ namespace GDPR.Common
                 }
                 return _storageAccountKey;
             }
+            set
+            {
+                _storageAccountKey = value;
+            }
         }
 
         public static string StorageAccountSecret
@@ -319,6 +323,10 @@ namespace GDPR.Common
 
                 }
                 return _storageAccountSecret;
+            }
+            set
+            {
+                _storageAccountSecret = value;
             }
         }
 
@@ -796,6 +804,24 @@ namespace GDPR.Common
             set { _paypalClientSecret = value; }
         }
 
+        public static string DripClientId
+        {
+            get { return _dripClientId; }
+            set { _dripClientId = value; }
+        }
+
+        public static string LionDeskClientId
+        {
+            get { return _lionDeskClientId; }
+            set { _lionDeskClientId = value; }
+        }
+
+        public static string LionDeskClientSecret
+        {
+            get { return _lionDeskClientSecret; }
+            set { _lionDeskClientSecret = value; }
+        }
+
         public static string PaypalMode
         {
             get { return _paypalMode; }
@@ -860,6 +886,60 @@ namespace GDPR.Common
         {
             get { return twitterClientSecret; }
             set { twitterClientSecret = value; }
+        }
+
+        public static string ConstantContactClientId
+        {
+            get { return constantContactClientId; }
+            set { constantContactClientId = value; }
+        }
+
+        public static string ConstantContactClientSecret
+        {
+            get { return constantContactClientSecret; }
+            set { constantContactClientSecret = value; }
+        }
+
+        public static string ConstantContactRedirect
+        {
+            get { return _constantContactRedirect; }
+            set { _constantContactRedirect = value; }
+        }
+
+        public static string DropboxClientId
+        {
+            get { return dropboxClientId; }
+            set { dropboxClientId = value; }
+        }
+
+        public static string DropboxClientSecret
+        {
+            get { return dropboxClientSecret; }
+            set { dropboxClientSecret = value; }
+        }
+
+        public static string DropboxRedirect
+        {
+            get { return _dropboxRedirect; }
+            set { _dropboxRedirect = value; }
+        }
+
+        public static string DocusignClientId
+        {
+            get { return docusignClientId; }
+            set { docusignClientId = value; }
+        }
+
+        public static string DocusignClientSecret
+        {
+            get { return docusignClientSecret; }
+            set { docusignClientSecret = value; }
+        }
+
+        public static string DocusignRedirect
+        {
+            get { return _docusignRedirect; }
+            set { _docusignRedirect = value; }
         }
 
         public static string FacebookClientId
@@ -1153,12 +1233,24 @@ namespace GDPR.Common
         private static string githubRedirect = CoreSystemUrl + "/Home/GitHubAuthorize";
         private static string instagramRedirect = CoreSystemUrl + "/Home/InstagramAuthorize";
         private static string salesForceRedirect = CoreSystemUrl + "/Home/SalesForceAuthorize";
+        private static string _constantContactRedirect = CoreSystemUrl + "/Home/ConstantContactAuthorize";
+        private static string _dropboxRedirect = CoreSystemUrl + "/Home/DropboxAuthorize";
+        private static string _docusignRedirect = CoreSystemUrl + "/Home/DocusignAuthorize";
 
         private static string liveClientId;
         private static string liveClientSecret;
 
         private static string twitterClientId;
         private static string twitterClientSecret;
+
+        private static string dropboxClientId;
+        private static string dropboxClientSecret;
+
+        private static string docusignClientId;
+        private static string docusignClientSecret;
+
+        private static string constantContactClientId;
+        private static string constantContactClientSecret;
 
         private static string facebookClientId;
         private static string facebookClientSecret;
@@ -1171,6 +1263,11 @@ namespace GDPR.Common
 
         private static string instagramClientId;
         private static string instagramClientSecret;
+
+        private static string _dripClientId;
+
+        private static string _lionDeskClientId;
+        private static string _lionDeskClientSecret;
 
         private static string amazonClientId;
         private static string amazonClientSecretId;

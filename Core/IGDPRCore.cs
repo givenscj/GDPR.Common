@@ -22,6 +22,7 @@ namespace GDPR.Common.Core
         void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records);
         string GetSystemKey(string systemId, int keyVersion);
         string GetApplicationKey(string applicationId, int keyVersion);
+        Guid GetApplicationTenantId(Guid applicationId);
         void SaveApplicationRequest(Guid subjectRequestApplicationId, string v);
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);

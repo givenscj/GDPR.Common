@@ -271,8 +271,8 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
 
         public static string GetPrivateKey(string filePath, string id, string version)
         {
-            filePath = string.Format("{0}\\{1}_{2}.key", filePath, id, version);
-            return File.ReadAllText(filePath);
+            string path = string.Format("{0}\\{1}_{2}.key", filePath, id, version);
+            return File.ReadAllText(path);
         }
 
         public static string Encrypt(string data, string keyPath, string id, string passPhrase, bool isSystem, string version)

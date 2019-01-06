@@ -1,7 +1,6 @@
 ﻿using GDPR.Common.Classes;
 using GDPR.Common.Enums;
 using GDPR.Common.Messages;
-using GDPR.Common.Storage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,6 +46,11 @@ namespace GDPR.Common.Core
         public int GetApplicationKeyVersion(Guid applicationId)
         {
             return -1;
+        }
+
+        public Guid GetApplicationTenantId(Guid applicationId)
+        {
+            throw new NotImplementedException();
         }
 
         public string GetConfigurationProperty(string name)
@@ -140,8 +144,7 @@ namespace GDPR.Common.Core
 
         public string UploadBlob(Guid applicationId, string filePath)
         {
-            AzureStorage s = new AzureStorage();
-            return s.UploadBlob(applicationId, filePath);
+            return StorageContext.Current.UploadExportBlob(applicationId, filePath);
         }
     }
 }

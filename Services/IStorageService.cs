@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Blob;
+﻿using GDPR.Common.Classes;
 using System;
 using System.IO;
 
@@ -8,9 +8,10 @@ namespace GDPR.Common.Services
     {
         object StartLogBlob(Guid applicationId);
         string UploadBlob(FileInfo fi);
+        string UploadBlob(BlobContext ctx);
         string UploadBlob(string name, byte[] data);
-        string UploadBlob(Guid applicationId, string fileName);
-        string UploadBlob(string containerName, byte[] fileBytes, string name);
+        string UploadExportBlob(Guid applicationId, string fileName);
+        string UploadBlob(string containerName, byte[] data, string name);
         string Url { get; set; }
         string Key { get; set; }
     }

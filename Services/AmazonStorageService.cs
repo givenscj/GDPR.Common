@@ -4,8 +4,8 @@ using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using GDPR.Common.Classes;
 using GDPR.Common.Core;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.IO;
 
@@ -54,7 +54,7 @@ namespace GDPR.Common.Services
             return UploadBlob(GDPRCore.Current.GetSystemId().ToString(), data, name);
         }
 
-        public string UploadBlob(Guid applicationId, string fileName)
+        public string UploadExportBlob(Guid applicationId, string fileName)
         {
             FileInfo fi = new FileInfo(fileName);
             return UploadBlob(applicationId.ToString(), File.ReadAllBytes(fi.FullName), fi.Name);
@@ -104,6 +104,11 @@ namespace GDPR.Common.Services
             fileTransferUtility.Upload(fileTransferUtilityRequest);
 
             return "";
+        }
+
+        public string UploadBlob(BlobContext ctx)
+        {
+            throw new NotImplementedException();
         }
     }
 }

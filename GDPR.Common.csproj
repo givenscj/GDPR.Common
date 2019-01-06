@@ -157,6 +157,7 @@
     <Compile Include="Application\BaseApplication.cs" />
     <Compile Include="Classes\BaseEntityProperty.cs" />
     <Compile Include="Application\BaseGDPRApplication.cs" />
+    <Compile Include="Classes\BlobContext.cs" />
     <Compile Include="Classes\Configuration.cs" />
     <Compile Include="Classes\ExportInfo.cs" />
     <Compile Include="Classes\GoogleTranslation.cs" />
@@ -210,8 +211,6 @@
     <Compile Include="Services\AmazonStorageService.cs" />
     <Compile Include="Services\AzureStorageService.cs" />
     <Compile Include="Services\IStorageService.cs" />
-    <Compile Include="Storage\AzureStorage.cs" />
-    <Compile Include="Storage\Storage.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +219,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\GDPR.Application\packages\AWSSDK.S3.3.3.31.5\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Storage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\GDPR.SDK\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\GDPR.SDK\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
