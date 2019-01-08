@@ -34,6 +34,8 @@ namespace GDPR.Applications
 
         //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
         protected string _version;
+        protected string _shortName;
+        protected string _longName;
         protected IGDPRCore core;
 
         protected BaseApplicationMessage _request;
@@ -60,6 +62,22 @@ namespace GDPR.Applications
             get
             {
                 return this._version;
+            }
+        }
+
+        public string ShortName
+        {
+            get
+            {
+                return this._shortName;
+            }
+        }
+
+        public string LongName
+        {
+            get
+            {
+                return this._longName;
             }
         }
 
