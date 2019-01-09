@@ -159,6 +159,7 @@ namespace GDPR.Common.Services
             FileInfo fi = new FileInfo(fileName);
             BlobContext ctx = new BlobContext();
             ctx.ApplicationId = applicationId;
+            ctx.FileInfo = fi;
             ctx.TenantId = TenantId;
             ctx.Type = "Export";
             return UploadBlob(ctx);
