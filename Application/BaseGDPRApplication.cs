@@ -32,6 +32,8 @@ namespace GDPR.Applications
 
         protected bool _supportsAnonymization;
 
+        protected bool _allowUnverifiedRecords;
+
         //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
         protected string _version;
         protected string _shortName;
@@ -42,6 +44,8 @@ namespace GDPR.Applications
         protected BaseApplicationMessage _response;
 
         public EncryptionContext ctx { get; set; }
+
+        public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
 
         public bool SupportsGDPRUpdate { get { return this._supportsGDPRUpdate; } }
         public bool SupportsGDPRHold { get { return this._supportsGDPRHold; } }
