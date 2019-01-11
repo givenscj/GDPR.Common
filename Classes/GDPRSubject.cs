@@ -29,6 +29,8 @@ namespace GDPR.Common
         public bool ConsentGiven { get; set; }
         public DateTime ConsentDate { get; set; }
         public string ConsentMessage { get; set; }
+        public string DefaultEmail { get; set; }
+        public string DefaultPhone { get; set; }
         public System.Collections.Hashtable Attributes { get; set; }
         
         public GDPRSubject()

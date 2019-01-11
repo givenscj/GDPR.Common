@@ -116,7 +116,7 @@ namespace GDPR.Util
 
         public string DoPost(string url, string postData, string cookies)
         {
-            ASCIIEncoding encoding = new ASCIIEncoding();
+            UTF8Encoding encoding = new UTF8Encoding();
             byte[] data = encoding.GetBytes(postData);
 
             return DoPost(url, data, cookies);

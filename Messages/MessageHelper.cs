@@ -11,6 +11,8 @@ using Org.BouncyCastle.Bcpg.OpenPgp;
 using PGPSnippet.Keys;
 using PGPSnippet.PGPDecryption;
 using PGPSnippet.PGPEncryption;
+using Newtonsoft.Json;
+using GDPR.Common.Exceptions;
 
 namespace GDPR.Common.Messages
 {
@@ -112,7 +114,7 @@ namespace GDPR.Common.Messages
             //BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
             //w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
-            string toSend = "";
+            string toSend = JsonConvert.SerializeObject(message);
 
             if (ctx.Encrypt)
             {
@@ -123,6 +125,12 @@ namespace GDPR.Common.Messages
             w.Type = message.GetType().AssemblyQualifiedName;
             w.Object = toSend;
             w.MessageDate = DateTime.Now;
+
+            //throw message if message is not encrypted...
+            if (!ctx.Encrypt)
+            {
+                GDPRCore.Current.Log(new GDPRException("Message is not encrypted"), Enums.LogLevel.Error);
+            }
             return w;
         }
 
