@@ -27,6 +27,8 @@ namespace GDPR.Applications
         protected bool _supportsGDPRHold;
         protected bool _supportsGDPRInsert;
 
+        protected bool _supportsRecords;
+
         protected bool _manualApprovalOnly;
         protected bool _manualDataExportOnly;
 
@@ -60,6 +62,8 @@ namespace GDPR.Applications
         public bool SupportsIpAddressSearch { get { return this._supportsIpAddressSearch; } }
 
         public bool SupportsAnonymization { get { return this._supportsAnonymization; } }
+
+        public bool SupportsRecords { get { return this._supportsRecords; } }
 
         public string Version
         {
@@ -481,6 +485,16 @@ namespace GDPR.Applications
         public override void SetProperty(string name, string value)
         {
             base.SetProperty(name, value);
+        }
+
+        public string GetProperty(string name, string defaultValue)
+        {
+            string val = GetProperty(name);
+
+            if (string.IsNullOrEmpty(val))
+                return defaultValue;
+
+            return val;
         }
 
         override public string GetProperty(string name)

@@ -95,9 +95,8 @@
       <HintPath>..\GDPR.Application\packages\WindowsAzure.Storage.9.3.2\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.Application\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\GDPR.Application\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
       <HintPath>..\GDPR.Application\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
@@ -170,6 +169,7 @@
     <Compile Include="Enums\Authentication.cs" />
     <Compile Include="Enums\LogLevel.cs" />
     <Compile Include="Enums\SocialPlatformId.cs" />
+    <Compile Include="Exceptions\GDPRExportTimeoutException.cs" />
     <Compile Include="Messages\BaseDiscoverResponseMessage.cs" />
     <Compile Include="Encryption\EncryptionHelper.cs" />
     <Compile Include="Application\GDPRApplicationCore.cs" />

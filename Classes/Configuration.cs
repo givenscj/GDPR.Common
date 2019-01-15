@@ -1038,6 +1038,24 @@ namespace GDPR.Common
             set { auth0ClientSecret = value; }
         }
 
+        public static string YammerClientId
+        {
+            get { return yammerClientId; }
+            set { yammerClientId = value; }
+        }
+
+        public static string YammerClientSecret
+        {
+            get { return yammerClientSecret; }
+            set { yammerClientSecret = value; }
+        }
+
+        public static string YammerRedirect
+        {
+            get { return _yammerRedirect; }
+            set { _yammerRedirect = value; }
+        }
+
         public static Guid SystemId
         {
             get { return _systemId; }
@@ -1085,9 +1103,6 @@ namespace GDPR.Common
             get { return _systemKeyVersion; }
             set { _systemKeyVersion = value; }
         }
-
-
-        
 
         public static string EventLogLevel
         {
@@ -1236,6 +1251,7 @@ namespace GDPR.Common
         private static string _constantContactRedirect = CoreSystemUrl + "/Home/ConstantContactAuthorize";
         private static string _dropboxRedirect = CoreSystemUrl + "/Home/DropboxAuthorize";
         private static string _docusignRedirect = CoreSystemUrl + "/Home/DocusignAuthorize";
+        private static string _yammerRedirect = CoreSystemUrl + "/Home/YammerAuthorize";
 
         private static string liveClientId;
         private static string liveClientSecret;
@@ -1281,6 +1297,9 @@ namespace GDPR.Common
 
         private static string auth0ClientId = "";
         private static string auth0ClientSecret = "";
-        
+
+        private static string yammerClientId = "";
+        private static string yammerClientSecret = "";
+
     }
 }
