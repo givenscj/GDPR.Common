@@ -17,7 +17,7 @@
         virtual public string Description { get; set; }
         virtual public string DisplayName { get; set; }
         virtual public string Type { get; set; }
-        virtual public int? SystemPinVersion { get; set; }
+        virtual public int SystemPinVersion { get; set; }
         virtual public string Category { get; set; }
     }
 }
