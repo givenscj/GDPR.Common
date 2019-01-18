@@ -215,6 +215,11 @@ namespace GDPR.Applications
             if (message.Subject != null)
                 s = new GDPRSubject(message.Subject);
 
+            string action = message.GetType().Name;
+
+            if (action == "BaseAppplicationName")
+                action = message.Type;
+
             switch (message.GetType().Name)
             {
                 case "DiscoverMessage":

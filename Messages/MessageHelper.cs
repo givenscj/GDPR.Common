@@ -1,18 +1,17 @@
-﻿using Microsoft.ServiceBus.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Net.Http;
-using System.Text;
-using GDPR.Common.Core;
-using System.IO;
+﻿using GDPR.Common.Core;
 using GDPR.Common.Encryption;
+using GDPR.Common.Exceptions;
+using Microsoft.ServiceBus.Messaging;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using PGPSnippet.Keys;
 using PGPSnippet.PGPDecryption;
 using PGPSnippet.PGPEncryption;
-using Newtonsoft.Json;
-using GDPR.Common.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Text;
 
 namespace GDPR.Common.Messages
 {
@@ -22,12 +21,35 @@ namespace GDPR.Common.Messages
 
         static public bool ValidateMessage(GDPRMessageWrapper message)
         {
-            //download the application public key
-            string applicationPublicKey = message.Source.ApiEndPoint + "/GetApplicationPublicKey?applicationid=" + message.ApplicationId;
-            string systemPublicKey = message.Source.ApiEndPoint + "/GetSystemPublicKey";
+            HttpHelper hh = new HttpHelper();
 
+            //testing...
+            message.Source.ApiEndPoint = "www.thegdprregistry.com";
+
+            //ignore SSL
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+            //download the application public key
+            string applicationPublicKeyUrl = "https://" + message.Source.ApiEndPoint + "/Home/GetApplicationPublicKey?applicationid=" + message.ApplicationId + "&version=" + message.KeyVersion;
+            string systemPublicKeyUrl = "https://" + message.Source.ApiEndPoint + "/Home/GetSystemPublicKey?version=" + message.KeyVersion;
+
+            string decryptKey = "";
+            
+            EncryptionContext ctx = null;
+
+            if (message.IsSystem)
+            {
+                decryptKey = hh.DoGet(systemPublicKeyUrl, "");
+                ctx = EncryptionContext.Default;
+            }
+            else
+            {
+                decryptKey = hh.DoGet(applicationPublicKeyUrl, "");
+                ctx = EncryptionContext.CreateForApplication(Guid.Parse(message.ApplicationId), message.KeyVersion);
+            }
+            
             //message
-            string check = Encryption.EncryptionHelper.DecryptPGP(systemPublicKey, message.Check);
+            string check = Encryption.EncryptionHelper.DecryptPGP(message.Check, ctx);
 
             //check signer...
             bool validSigner = true;
@@ -35,7 +57,7 @@ namespace GDPR.Common.Messages
             if (check == "GDPRISEASY")
                 return true;
 
-            return true;
+            return false;
         }
 
         static public void SendMessage(BaseGDPRMessage msg, EncryptionContext ctx)
