@@ -1,6 +1,4 @@
 ﻿using GDPR.Common.Core;
-using GDPR.Common.Enums;
-using GDPR.Common.Exceptions;
 using Microsoft.Azure.KeyVault;
 using Newtonsoft.Json;
 using PayPal.Api;
@@ -34,7 +32,7 @@ namespace GDPR.Common
                     {
                         object val = pi.GetValue(null);
 
-                        if (val != null || val.ToString() != "")
+                        if (val != null && val.ToString() != "")
                         {
                             var result = Task.Run(async () =>
                             {
@@ -44,7 +42,7 @@ namespace GDPR.Common
                     }
                     catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -54,7 +52,11 @@ namespace GDPR.Common
         {
             try
             {
-                string uri = AzureKeyVaultUrl + "/secrets/" + name;
+                string vaultUrl = AzureKeyVaultUrl;
+                if (vaultUrl.EndsWith("/"))
+                    vaultUrl = vaultUrl.Substring(0, vaultUrl.Length - 1);
+
+                string uri = vaultUrl + "/secrets/" + name;
                 var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
                 string keyValue = result.Value;
                 return keyValue;
@@ -89,6 +91,8 @@ namespace GDPR.Common
             {
                 return await kv.SetSecretAsync(AzureKeyVaultUrl, name, value);
             }).Result;
+
+            SetProperty(name, value);
 
             return result.Id.Replace(Configuration.AzureKeyVaultUrl + "/secrets/" + name + "/", "");
         }
@@ -154,6 +158,41 @@ namespace GDPR.Common
             return null;
         }
 
+        private static void SetProperty(string name, string value)
+        {
+            PropertyInfo prop = typeof(Configuration).GetProperty(name);
+
+            SetProperty(prop, value);
+        }
+
+        private static void SetProperty(PropertyInfo pi, string inValue)
+        {
+            try
+            {
+                object value;
+
+                switch (pi.PropertyType.FullName)
+                {
+                    case "System.Int32":
+                        value = int.Parse(inValue);
+                        pi.SetValue(null, value);
+                        break;
+                    case "System.Guid":
+                        value = Guid.Parse(inValue);
+                        pi.SetValue(null, value);
+                        break;
+                    case "System.String":
+                        value = inValue;
+                        pi.SetValue(null, value);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public static void LoadConfiguration(Hashtable ht)
         {
             PropertyInfo[] props = typeof(Configuration).GetProperties();
@@ -164,24 +203,7 @@ namespace GDPR.Common
                 {
                     if (pi.Name.Equals(key, StringComparison.OrdinalIgnoreCase))
                     {
-                        object value;
-
-                        switch (pi.PropertyType.FullName)
-                        {
-                            case "System.Int32":
-                                value = int.Parse(ht[key].ToString());
-                                pi.SetValue(null, value);
-                                break;
-                            case "System.Guid":
-                                value = Guid.Parse(ht[key].ToString());
-                                pi.SetValue(null, value);
-                                break;
-                            case "System.String":
-                                value = ht[key].ToString();
-                                pi.SetValue(null, value);
-                                break;
-                        }
-                        
+                        SetProperty(pi, ht[key].ToString());
                     }
                 }
             }
@@ -226,9 +248,17 @@ namespace GDPR.Common
                     config.Add("requestRetries", "1");
                     config.Add("connectionTimeout", "360000");
                     ConfigManager.GetConfigWithDefaults(config);
-                    // Use OAuthTokenCredential to request an access token from PayPal
-                    var accessToken = new OAuthTokenCredential(config).GetAccessToken();
-                    _apiContext = new APIContext(accessToken);
+
+                    try
+                    {
+                        // Use OAuthTokenCredential to request an access token from PayPal
+                        var accessToken = new OAuthTokenCredential(config).GetAccessToken();
+                        _apiContext = new APIContext(accessToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
 
                 return _apiContext;
@@ -245,31 +275,10 @@ namespace GDPR.Common
             {
                 if (string.IsNullOrEmpty(_gdprSqlConnectionString))
                 {
-                    string uri = KeyVaultGdprsqlConnectionStringUri;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _gdprSqlConnectionString = result.Value;
+                    _gdprSqlConnectionString = LoadFromKeyVault("GDPRSQLConnectionString");
                 }
 
                 return _gdprSqlConnectionString;
-            }
-        }
-
-        public static string TranslateSQLConnectionString
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_translateSqlConnectionString))
-                {
-                    string uri = KeyVaultTranslateSqlConnectionStringUri;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _translateSqlConnectionString = result.Value;
-                }
-
-                return _translateSqlConnectionString;
-            }
-            set
-            {
-                _translateSqlConnectionString = value;
             }
         }
 
@@ -279,9 +288,7 @@ namespace GDPR.Common
             {
                 if (string.IsNullOrEmpty(_aesKey))
                 {
-                    string uri = AesKeyUri;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _aesKey = result.Value;
+                    _aesKey = LoadFromKeyVault("AesKey");
                 }
 
                 return _aesKey;
@@ -298,10 +305,7 @@ namespace GDPR.Common
             {
                 if (string.IsNullOrEmpty(_storageAccountKey))
                 {
-                    string uri = KeyVaultStorageAccountKeyUri;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _storageAccountKey = result.Value;
-
+                    _storageAccountKey = LoadFromKeyVault("StorageAccountKey");
                 }
                 return _storageAccountKey;
             }
@@ -317,10 +321,7 @@ namespace GDPR.Common
             {
                 if (string.IsNullOrEmpty(_storageAccountSecret))
                 {
-                    string uri = KeyVaultStorageAccountKeyUri;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _storageAccountSecret = result.Value;
-
+                    _storageAccountSecret = LoadFromKeyVault("StorageAccountSecret");
                 }
                 return _storageAccountSecret;
             }
@@ -360,14 +361,48 @@ namespace GDPR.Common
             {
                 if (string.IsNullOrEmpty(_eventHubConnectionStringWithPath))
                 {
-                    string uri = KeyVaultEventHubConnectionStringUri;
                     string eventHubName = EventHubName;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _eventHubConnectionStringWithPath = result.Value + ";EntityPath=" + eventHubName;
+                    _eventHubConnectionStringWithPath = LoadFromKeyVault("EventHubConnectionStringWithPath") + ";EntityPath=" + eventHubName; ;
                 }
 
                 return _eventHubConnectionStringWithPath;
             }
+        }
+
+        public static void Export(string filePath, Hashtable ht)
+        {
+            FileInfo fi = new FileInfo(filePath);
+
+            if (fi.Exists)
+                fi.Delete();
+
+            Configuration c = new Configuration();
+            PropertyInfo[] props = c.GetType().GetProperties();
+
+            var obj = new Dictionary<string, object>();
+
+            foreach (PropertyInfo pi in props)
+            {
+                try
+                {
+                    object val = pi.GetValue(null);
+                    string name = pi.Name;
+
+                    if (ht.ContainsKey(name))
+                        val = ht[name];
+                    
+                    obj.Add(pi.Name, val);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.Formatting = Formatting.Indented;
+            string json = JsonConvert.SerializeObject(obj, settings);
+            File.AppendAllText(filePath, json);
         }
 
         public static string EventHubConnectionString
@@ -376,9 +411,7 @@ namespace GDPR.Common
             {
                 if (string.IsNullOrEmpty(_eventHubConnectionString))
                 {
-                    string uri = KeyVaultEventHubConnectionStringUri;
-                    var result = Task.Run(async () => { return await kv.GetSecretAsync(uri); }).Result;
-                    _eventHubConnectionString = result.Value;
+                    _eventHubConnectionString = LoadFromKeyVault("EventHubConnectionString");
                 }
 
                 return _eventHubConnectionString;
@@ -701,37 +734,7 @@ namespace GDPR.Common
             get { return graphVersion; }
             set { graphVersion = value; }
         }
-
-        public static string KeyVaultGdprsqlConnectionStringUri
-        {
-            get { return keyVaultGDPRSQLConnectionStringUri; }
-            set { keyVaultGDPRSQLConnectionStringUri = value; }
-        }
-
-        public static string KeyVaultTranslateSqlConnectionStringUri
-        {
-            get { return keyVaultTranslateSQLConnectionStringUri; }
-            set { keyVaultTranslateSQLConnectionStringUri = value; }
-        }
-
-        public static string KeyVaultEventHubConnectionStringUri
-        {
-            get { return keyVaultEventHubConnectionStringUri; }
-            set { keyVaultEventHubConnectionStringUri = value; }
-        }
-
-        public static string KeyVaultStorageAccountKeyUri
-        {
-            get { return keyVaultStorageAccountKeyUri; }
-            set { keyVaultStorageAccountKeyUri = value; }
-        }
-
-        public static string AesKeyUri
-        {
-            get { return aesKeyUri; }
-            set { aesKeyUri = value; }
-        }
-
+        
         public static string TenantSystemUrl
         {
             get { return _tenantSystemUrl; }
@@ -1122,7 +1125,6 @@ namespace GDPR.Common
         static readonly KeyVaultClient kv;
         private static string _gdprSqlConnectionString;
         private static string _crmSqlConnectionString;
-        private static string _translateSqlConnectionString;
         private static string _eventHubConnectionString;
         private static string _mode;
         private static string _aesKey;
@@ -1187,12 +1189,6 @@ namespace GDPR.Common
         private static string graphResourceId = "https://graph.microsoft.com";
         private static string graphUrl = "https://graph.microsoft.com";
         private static string graphVersion = "v1.0";
-
-        private static string keyVaultGDPRSQLConnectionStringUri;
-        private static string keyVaultTranslateSQLConnectionStringUri;
-        private static string keyVaultEventHubConnectionStringUri;
-        private static string keyVaultStorageAccountKeyUri;
-        private static string aesKeyUri;
 
         private static int _systemKeyVersion = 1;
 

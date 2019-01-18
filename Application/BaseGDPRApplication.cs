@@ -459,6 +459,18 @@ namespace GDPR.Applications
             AddProperty(
                 new BaseEntityProperty
                 {
+                    EntityPropertyId = Guid.NewGuid(),
+                    Name = "Department",
+                    Value = "",
+                    Type = "textbox",
+                    Category = "Billing",
+                    IsMasked = false,
+                    IsSecure = false
+                }, overwrite);
+
+            AddProperty(
+                new BaseEntityProperty
+                {
                     EntityPropertyId = Guid.NewGuid(), Name = "DataIsSold", Value = "true", Type = "checkbox",
                     Category = "Compliance", IsMasked = false, IsSecure = false
                 }, overwrite);
