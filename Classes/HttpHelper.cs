@@ -9,7 +9,7 @@ using System.Text;
 using GDPR.Common;
 using GDPR.Util.GDPRVerificationService;
 
-namespace GDPR.Util
+namespace GDPR.Common
 {
     public class HttpHelper
     {

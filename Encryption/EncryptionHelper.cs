@@ -483,21 +483,30 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 outputStream.Close();
         }
 
-        internal static string DecryptPGP(string publicKey, string check)
+        public static string DecryptPGP(string publicKey, string check)
         {
-            throw new NotImplementedException();
+            EncryptionContext ctx = EncryptionContext.Default;
+            return DecryptPGP(check, ctx);
         }
 
-        public static string Decrypt(string data, EncryptionContext ctx)
+        public static string DecryptPGP(string data, EncryptionContext ctx)
         {
-            Stream inputStream = Utility.GenerateStreamFromString(data);
-            string passPhrase = ctx.Password;
-            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
-            Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
-            //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
-            Stream outputStream = new MemoryStream();
-            PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
-            return Utility.StreamToString(outputStream);
+            try
+            {
+                Stream inputStream = Utility.GenerateStreamFromString(data);
+                string passPhrase = ctx.Password;
+                string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
+                Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
+                //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+                Stream outputStream = new MemoryStream();
+                PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
+                return Utility.StreamToString(outputStream);
+            }
+            catch (Exception ex)
+            {
+                GDPRCore.Current.Log(ex, Enums.LogLevel.Error);
+                return null;
+            }
         }
     }
 }

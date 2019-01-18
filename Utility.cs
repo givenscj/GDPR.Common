@@ -242,5 +242,17 @@ namespace GDPR.Common
         {
             return;
         }
+
+        public static string GetPath()
+        {
+            string path = "";
+
+            if (System.Web.HttpContext.Current != null)
+                path = System.Web.HttpContext.Current.Server.MapPath(Configuration.CertKeyPath);
+            else
+                path = Configuration.CertKeyDirectory + "\\" + Configuration.CertKeyPath;
+
+            return path;
+        }
     }
 }

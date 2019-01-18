@@ -523,6 +523,12 @@ namespace GDPR.Common
             set { _region = value; }
         }
 
+        public static string ApplicationPassword
+        {
+            get { return _applicationPassword; }
+            set { _applicationPassword = value; }
+        }
+
         public static string SqlPassword
         {
             get { return _sqlPassword; }
@@ -1159,6 +1165,7 @@ namespace GDPR.Common
         private static string _sqlServerName;
         private static string _sqlUsername;
         private static string _sqlPassword;
+        private static string _applicationPassword;
         private static string _databaseName;
 
         private static string _keyVaultName;
