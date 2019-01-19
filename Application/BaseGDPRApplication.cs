@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 
 namespace GDPR.Applications
 {
@@ -66,6 +67,8 @@ namespace GDPR.Applications
         public bool SupportsAnonymization { get { return this._supportsAnonymization; } }
 
         public bool SupportsRecords { get { return this._supportsRecords; } }
+
+        public bool ZipAndLock { get; set; }
 
         public string Version
         {
@@ -631,7 +634,51 @@ namespace GDPR.Applications
 
         public override ExportInfo ExportData(List<Record> records)
         {
-            return base.ExportData(records);
+            if (ZipAndLock)
+            {
+                string code = Utility.GenerateCode();
+                return ExportData(records, true, code);
+            }
+            else
+                return ExportData(records, false, null);
+        }
+
+        public virtual ExportInfo ExportData(List<Record> records, bool zipAndLock, string password)
+        {
+            ExportInfo ei = new ExportInfo();
+
+            string json = Common.Utility.SerializeObject(records, 1);
+
+            //save local...
+            string fileName = string.Format(@"c:\temp\{0}_{1}_{2}.json", this.GetType().Name, this.ApplicationId, this.Request.SubjectRequestId);
+            System.IO.File.AppendAllText(fileName, json);
+
+            if (zipAndLock)
+            {
+                BaseApplicationMessage msg = (BaseApplicationMessage)this.Request;
+                msg.Code = password;
+
+                MemoryStream memStreamIn = new MemoryStream();
+                System.IO.Stream fs = new System.IO.FileStream(fileName, FileMode.Open);
+                MemoryStream zipped = Utility.CreateToMemoryStream(fs, this.Request.SubjectRequestId.ToString(), password);
+                fs.Close();
+
+                fileName = string.Format(@"c:\temp\{0}_{1}_{2}_encrypted.zip", this.GetType().Name, this.ApplicationId, this.Request.SubjectRequestId);
+                byte[] byteArrayOut = zipped.ToArray();
+                File.WriteAllBytes(fileName, byteArrayOut);
+
+                ei.FileType = "zip";
+            }
+            else
+            {
+                ei.FileType = "json";
+            }
+
+            //upload to azure...
+            string url = StorageContext.Current.UploadExportBlob(this.ApplicationId, fileName);
+            ei.Url = url;
+
+            return ei;
         }
 
         public virtual void Discover(DateTime? checkPoint)

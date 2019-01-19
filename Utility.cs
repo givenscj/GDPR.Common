@@ -1,4 +1,7 @@
-﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+﻿using GDPR.Common.Classes;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -243,6 +246,42 @@ namespace GDPR.Common
             return;
         }
 
+        public static MemoryStream CreateToMemoryStream(System.IO.Stream memStreamIn, string zipEntryName, string password)
+        {
+
+            MemoryStream outputMemStream = new MemoryStream();
+            ZipOutputStream zipStream = new ZipOutputStream(outputMemStream);
+
+            zipStream.SetLevel(3); //0-9, 9 being the highest level of compression
+            zipStream.Password = password;
+
+            ZipEntry newEntry = new ZipEntry(zipEntryName);
+            newEntry.DateTime = DateTime.Now;
+
+            zipStream.PutNextEntry(newEntry);
+
+            StreamUtils.Copy(memStreamIn, zipStream, new byte[4096]);
+            zipStream.CloseEntry();
+
+            zipStream.IsStreamOwner = false;    // False stops the Close also Closing the underlying stream.
+            zipStream.Close();          // Must finish the ZipOutputStream before using outputMemStream.
+
+            outputMemStream.Position = 0;
+            return outputMemStream;
+
+            // Alternative outputs:
+            // ToArray is the cleaner and easiest to use correctly with the penalty of duplicating allocated memory.
+
+            /*
+            byte[] byteArrayOut = outputMemStream.ToArray();
+
+            // GetBuffer returns a raw buffer raw and so you need to account for the true length yourself.
+            byte[] byteArrayOut = outputMemStream.GetBuffer();
+            long len = outputMemStream.Length;
+            */
+        }
+
+
         public static string GetPath()
         {
             string path = "";
@@ -253,6 +292,32 @@ namespace GDPR.Common
                 path = Configuration.CertKeyDirectory + "\\" + Configuration.CertKeyPath;
 
             return path;
+        }
+
+        public static string GenerateCode()
+        {
+            CaptchaImage ci = new CaptchaImage();
+            return ci.Text;
+        }
+
+        public static string GenerateCode(int chars, bool numbersOnly)
+        {
+            string code = "";
+            Random r = new Random();
+
+            if (numbersOnly)
+            {
+                while (code.Length < chars)
+                {
+                    code += r.Next(9).ToString();
+                }
+            }
+            else
+            {
+                code = GenerateCode();
+            }
+
+            return code;
         }
     }
 }
