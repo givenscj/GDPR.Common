@@ -278,13 +278,26 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         public static string Encrypt(string data, string keyPath, string id, string passPhrase, bool isSystem, string version)
         {
             string publicKeyStr = "";
+            string privateKeyStr = "";
 
             if (isSystem)
+            {
+                //encrypt key
                 publicKeyStr = GetSystemKey(id, version);
+
+                //signing key is system...
+                privateKeyStr = GetPrivateKey(keyPath, GDPRCore.Current.GetSystemId().ToString(), version);
+                passPhrase = EncryptionContext.Default.Password;
+            }
             else
+            {
+                //encrypt key
                 publicKeyStr = GetApplicationKey(id, version);
 
-            string privateKeyStr = GetPrivateKey(keyPath, id, version);
+                //signing key is system..
+                privateKeyStr = GetPrivateKey(keyPath, GDPRCore.Current.GetSystemId().ToString(), version);
+                passPhrase = EncryptionContext.Default.Password;
+            }
 
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);

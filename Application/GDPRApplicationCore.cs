@@ -7,7 +7,7 @@ namespace GDPR.Applications
 {
     public abstract class GDPRApplicationCore
     {
-        virtual public void SetProperty(string name, string value)
+        virtual public void SetProperty(string name, string value, bool isHidden)
         {
             //to be done via platform...
         }

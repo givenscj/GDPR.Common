@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 
 namespace GDPR.Applications
 {
@@ -19,6 +20,7 @@ namespace GDPR.Applications
         protected bool _supportsIdentitySearch;
         protected bool _supportsSocialSearch;
         protected bool _supportsIpAddressSearch;
+        protected bool _supportsBioidentitySearch;
 
         protected bool _enableNameSearch;
         protected bool _enablePhoneFormatsSearch;
@@ -58,12 +60,15 @@ namespace GDPR.Applications
         public bool SupportsPhoneSearch { get { return this._supportsPhoneSearch; } }
         public bool SupportsAddressSearch { get { return this._supportsAddressSearch; } }
         public bool SupportsIdentitySearch { get { return this._supportsIdentitySearch; } }
+        public bool SupportsBioidentitySearch { get { return this._supportsBioidentitySearch; } }
         public bool SupportsSocialSearch { get { return this._supportsSocialSearch; } }
         public bool SupportsIpAddressSearch { get { return this._supportsIpAddressSearch; } }
 
         public bool SupportsAnonymization { get { return this._supportsAnonymization; } }
 
         public bool SupportsRecords { get { return this._supportsRecords; } }
+
+        public bool ZipAndLock { get; set; }
 
         public string Version
         {
@@ -323,15 +328,106 @@ namespace GDPR.Applications
             AddProperty(
                 new BaseEntityProperty
                 {
-                    DisplayName = "Username", Category = "Security", Name = "Username", Value = "", IsMasked = false,
+                    DisplayName = "Username", Category = "Security",
+                    Type = "textbox", Name = "Username", Value = "", IsMasked = false,
                     IsSecure = true
                 }, overwrite);
             AddProperty(
                 new BaseEntityProperty
                 {
-                    DisplayName = "Password", Category = "Security", Name = "Password", Value = "", IsMasked = true,
+                    DisplayName = "Password", Category = "Security",
+                    Type = "textbox", Name = "Password", Value = "", IsMasked = true,
                     IsSecure = true
                 }, overwrite);
+        }
+
+        public void CreateRequestProperties(bool overwrite)
+        {
+            /*
+            this._supportsAddressSearch = true;
+            this._supportsEmailSearch = true;
+            this._supportsIdentitySearch = true;
+            this._supportsPhoneSearch = true;
+            this._supportsPersonalSearch = true;
+            this._supportsSocialSearch = true;
+            */
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsAddressSearch",
+                     Category = "Search",
+                     Name = "SupportsAddressSearch",
+                     Value = "",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsEmailSearch",
+                     Category = "Search",
+                     Name = "SupportsEmailSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsIdentitySearch",
+                     Category = "Search",
+                     Name = "SupportsIdentitySearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsBioidentitySearch",
+                     Category = "Search",
+                     Name = "SupportsBioidentitySearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsPhoneSearch",
+                     Category = "Search",
+                     Name = "SupportsPhoneSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsSocialSearch",
+                     Category = "Search",
+                     Name = "SupportsSocialSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     DisplayName = "SupportsPersonalSearch",
+                     Category = "Search",
+                     Name = "SupportsPersonalSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
         }
 
         public void CreateOAuthProperties(bool overwrite)
@@ -499,9 +595,9 @@ namespace GDPR.Applications
                 }, overwrite);
         }
 
-        public override void SetProperty(string name, string value)
+        public override void SetProperty(string name, string value, bool isHidden)
         {
-            base.SetProperty(name, value);
+            base.SetProperty(name, value, isHidden);
         }
 
         public string GetProperty(string name, string defaultValue)
@@ -525,8 +621,8 @@ namespace GDPR.Applications
 
             if (ep != null)
             {
-                if (ep.IsSecure && ep.SystemPinVersion.HasValue && ep.IsEncrypted)
-                    ret = GDPRCore.Current.Decrypt(ep.Value, ep.SystemPinVersion.Value);
+                if (ep.IsSecure && ep.IsEncrypted)
+                    ret = GDPRCore.Current.Decrypt(ep.Value, ep.SystemPinVersion);
                 else
                     ret = ep.Value;
 
@@ -538,7 +634,51 @@ namespace GDPR.Applications
 
         public override ExportInfo ExportData(List<Record> records)
         {
-            return base.ExportData(records);
+            if (ZipAndLock)
+            {
+                string code = Utility.GenerateCode();
+                return ExportData(records, true, code);
+            }
+            else
+                return ExportData(records, false, null);
+        }
+
+        public virtual ExportInfo ExportData(List<Record> records, bool zipAndLock, string password)
+        {
+            ExportInfo ei = new ExportInfo();
+
+            string json = Common.Utility.SerializeObject(records, 1);
+
+            //save local...
+            string fileName = string.Format(@"c:\temp\{0}_{1}_{2}.json", this.GetType().Name, this.ApplicationId, this.Request.SubjectRequestId);
+            System.IO.File.AppendAllText(fileName, json);
+
+            if (zipAndLock)
+            {
+                BaseApplicationMessage msg = (BaseApplicationMessage)this.Request;
+                msg.Code = password;
+
+                MemoryStream memStreamIn = new MemoryStream();
+                System.IO.Stream fs = new System.IO.FileStream(fileName, FileMode.Open);
+                MemoryStream zipped = Utility.CreateToMemoryStream(fs, this.Request.SubjectRequestId.ToString(), password);
+                fs.Close();
+
+                fileName = string.Format(@"c:\temp\{0}_{1}_{2}_encrypted.zip", this.GetType().Name, this.ApplicationId, this.Request.SubjectRequestId);
+                byte[] byteArrayOut = zipped.ToArray();
+                File.WriteAllBytes(fileName, byteArrayOut);
+
+                ei.FileType = "zip";
+            }
+            else
+            {
+                ei.FileType = "json";
+            }
+
+            //upload to azure...
+            string url = StorageContext.Current.UploadExportBlob(this.ApplicationId, fileName);
+            ei.Url = url;
+
+            return ei;
         }
 
         public virtual void Discover(DateTime? checkPoint)
