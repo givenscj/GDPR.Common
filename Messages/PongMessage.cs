@@ -4,7 +4,7 @@
     {
         public override bool Process()
         {
-            return base.Process();
+            return true;
         }
     }
 }
