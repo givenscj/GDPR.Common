@@ -58,7 +58,9 @@ namespace GDPR.Common
                         }
 
                         GDPRCore.Current.Log(string.Format("Message received.  Partition: '{0}', Data: '{1}'", context.Lease.PartitionId, data));
-                        GDPRCore.Current.ProcessRequest(w);
+
+                        //start a new thread to process the request...
+                        await Task.Run(() => GDPRCore.Current.ProcessRequest(w));
 
                         //hopefully the are serialized...
                         checkPoint = lastMessageDate;
