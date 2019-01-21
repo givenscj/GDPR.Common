@@ -32,6 +32,7 @@ namespace GDPR.Common.Core
         void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx);
         BaseAddress GeocodeAddress(object p, string address);
         string Decrypt(string value1, int value2);
+        void Log(SecurityContext context, Exception ex, LogLevel error);
         int GetApplicationKeyVersion(Guid applicationId);
         int GetSystemKeyVersion(Guid systemId);
         DateTime GetOffset(string hubName, string partitionId);
@@ -40,5 +41,6 @@ namespace GDPR.Common.Core
         void SaveApplicationRequest(Guid subjectRequestId, Guid applicationId, string status, string errorMessage);
         void SaveApplicationRequest(BaseApplicationMessage am, string v);
         void SendMessage(GDPRMessageWrapper msg);
+        void ErrorSubjectRequest(Exception ex, BaseGDPRMessage baseGDPRMessage);
     }
 }
