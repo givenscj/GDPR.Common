@@ -128,11 +128,6 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
-        public void Log(SecurityContext context, Exception ex, LogLevel error)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool ProcessApplicationMessage(BaseApplicationMessage am)
         {
             throw new NotImplementedException();
