@@ -331,6 +331,54 @@ namespace GDPR.Common
             }
         }
 
+        public static bool EnableEncryption
+        {
+            get
+            {
+                return _enableEncryption;
+            }
+            set
+            {
+                _enableEncryption = value;
+            }
+        }
+
+        public static string SearchServiceName
+        {
+            get
+            {
+                return _searchServiceName;
+            }
+            set
+            {
+                _searchServiceName = value;
+            }
+        }
+
+        public static string SearchService
+        {
+            get
+            {
+                return _searchService;
+            }
+            set
+            {
+                _searchService = value;
+            }
+        }
+
+        public static string SearchKey
+        {
+            get
+            {
+                return _searchKey;
+            }
+            set
+            {
+                _searchKey = value;
+            }
+        }
+
         public static string StorageService
         {
             get
@@ -1077,6 +1125,12 @@ namespace GDPR.Common
             set { _applicationId = value; }
         }
 
+        public static string Applications
+        {
+            get { return _applications; }
+            set { _applications = value; }
+        }
+
         public static string AzureUsername
         {
             get { return _azureUsername; }
@@ -1130,7 +1184,6 @@ namespace GDPR.Common
         static Hashtable _settings;
         static readonly KeyVaultClient kv;
         private static string _gdprSqlConnectionString;
-        private static string _crmSqlConnectionString;
         private static string _eventHubConnectionString;
         private static string _mode;
         private static string _aesKey;
@@ -1138,6 +1191,10 @@ namespace GDPR.Common
         private static string _storageAccountKey;
         private static string _storageAccountSecret;
         private static string _storageService;
+        private static string _searchService;
+        private static string _searchServiceName;
+        private static string _searchKey;
+        private static bool _enableEncryption;
         private static string _storageRegion;
         private static string _azureKeyVaultUrl;
 
@@ -1145,6 +1202,7 @@ namespace GDPR.Common
         private static string _consoleLogLevel;
         
         private static string _applicationId;
+        private static string _applications;
 
         private static string _azureClientId;
         private static string _azureClientSecret;

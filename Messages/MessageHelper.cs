@@ -121,6 +121,8 @@ namespace GDPR.Common.Messages
 
         static public GDPRMessageWrapper CreateWrapper(BaseGDPRMessage message, EncryptionContext ctx)
         {
+            ctx.Encrypt = Configuration.EnableEncryption;
+
             GDPRMessageWrapper w = new GDPRMessageWrapper();
             w.IsEncrypted = ctx.Encrypt;
             w.IsSystem = message.IsSystem;

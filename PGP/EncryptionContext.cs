@@ -43,12 +43,14 @@ namespace GDPR.Common
         {
             get
             {
+                string systemId = GDPRCore.Current.GetSystemId().ToString();
+
                 EncryptionContext ctx = new EncryptionContext();
-                ctx.Encrypt = true;
-                ctx.Id = Configuration.SystemId.ToString();
-                int version = GDPRCore.Current.GetSystemKeyVersion(Configuration.SystemId);
+                ctx.Encrypt = Configuration.EnableEncryption;
+                ctx.Id = systemId;
+                int version = GDPRCore.Current.GetSystemKeyVersion(Guid.Parse(systemId));
                 ctx.Version = version;
-                ctx.Password = GDPRCore.Current.GetSystemKey(Configuration.SystemId.ToString(), version);
+                ctx.Password = GDPRCore.Current.GetSystemKey(systemId, version);
                 ctx.IsApplication = false;
                 ctx.Path = Utility.GetPath();
                 
@@ -69,7 +71,7 @@ namespace GDPR.Common
             EncryptionContext ctx = new EncryptionContext();
             ctx.IsApplication = true;
             ctx.Id = applicationId.ToString();
-            ctx.Encrypt = true;
+            ctx.Encrypt = Configuration.EnableEncryption;
             ctx.Path = Utility.GetPath();
             ctx.Version = version;
             ctx.Password = GDPRCore.Current.GetApplicationKey(applicationId.ToString(), version);
