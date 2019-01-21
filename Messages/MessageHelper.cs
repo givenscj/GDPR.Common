@@ -200,10 +200,19 @@ namespace GDPR.Common.Messages
         {
             GDPRMessageWrapper message = CreateWrapper(inMsg, ctx);
 
-            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
+            SendMessage(message, connectionString);
+        }
 
+        static public void SendMessage(GDPRMessageWrapper message, string connectionString)
+        {
+            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
             eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+        }
+
+        static public void SendMessage(GDPRMessageWrapper message)
+        {
+            SendMessage(message, Configuration.EventHubConnectionString);
         }
 
         static public void SendMessageViaQueue(GDPRMessageWrapper message, string connectionString)

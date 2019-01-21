@@ -280,7 +280,7 @@ namespace GDPR.Common.Core
 
         public void SendMessage(GDPRMessageWrapper msg)
         {
-            throw new NotImplementedException();
+            MessageHelper.SendMessage(msg);            
         }
 
         public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
