@@ -1125,6 +1125,12 @@ namespace GDPR.Common
             set { _applicationId = value; }
         }
 
+        public static string Applications
+        {
+            get { return _applications; }
+            set { _applications = value; }
+        }
+
         public static string AzureUsername
         {
             get { return _azureUsername; }
@@ -1196,6 +1202,7 @@ namespace GDPR.Common
         private static string _consoleLogLevel;
         
         private static string _applicationId;
+        private static string _applications;
 
         private static string _azureClientId;
         private static string _azureClientSecret;
