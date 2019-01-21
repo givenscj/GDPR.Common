@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Core;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -9,6 +10,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +56,23 @@ namespace GDPR.Common
                 return copy;
             }
             return token;
+        }
+
+        public static void LoadAssemblies(string dirPath)
+        {
+            DirectoryInfo di = new DirectoryInfo(dirPath);
+
+            foreach(FileInfo fi in di.GetFiles("*.dll"))
+            {
+                try
+                {
+                    Assembly.Load(fi.FullName);
+                }
+                catch (Exception ex)
+                {
+                    GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Error);
+                }
+            }
         }
 
         public static bool IsEmpty(JToken token)

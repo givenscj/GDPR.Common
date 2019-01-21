@@ -771,6 +771,12 @@ namespace GDPR.Common
             set { _consoleLogLevel = value; }
         }
 
+        public static string AppStubPath
+        {
+            get { return _appStubPath; }
+            set { _appStubPath = value; }
+        }
+
         public static string GraphResourceId
         {
             get { return graphResourceId; }
@@ -1200,7 +1206,8 @@ namespace GDPR.Common
 
         private static string _eventLogLevel;
         private static string _consoleLogLevel;
-        
+        private static string _appStubPath;
+
         private static string _applicationId;
         private static string _applications;
 
