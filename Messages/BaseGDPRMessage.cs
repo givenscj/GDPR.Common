@@ -1,10 +1,10 @@
-﻿using GDPR.Common.Data;
-using GDPR.Common.Enums;
-using System;
+﻿using GDPR.Applications;
 using GDPR.Common.Classes;
 using GDPR.Common.Core;
-using GDPR.Applications;
+using GDPR.Common.Data;
+using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
+using System;
 
 namespace GDPR.Common.Messages
 {
@@ -40,29 +40,42 @@ namespace GDPR.Common.Messages
             { 
                 CreateSecurityContext();
 
+                ApplicationClass = Configuration.ApplicationMap[this.ApplicationId.ToString().ToLower()].ToString();
+
                 //initalize the Application stub
-                Type pType = System.Type.GetType(ApplicationClass);
-                Instance = (BaseGDPRApplication)Activator.CreateInstance(pType);
+                
+                Type pType = Utility.LoadType(ApplicationClass); 
 
-                //need to set the application id BEFORE init to get the proper properties
-                Instance.ApplicationId = this.ApplicationId;
-                Instance.Init();
+                if (pType != null)
+                {
+                    Instance = (BaseGDPRApplication)Activator.CreateInstance(pType);
 
-                //authorize the app for this request processing...
-                Instance.Authorize();
+                    //need to set the application id BEFORE init to get the proper properties
+                    Instance.ApplicationId = this.ApplicationId;
+                    Instance.Init();
 
-                EncryptionContext ctx = EncryptionContext.CreateForApplication(this.ApplicationId);
-                this.Context.Encryption = ctx;
+                    //authorize the app for this request processing...
+                    Instance.Authorize();
 
-                //fire the request
-                Instance.ProcessRequest((BaseApplicationMessage)this, ctx);
+                    EncryptionContext ctx = EncryptionContext.CreateForApplication(this.ApplicationId);
+                    this.Context.Encryption = ctx;
 
-                return true;
+                    //fire the request
+                    if (this is BaseGDPRMessage)
+                        Instance.ProcessRequest((BaseGDPRMessage)this, ctx);
+
+                    if (this is BaseApplicationMessage)
+                        Instance.ProcessRequest((BaseApplicationMessage)this, ctx);
+
+                    return true;
+                }
+                else
+                    throw new GDPRException($"Application Class {ApplicationClass} was not found");
+
             }
             catch (Exception ex)
             {
                 GDPRCore.Current.ErrorSubjectRequest(ex, this);
-                throw new GDPRException("Application is not active", this.Context);
             }
 
             return false;

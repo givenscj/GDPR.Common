@@ -141,6 +141,16 @@ namespace GDPR.Common
 
             //SaveToKeyVault();
             //LoadFromKeyVault();
+
+            //Load application map...
+            Configuration.ApplicationMap = new Hashtable();
+            string[] apps = Configuration.Applications.Split('|');
+
+            foreach(string app in apps)
+            {
+                string[] data = app.Split('_');
+                Configuration.ApplicationMap.Add(data[0].ToLower(), data[1]);
+            }
         }
 
         public static object GetProperty(string name)
@@ -232,6 +242,8 @@ namespace GDPR.Common
 
             return ht;
         }
+
+        static public Hashtable ApplicationMap { get; set; }
 
         private static APIContext _apiContext;
 

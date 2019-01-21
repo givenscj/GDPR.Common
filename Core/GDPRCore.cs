@@ -33,7 +33,7 @@ namespace GDPR.Common.Core
 
         public void ErrorSubjectRequest(Exception ex, BaseGDPRMessage baseGDPRMessage)
         {
-            throw new NotImplementedException();
+            Log(ex.Message);
         }
 
         public BaseAddress GeocodeAddress(object p, string address)
@@ -135,7 +135,7 @@ namespace GDPR.Common.Core
 
         public bool ProcessMessage(BaseGDPRMessage am)
         {
-            throw new NotImplementedException();
+            return am.Process();
         }
 
         public void ProcessRequest(GDPRMessageWrapper msg)
