@@ -60,6 +60,25 @@ namespace GDPR.Common
             return token;
         }
 
+        internal static Type LoadType(string applicationClass)
+        {
+            Type t = System.Type.GetType(applicationClass);
+            
+            if (t == null)
+            {
+                Assembly[] asses = AppDomain.CurrentDomain.GetAssemblies();
+
+                foreach(Assembly a in asses)
+                {
+                    t = a.GetType(applicationClass);
+                    if (t != null)
+                        return t;
+                }
+            }
+
+            return null;
+        }
+
         public static void LoadAssemblies(string dirPath)
         {
             DirectoryInfo di = new DirectoryInfo(dirPath);
@@ -68,7 +87,7 @@ namespace GDPR.Common
             {
                 try
                 {
-                    Assembly.Load(fi.FullName);
+                    Assembly.LoadFrom(fi.FullName);
                 }
                 catch (Exception ex)
                 {

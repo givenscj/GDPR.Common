@@ -207,6 +207,11 @@ namespace GDPR.Applications
             Discover(null);
         }
 
+        public virtual void ProcessRequest(BaseGDPRMessage message, EncryptionContext ctx)
+        {
+            message.Process();
+        }
+
         public virtual void ProcessRequest(BaseApplicationMessage message, EncryptionContext ctx)
         {
             Request = message;
