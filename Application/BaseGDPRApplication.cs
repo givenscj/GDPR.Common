@@ -222,10 +222,10 @@ namespace GDPR.Applications
 
             string action = message.GetType().Name;
 
-            if (action == "BaseAppplicationName")
+            if (action == "BaseApplicationMessage")
                 action = message.Type;
 
-            switch (message.GetType().Name)
+            switch (action)
             {
                 case "DiscoverMessage":
                     Discover();
