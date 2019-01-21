@@ -104,6 +104,16 @@ namespace GDPR.Common.Core
             System.IO.File.AppendAllText(@"c:\temp\error.log", ex.Message);
         }
 
+        public void Log(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Log(SecurityContext ctx, Exception ex, LogLevel level)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ProcessApplicationMessage(BaseApplicationMessage am)
         {
             throw new NotImplementedException();
@@ -124,6 +134,16 @@ namespace GDPR.Common.Core
             return;
         }
 
+        public void SaveApplicationRequest(Guid subjectRequestId, Guid applicationId, string status, string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveApplicationRequest(BaseApplicationMessage am, string v)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite)
         {
             return;
@@ -134,11 +154,21 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public void SaveSubjectRequestMessageData(Guid subjectRequestId, string message)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx)
         {
             string mode = ConfigurationManager.AppSettings["Mode"];
 
             MessageHelper.SendMessage(cm, mode, ctx);
+        }
+
+        public void SendMessage(GDPRMessageWrapper msg)
+        {
+            throw new NotImplementedException();
         }
 
         public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)

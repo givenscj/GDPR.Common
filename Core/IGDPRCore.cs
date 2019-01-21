@@ -16,6 +16,8 @@ namespace GDPR.Common.Core
         string Encrypt(string input);
         void Log(Exception ex, LogLevel level);
         void Log(Exception ex, string level);
+        void Log(SecurityContext ctx, Exception ex, LogLevel level);
+        void Log(string message);
         Hashtable LoadProperties(Guid entityId);
         void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite);
         void SetSystemOAuth(OAuthContext oAuthContext, string type);
@@ -24,6 +26,7 @@ namespace GDPR.Common.Core
         string GetApplicationKey(string applicationId, int keyVersion);
         Guid GetApplicationTenantId(Guid applicationId);
         void SaveApplicationRequest(Guid subjectRequestApplicationId, string v);
+        void SaveSubjectRequestMessageData(Guid subjectRequestId, string message);
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);
         void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx);
@@ -34,5 +37,8 @@ namespace GDPR.Common.Core
         DateTime GetOffset(string hubName, string partitionId);
         bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset);
         void ProcessRequest(GDPRMessageWrapper msg);
+        void SaveApplicationRequest(Guid subjectRequestId, Guid applicationId, string status, string errorMessage);
+        void SaveApplicationRequest(BaseApplicationMessage am, string v);
+        void SendMessage(GDPRMessageWrapper msg);
     }
 }

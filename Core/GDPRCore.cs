@@ -1,10 +1,14 @@
 ﻿using GDPR.Common.Classes;
 using GDPR.Common.Enums;
+using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
+using System.Reflection;
 
 namespace GDPR.Common.Core
 {
@@ -60,7 +64,7 @@ namespace GDPR.Common.Core
 
         public DateTime GetOffset(string hubName, string partitionId)
         {
-            throw new NotImplementedException();
+            return DateTime.Now.AddMinutes(-60);
         }
 
         public Guid GetSystemId()
@@ -98,9 +102,25 @@ namespace GDPR.Common.Core
             return;
         }
 
+        public void Log(string message)
+        {
+            Console.WriteLine(message);
+
+            FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", message + "\n\r");
+        }
+
         public void Log(Exception ex, LogLevel level)
         {
-            return;
+            Console.WriteLine(ex.Message);
+
+            FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", ex.Message + "\n\r");
+        }
+
+        public void Log(SecurityContext ctx, Exception ex, LogLevel level)
+        {
+            throw new NotImplementedException();
         }
 
         public bool ProcessApplicationMessage(BaseApplicationMessage am)
@@ -115,12 +135,120 @@ namespace GDPR.Common.Core
 
         public void ProcessRequest(GDPRMessageWrapper msg)
         {
-            throw new NotImplementedException();
+            BaseGDPRMessage actionMessage = null;
+            bool success = false;
+
+            try
+            {
+                EncryptionContext ctx = new EncryptionContext(msg);
+
+                Type t = Type.GetType(msg.Type);
+
+                if (t == null)
+                    throw new GDPRException($"Type was not found {msg.Type}");
+
+                if (!string.IsNullOrEmpty(msg.Check) && msg.IsEncrypted)
+                {
+                    string check = MessageHelper.DecryptMessage(msg.Check, ctx);
+
+                    if (check != "GDPRISEASY")
+                    {
+                        throw new GDPRException("Encryption check failed");
+                    }
+                }
+
+                if (msg.IsEncrypted)
+                {
+                    msg.Object = MessageHelper.DecryptMessage(msg.Object, ctx);
+                    msg.IsEncrypted = false;
+                }
+
+                try
+                {
+                    actionMessage = (BaseGDPRMessage)Newtonsoft.Json.JsonConvert.DeserializeObject(msg.Object.ToString(), t);
+                }
+                catch (Exception ex)
+                {
+                    throw new GDPRException("Message object body not valid");
+                }
+
+                if (actionMessage == null)
+                    throw new GDPRException("Message object body not valid");
+
+                //create the system context
+                if (actionMessage.Context == null)
+                {
+                    actionMessage.Context = new Common.Classes.SecurityContext();
+                }
+
+                actionMessage.Context.Encryption = ctx;
+
+                success = actionMessage.Process();
+
+                GDPRCore.Current.SaveSubjectRequestMessageData(actionMessage.SubjectRequestId, JsonConvert.SerializeObject(msg));
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Subject Request not found"))
+                {
+                    msg.IsError = true;
+
+                    //no sense it trying it over if it was deleted...
+                    msg.Retries = 3;
+                }
+
+                msg.ErrorMessage = ex.Message;
+
+                //save the state as error...
+                BaseApplicationMessage am = actionMessage as BaseApplicationMessage;
+
+                if (am != null)
+                {
+                    GDPRCore.Current.SaveApplicationRequest(am, "Error");
+                    GDPRCore.Current.Log(am.Context, ex, LogLevel.Error);
+                }
+            }
+
+            if (!success)
+            {
+                Console.WriteLine("Error processing message");
+
+                if (msg.Retries < 3)
+                {
+                    msg.Retries += 1;
+                }
+                else
+                    msg.IsError = true;
+
+                if (actionMessage != null && string.IsNullOrEmpty(actionMessage.ErrorMessage))
+                    msg.ErrorMessage = actionMessage.ErrorMessage;
+
+                if (msg.IsError)
+                {
+                    GDPRCore.Current.SaveSubjectRequestMessageData(actionMessage.SubjectRequestId, JsonConvert.SerializeObject(msg));
+                    GDPRCore.Current.SaveApplicationRequest(actionMessage.SubjectRequestId, actionMessage.ApplicationId, "Error", msg.ErrorMessage);
+                }
+
+                //update the message date so we process it again...
+                msg.MessageDate = DateTime.Now;
+
+                GDPRCore.Current.SendMessage(msg);
+            }
         }
 
         public void SaveApplicationRequest(Guid subjectRequestApplicationId, string v)
         {
             return;
+        }
+
+        public void SaveApplicationRequest(Guid subjectRequestId, Guid applicationId, string status, string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveApplicationRequest(BaseApplicationMessage am, string v)
+        {
+            throw new NotImplementedException();
         }
 
         public void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite)
@@ -133,11 +261,21 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public void SaveSubjectRequestMessageData(Guid subjectRequestId, string message)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx)
         {
             string mode = ConfigurationManager.AppSettings["Mode"];
 
             MessageHelper.SendMessage(cm, mode, ctx);
+        }
+
+        public void SendMessage(GDPRMessageWrapper msg)
+        {
+            throw new NotImplementedException();
         }
 
         public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
