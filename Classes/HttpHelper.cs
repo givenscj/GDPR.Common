@@ -247,9 +247,6 @@ namespace GDPR.Common
 
             foreach (String c in cookies)
             {
-                if (c.Contains("CRM"))
-                    Console.WriteLine("hi");
-
                 String c1 = c.Replace("HttpOnly,", "");
 
                 c1 = c1.Replace("secure,", "");

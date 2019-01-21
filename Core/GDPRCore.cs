@@ -58,6 +58,11 @@ namespace GDPR.Common.Core
             return "";
         }
 
+        public DateTime GetOffset(string hubName, string partitionId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Guid GetSystemId()
         {
             return Guid.Parse(ConfigurationManager.AppSettings["SystemId"].ToString());
@@ -108,6 +113,11 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public void ProcessRequest(GDPRMessageWrapper msg)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SaveApplicationRequest(Guid subjectRequestApplicationId, string v)
         {
             return;
@@ -128,6 +138,11 @@ namespace GDPR.Common.Core
             string mode = ConfigurationManager.AppSettings["Mode"];
 
             MessageHelper.SendMessage(cm, mode, ctx);
+        }
+
+        public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetSystemOAuth(OAuthContext ctx, string type)
