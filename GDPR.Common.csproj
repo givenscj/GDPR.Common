@@ -34,154 +34,154 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\AWSSDK.Core.3.3.31.3\lib\net45\AWSSDK.Core.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\AWSSDK.Core.3.3.31.3\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\AWSSDK.S3.3.3.31.11\lib\net45\AWSSDK.S3.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\AWSSDK.S3.3.3.31.11\lib\net45\AWSSDK.S3.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.OpenPgp, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\BouncyCastle.OpenPgp.1.8.1.1\lib\net20\BouncyCastle.OpenPgp.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\BouncyCastle.OpenPgp.1.8.1.1\lib\net20\BouncyCastle.OpenPgp.dll</HintPath>
     </Reference>
     <Reference Include="libphonenumber, Version=5.8.606.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Google.LibPhoneNumber.1.0.0\lib\libphonenumber.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Google.LibPhoneNumber.1.0.0\lib\libphonenumber.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.KeyVault.3.0.1\lib\net452\Microsoft.Azure.KeyVault.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.KeyVault.3.0.1\lib\net452\Microsoft.Azure.KeyVault.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.KeyVault.Core.3.0.0\lib\net452\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.KeyVault.Core.3.0.0\lib\net452\Microsoft.Azure.KeyVault.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.WebKey, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.KeyVault.WebKey.3.0.1\lib\net452\Microsoft.Azure.KeyVault.WebKey.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.KeyVault.WebKey.3.0.1\lib\net452\Microsoft.Azure.KeyVault.WebKey.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.AppService.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.AppService.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.AppService.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.AppService.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.AppService.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Batch.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Batch.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Batch.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Batch.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Batch.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.BatchAI.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.BatchAI.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.BatchAI.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.BatchAI.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.BatchAI.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Cdn.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Cdn.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Cdn.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Cdn.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Cdn.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Compute.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Compute.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Compute.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Compute.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Compute.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.ContainerInstance.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.ContainerInstance.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ContainerInstance.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.ContainerInstance.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ContainerInstance.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.ContainerRegistry.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.ContainerRegistry.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ContainerRegistry.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.ContainerRegistry.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ContainerRegistry.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.ContainerService.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.ContainerService.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ContainerService.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.ContainerService.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ContainerService.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.CosmosDB.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.CosmosDB.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.CosmosDB.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.CosmosDB.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.CosmosDB.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Dns.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Dns.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Dns.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Dns.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Dns.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.EventHub.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.EventHub.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.EventHub.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.EventHub.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.EventHub.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Graph.RBAC.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Graph.RBAC.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Graph.RBAC.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Graph.RBAC.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Graph.RBAC.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.KeyVault.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.KeyVault.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.KeyVault.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.KeyVault.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.KeyVault.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Locks.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Locks.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Locks.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Locks.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Locks.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Monitor.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Monitor.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Monitor.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Monitor.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Monitor.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Msi.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Msi.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Msi.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Msi.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Msi.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Network.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Network.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Network.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Network.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Network.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Redis.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Redis.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Redis.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Redis.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Redis.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.ResourceManager.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.ResourceManager.Fluent.1.18.0\lib\net461\Microsoft.Azure.Management.ResourceManager.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.ResourceManager.Fluent.1.18.0\lib\net461\Microsoft.Azure.Management.ResourceManager.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Search.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Search.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Search.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Search.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Search.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.ServiceBus.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.ServiceBus.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ServiceBus.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.ServiceBus.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.ServiceBus.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Sql.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Sql.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Sql.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Sql.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Sql.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Storage.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.Storage.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Storage.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Storage.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.Storage.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.TrafficManager.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Management.TrafficManager.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.TrafficManager.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.TrafficManager.Fluent.1.18.0\lib\net452\Microsoft.Azure.Management.TrafficManager.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Search, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Search.5.0.3\lib\net452\Microsoft.Azure.Search.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Search.5.0.3\lib\net452\Microsoft.Azure.Search.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Search.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Search.Common.5.0.3\lib\net452\Microsoft.Azure.Search.Common.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Search.Common.5.0.3\lib\net452\Microsoft.Azure.Search.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Search.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Search.Data.5.0.3\lib\net452\Microsoft.Azure.Search.Data.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Search.Data.5.0.3\lib\net452\Microsoft.Azure.Search.Data.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Search.Service, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Search.Service.5.0.3\lib\net452\Microsoft.Azure.Search.Service.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Search.Service.5.0.3\lib\net452\Microsoft.Azure.Search.Service.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Services.AppAuthentication, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\lib\net452\Microsoft.Azure.Services.AppAuthentication.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\lib\net452\Microsoft.Azure.Services.AppAuthentication.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.8.16603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.19.8.16603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.IdentityModel.JsonWebTokens.5.3.0\lib\net461\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.IdentityModel.JsonWebTokens.5.3.0\lib\net461\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Logging, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.IdentityModel.Logging.5.3.0\lib\net461\Microsoft.IdentityModel.Logging.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.IdentityModel.Logging.5.3.0\lib\net461\Microsoft.IdentityModel.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.IdentityModel.Tokens.5.3.0\lib\net461\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.IdentityModel.Tokens.5.3.0\lib\net461\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Rest.ClientRuntime.2.3.17\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Rest.ClientRuntime.2.3.17\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.18\lib\net452\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.18\lib\net452\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Rest.ClientRuntime.Azure.Authentication.2.3.4\lib\net461\Microsoft.Rest.ClientRuntime.Azure.Authentication.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Rest.ClientRuntime.Azure.Authentication.2.3.4\lib\net461\Microsoft.Rest.ClientRuntime.Azure.Authentication.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\WindowsAzure.ServiceBus.4.1.11\lib\net45\Microsoft.ServiceBus.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\WindowsAzure.ServiceBus.4.1.11\lib\net45\Microsoft.ServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Spatial, Version=7.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Spatial.7.2.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Spatial.7.2.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\WindowsAzure.Storage.9.3.2\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\WindowsAzure.Storage.9.3.2\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -193,17 +193,17 @@
       <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.IdentityModel.dll</HintPath>
     </Reference>
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\System.IdentityModel.Tokens.Jwt.5.3.0\lib\net461\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\System.IdentityModel.Tokens.Jwt.5.3.0\lib\net461\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime" />
@@ -211,10 +211,10 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.WindowsService\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -302,26 +302,22 @@
     <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\GDPR.Application\packages\AWSSDK.S3.3.3.31.11\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\GDPR.Application\ICSharpCode.SharpZipLib\ICSharpCode.SharpZipLib.csproj">
       <Project>{2EC10391-1EC4-46A8-AE92-73CFB6C624D0}</Project>
       <Name>ICSharpCode.SharpZipLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\GDPR.WindowsService\packages\AWSSDK.S3.3.3.31.11\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\GDPR.SDK\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\GDPR.SDK\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <Error Condition="!Exists('..\GDPR.Application\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\GDPR.Application\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
     <Error Condition="!Exists('..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets'))" />
-    <Error Condition="!Exists('..\GDPR.WindowsService\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\GDPR.WindowsService\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\GDPR.WindowsService\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\GDPR.WindowsService\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets'))" />
   </Target>
   <Import Project="..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
   <Import Project="..\GDPR.Application\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\GDPR.Application\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Import Project="..\GDPR.Application\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\GDPR.Application\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Import Project="..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\GDPR.Application\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
-  <Import Project="..\GDPR.WindowsService\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\GDPR.WindowsService\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Import Project="..\GDPR.WindowsService\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\GDPR.WindowsService\packages\Microsoft.Azure.Services.AppAuthentication.1.0.3\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
 </Project>

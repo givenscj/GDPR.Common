@@ -1,8 +1,10 @@
 ﻿using GDPR.Common.Classes;
 using GDPR.Common.Core;
+using GDPR.Common.Messages;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -337,6 +339,41 @@ namespace GDPR.Common
             }
 
             return code;
+        }
+
+        static public bool SendMessage(GDPRMessageWrapper message)
+        {
+            string eventHubName = Configuration.EventHubName;
+
+            if (message.IsError)
+                eventHubName = Configuration.EventErrorHubName;
+
+            if (!message.IsSystem)
+                eventHubName = message.ApplicationId;
+
+            string connectionStringBuilder = Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+
+            //pick a different queue based on the message type..
+            switch (message.Type)
+            {
+                case "DiscoverResponsesMessage":
+                    break;
+                case "DiscoverMessage":
+                    break;
+                case "PreApprovalMessage":
+                    break;
+                case "PostApprovalMessage":
+                    break;
+            }
+
+            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+
+            string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+            eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+            //eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
+            //eventHubClient.CloseAsync();
+
+            return true;
         }
     }
 }

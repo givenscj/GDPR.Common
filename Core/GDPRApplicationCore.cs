@@ -27,6 +27,11 @@ namespace GDPR.Common.Core
             return input;
         }
 
+        public void ErrorSubjectRequest(Exception ex, BaseGDPRMessage baseGDPRMessage)
+        {
+            throw new NotImplementedException();
+        }
+
         public BaseAddress GeocodeAddress(object p, string address)
         {
             BaseAddress a = new BaseAddress();
@@ -102,6 +107,11 @@ namespace GDPR.Common.Core
         {
             //string path = Utility.GetPath();
             System.IO.File.AppendAllText(@"c:\temp\error.log", ex.Message);
+        }
+
+        public void Log(SecurityContext context, Exception ex, LogLevel error)
+        {
+            throw new NotImplementedException();
         }
 
         public bool ProcessApplicationMessage(BaseApplicationMessage am)
