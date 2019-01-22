@@ -8,6 +8,7 @@ namespace GDPR.Common.Messages
         {
             PongMessage pm = new PongMessage();
             pm.ApplicationId = this.ApplicationId;
+            pm.QueueUri = this.QueueUri;
             GDPRCore.Current.SendMessage(pm, EncryptionContext.Default);
             return true;
         }

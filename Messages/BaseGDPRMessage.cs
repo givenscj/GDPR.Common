@@ -24,6 +24,7 @@ namespace GDPR.Common.Messages
         public Guid SystemId { get; set; }
         public Guid ApplicationId { get; set; }
         public string ApplicationClass { get; set; }
+        public string QueueUri { get; set; }
         public Guid ProcessorId { get; set; }
         public Guid SubjectRequestId { get; set; }
         public BaseGDPRApplication Instance { get; set; }

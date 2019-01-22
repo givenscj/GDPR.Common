@@ -212,7 +212,12 @@ namespace GDPR.Common.Messages
 
         static public void SendMessage(GDPRMessageWrapper message)
         {
-            SendMessage(message, Configuration.EventHubConnectionString);
+            string connString = Configuration.EventHubConnectionString;
+
+            if (!string.IsNullOrEmpty(message.QueueUri))
+                connString = message.QueueUri;
+
+            SendMessage(message, connString);
         }
 
         static public void SendMessageViaQueue(GDPRMessageWrapper message, string connectionString)

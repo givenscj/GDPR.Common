@@ -8,6 +8,7 @@ namespace GDPR.Common.Messages
         public string ApplicationId { get; set; }
         public string SystemId { get; set; }
         public string Authentication { get; set; }
+        public string QueueUri { get; set; }
         public string Type { get; set; }
         public string Check { get; set; }
         public int Retries { get; set; }
@@ -19,7 +20,6 @@ namespace GDPR.Common.Messages
         public string ErrorMessage { get; set; }
         public string Object { get; set; }
         public string OffSet { get; set; }
-        public string QueueUrl { get; set; }
         public DateTime MessageDate { get; set; }
         public DateTime OriginalMessageDate { get; set; }
     }
