@@ -144,12 +144,16 @@ namespace GDPR.Common
 
             //Load application map...
             Configuration.ApplicationMap = new Hashtable();
-            string[] apps = Configuration.Applications.Split('|');
 
-            foreach(string app in apps)
+            if (!string.IsNullOrEmpty(Configuration.Applications))
             {
-                string[] data = app.Split('_');
-                Configuration.ApplicationMap.Add(data[0].ToLower(), data[1]);
+                string[] apps = Configuration.Applications.Split('|');
+
+                foreach (string app in apps)
+                {
+                    string[] data = app.Split('_');
+                    Configuration.ApplicationMap.Add(data[0].ToLower(), data[1]);
+                }
             }
         }
 
