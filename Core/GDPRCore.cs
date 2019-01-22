@@ -74,7 +74,7 @@ namespace GDPR.Common.Core
 
         public Guid GetSystemId()
         {
-            return Guid.Parse(ConfigurationManager.AppSettings["SystemId"].ToString());
+            return Configuration.SystemId;
         }
 
         public string GetSystemKey(string systemId, int keyVersion)
@@ -121,11 +121,12 @@ namespace GDPR.Common.Core
 
             FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
             File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", ex.Message + "\n\r");
+            File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", ex.StackTrace + "\n\r");
         }
 
         public void Log(SecurityContext ctx, Exception ex, LogLevel level)
         {
-            throw new NotImplementedException();
+            Log(ex, level);
         }
 
         public bool ProcessApplicationMessage(BaseApplicationMessage am)
@@ -187,6 +188,7 @@ namespace GDPR.Common.Core
                 }
 
                 actionMessage.Context.Encryption = ctx;
+                actionMessage.QueueUri = msg.QueueUri;
 
                 success = actionMessage.Process();
 
@@ -263,17 +265,17 @@ namespace GDPR.Common.Core
 
         public void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SaveSubjectRequestMessageData(Guid subjectRequestId, string message)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx)
         {
-            string mode = ConfigurationManager.AppSettings["Mode"];
+            string mode = Utility.GetConfigurationValue("Mode"); ;
 
             MessageHelper.SendMessage(cm, mode, ctx);
         }
@@ -285,7 +287,7 @@ namespace GDPR.Common.Core
 
         public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void SetSystemOAuth(OAuthContext ctx, string type)
