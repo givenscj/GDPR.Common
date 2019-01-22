@@ -75,6 +75,7 @@ namespace GDPR.Common.Messages
                     MessageHelper.SendMessageViaHttp(msg, ctx);
                     break;
                 case "queue":
+                default:
                     MessageHelper.SendMessageViaQueue(msg, ctx);
                     break;
             }
@@ -214,7 +215,7 @@ namespace GDPR.Common.Messages
         {
             string connString = Configuration.EventHubConnectionString;
 
-            if (!string.IsNullOrEmpty(message.QueueUri))
+            if (!string.IsNullOrEmpty(message.QueueUri) && !message.IsError)
                 connString = message.QueueUri;
 
             SendMessage(message, connString);
@@ -231,6 +232,10 @@ namespace GDPR.Common.Messages
         {
             string hubName = Utility.GetConfigurationValue("EventHubName");
             string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
+
+            if (!string.IsNullOrEmpty(inMsg.QueueUri))
+                connectionStringBuilder = inMsg.QueueUri;
+
             SendMessageViaQueue(inMsg, connectionStringBuilder, ctx);
         }
 
@@ -240,6 +245,5 @@ namespace GDPR.Common.Messages
             string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
             SendMessageViaQueue(inMsg, connectionStringBuilder);
         }
-
     }
 }
