@@ -265,12 +265,12 @@ namespace GDPR.Common.Core
 
         public void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SaveSubjectRequestMessageData(Guid subjectRequestId, string message)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx)
