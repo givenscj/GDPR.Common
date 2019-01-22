@@ -61,12 +61,18 @@ namespace GDPR.Common.Messages
                     EncryptionContext ctx = EncryptionContext.CreateForApplication(this.ApplicationId);
                     this.Context.Encryption = ctx;
 
+                    bool executed = false;
+
                     //fire the request
-                    if (this is BaseGDPRMessage)
+                    if (this is BaseApplicationMessage)
+                    {
+                        Instance.ProcessRequest((BaseApplicationMessage)this, ctx);
+                        executed = true;
+                    }
+
+                    if (this is BaseGDPRMessage && !executed)
                         Instance.ProcessRequest((BaseGDPRMessage)this, ctx);
 
-                    if (this is BaseApplicationMessage)
-                        Instance.ProcessRequest((BaseApplicationMessage)this, ctx);
 
                     return true;
                 }
