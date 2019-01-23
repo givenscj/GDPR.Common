@@ -5,6 +5,7 @@ using GDPR.Common.Data;
 using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
 using System;
+using System.Data.Entity;
 
 namespace GDPR.Common.Messages
 {
@@ -16,6 +17,7 @@ namespace GDPR.Common.Messages
             this.CreateDate = DateTime.Now;
         }
 
+        public DbContext Database { get; set; }
         public bool IsSystem { get; set; }
         public int Retries { get; set; }
         public GDPRSubject Subject { get; set; }

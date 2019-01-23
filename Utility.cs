@@ -79,19 +79,28 @@ namespace GDPR.Common
             return null;
         }
 
+        public static void LoadAssemblies()
+        {
+            string appStubPath = Utility.GetPath() + GDPR.Common.Configuration.AppStubPath;
+            LoadAssemblies(appStubPath);
+        }
+
         public static void LoadAssemblies(string dirPath)
         {
-            DirectoryInfo di = new DirectoryInfo(dirPath);
-
-            foreach(FileInfo fi in di.GetFiles("*.dll"))
+            if (!string.IsNullOrEmpty(dirPath))
             {
-                try
+                DirectoryInfo di = new DirectoryInfo(dirPath);
+
+                foreach (FileInfo fi in di.GetFiles("*.dll"))
                 {
-                    Assembly.LoadFrom(fi.FullName);
-                }
-                catch (Exception ex)
-                {
-                    GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Error);
+                    try
+                    {
+                        Assembly.LoadFrom(fi.FullName);
+                    }
+                    catch (Exception ex)
+                    {
+                        GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Error);
+                    }
                 }
             }
         }
@@ -321,15 +330,27 @@ namespace GDPR.Common
             */
         }
 
+        public static string GetCertPath()
+        {
+            string path = GetPath();
+
+            if (System.Web.HttpContext.Current != null)
+                path += Configuration.CertKeyPath;
+            else
+                path = Configuration.CertKeyDirectory + "\\" + Configuration.CertKeyPath;
+
+            return path;
+        }
+
 
         public static string GetPath()
         {
             string path = "";
 
             if (System.Web.HttpContext.Current != null)
-                path = System.Web.HttpContext.Current.Server.MapPath(Configuration.CertKeyPath);
+                path = System.Web.HttpContext.Current.Server.MapPath("");
             else
-                path = Configuration.CertKeyDirectory + "\\" + Configuration.CertKeyPath;
+                path = Assembly.GetExecutingAssembly().Location;
 
             return path;
         }

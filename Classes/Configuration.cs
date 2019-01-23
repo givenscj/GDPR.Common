@@ -901,6 +901,12 @@ namespace GDPR.Common
             set { _lionDeskClientSecret = value; }
         }
 
+        public static string LionDeskRedirect
+        {
+            get { return _lionDeskRedirect; }
+            set { _lionDeskRedirect = value; }
+        }
+
         public static string PaypalMode
         {
             get { return _paypalMode; }
@@ -1336,6 +1342,7 @@ namespace GDPR.Common
         private static string _dropboxRedirect = CoreSystemUrl + "/Home/DropboxAuthorize";
         private static string _docusignRedirect = CoreSystemUrl + "/Home/DocusignAuthorize";
         private static string _yammerRedirect = CoreSystemUrl + "/Home/YammerAuthorize";
+        private static string _lionDeskRedirect = CoreSystemUrl + "/Home/LionDeskAuthorize";
 
         private static string liveClientId;
         private static string liveClientSecret;

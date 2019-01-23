@@ -72,6 +72,11 @@ namespace GDPR.Common.Core
             return DateTime.Now.AddMinutes(-60);
         }
 
+        public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
+        {
+            throw new NotImplementedException();
+        }
+
         public Guid GetSystemId()
         {
             return Configuration.SystemId;

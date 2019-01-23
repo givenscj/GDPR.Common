@@ -34,13 +34,26 @@ namespace GDPR.Common
 
         async Task IEventProcessor.ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
         {
-            long preOffset = 0;
-            DateTime checkPoint = GDPRCore.Current.GetOffset(context.ConsumerGroupName, context.Lease.PartitionId);
+            DateTime checkPoint;
+            string offSet;
+
+            GDPRCore.Current.GetOffset(context.ConsumerGroupName, context.Lease.PartitionId, out checkPoint, out offSet);
             DateTime lastMessageDate = checkPoint;
+            long currentOffset = long.Parse(offSet);
 
             foreach (EventData eventData in messages)
             {
+                long messageOffset = long.Parse(eventData.Offset);
+
+                if (messageOffset < currentOffset)
+                {
+                    GDPRCore.Current.Log(string.Format("Skiping message {0}", eventData.Offset));
+                    continue;
+                }
+
                 string data = Encoding.UTF8.GetString(eventData.GetBytes());
+
+                GDPRCore.Current.Log(string.Format("Message received.  Partition: '{0}', Data: '{1}'", context.Lease.PartitionId, data));
 
                 try
                 {
@@ -48,32 +61,13 @@ namespace GDPR.Common
                     GDPRMessageWrapper w = (GDPRMessageWrapper)Newtonsoft.Json.JsonConvert.DeserializeObject(data, t);
                     w.OffSet = eventData.Offset;
 
-                    long msgOffSet = long.Parse(eventData.Offset);
+                    //start a new thread to process the request...
+                    await Task.Run(() => GDPRCore.Current.ProcessRequest(w));
 
-                    if (w.MessageDate >= checkPoint)
-                    {
-                        if (w.MessageDate > lastMessageDate)
-                        {
-                            lastMessageDate = w.MessageDate;
-                        }
-
-                        GDPRCore.Current.Log(string.Format("Message received.  Partition: '{0}', Data: '{1}'", context.Lease.PartitionId, data));
-
-                        //start a new thread to process the request...
-                        await Task.Run(() => GDPRCore.Current.ProcessRequest(w));
-
-                        //hopefully the are serialized...
-                        checkPoint = lastMessageDate;
-
-                        //save the position...
-                        GDPRCore.Current.SetOffSet(context.ConsumerGroupName, context.Lease.PartitionId, lastMessageDate, eventData.Offset);
-                    }
-                    else
-                    {
-                        GDPRCore.Current.Log(string.Format("Skiping message {0}", eventData.Offset));
-                    }
+                    //save the position...
+                    GDPRCore.Current.SetOffSet(context.ConsumerGroupName, context.Lease.PartitionId, lastMessageDate, eventData.Offset);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     GDPRCore.Current.Log(data);
                     GDPRCore.Current.Log(ex, LogLevel.Error);
