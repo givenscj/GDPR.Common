@@ -62,6 +62,7 @@ namespace GDPR.Common
         public void SetupHttpRequest(HttpWebRequest req)
         {
             ServicePointManager.Expect100Continue = false;
+            req.ServicePoint.Expect100Continue = false;
             req.AllowAutoRedirect = allowRedirects;
             req.UseDefaultCredentials = true;
             req.UserAgent = Agent;
@@ -161,6 +162,11 @@ namespace GDPR.Common
                 httpWReq.Headers.Add(cookie);
 
             httpWReq.ContentLength = data.Length;
+
+            if (url == "https://login.microsoftonline.com/common/SAS/ProcessAuth")
+            {
+                //httpWReq.Connection = "keep-alive";
+            }
 
             try
             {

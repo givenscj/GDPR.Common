@@ -62,7 +62,9 @@ namespace GDPR.Common
                     w.OffSet = eventData.Offset;
 
                     //start a new thread to process the request...
-                    await Task.Run(() => GDPRCore.Current.ProcessRequest(w));
+                    //await Task.Run(() => GDPRCore.Current.ProcessRequest(w));
+
+                    GDPRCore.Current.ProcessRequest(w);
 
                     //save the position...
                     GDPRCore.Current.SetOffSet(context.ConsumerGroupName, context.Lease.PartitionId, lastMessageDate, eventData.Offset);
