@@ -29,6 +29,7 @@ namespace GDPR.Common.Core
         void SaveSubjectRequestMessageData(Guid subjectRequestId, string message);
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);
+        void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet);
         void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx);
         BaseAddress GeocodeAddress(object p, string address);
         string Decrypt(string value1, int value2);

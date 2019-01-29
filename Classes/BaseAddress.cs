@@ -10,7 +10,7 @@
         public virtual string Country { get; set; }
         public virtual double Latitude { get; set; }
         public virtual double Longitude { get; set; }
-        public string Raw { get; set; }
+        public virtual string Raw { get; set; }
 
         public override string ToString()
         {

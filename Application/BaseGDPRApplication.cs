@@ -2,6 +2,7 @@
 using GDPR.Common.Classes;
 using GDPR.Common.Core;
 using GDPR.Common.Data;
+using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
 using System;
 using System.Collections;
@@ -175,12 +176,12 @@ namespace GDPR.Applications
 
         public virtual ExportInfo ExportData(string applicationSubjectId, GDPRSubject s)
         {
-            throw new NotImplementedException();
+            throw new GDPRException("ExportData[string,GDPRSubject] is not implemented.  Check the SupportsRecords flag on the applicaiton");
         }
 
         public virtual ExportInfo ExportData(string applicationSubjectId)
         {
-            throw new NotImplementedException();
+            throw new GDPRException("ExportData[string]  is not implemented.  Check the SupportsRecords flag on the applicaiton");
         }
 
         public virtual List<GDPRSubject> GetAllSubjects(int skip, int count, DateTime? changeDate)

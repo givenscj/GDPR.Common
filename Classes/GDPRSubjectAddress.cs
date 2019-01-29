@@ -5,7 +5,7 @@
     public class GDPRSubjectAddress : BaseAddress
     {
         public System.Guid AddressId { get; set; }
-        public string Raw { get; set; }
+        override public string Raw { get; set; }
         public System.Guid SubjectId { get; set; }
         public bool IsVerified { get; set; }
         public System.DateTime ModifyDate { get; set; }

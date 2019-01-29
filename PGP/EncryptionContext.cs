@@ -36,7 +36,7 @@ namespace GDPR.Common
                 this.IsApplication = true;
             }
 
-            this.Path = Utility.GetPath();
+            this.Path = Utility.GetCertPath();
         }
 
         public static EncryptionContext Default
@@ -52,7 +52,7 @@ namespace GDPR.Common
                 ctx.Version = version;
                 ctx.Password = GDPRCore.Current.GetSystemKey(systemId, version);
                 ctx.IsApplication = false;
-                ctx.Path = Utility.GetPath();
+                ctx.Path = Utility.GetCertPath();
                 
                 return ctx;
             }
@@ -72,7 +72,7 @@ namespace GDPR.Common
             ctx.IsApplication = true;
             ctx.Id = applicationId.ToString();
             ctx.Encrypt = Configuration.EnableEncryption;
-            ctx.Path = Utility.GetPath();
+            ctx.Path = Utility.GetCertPath();
             ctx.Version = version;
             ctx.Password = GDPRCore.Current.GetApplicationKey(applicationId.ToString(), version);
             return ctx;

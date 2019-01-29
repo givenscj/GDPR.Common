@@ -9,6 +9,8 @@ namespace GDPR.Common.Exceptions
         public EncryptionContext EncryptionContext { get; set; }
         public string Url { get; set; }
 
+        public bool IsSafeToDisplay { get; set; }
+
         public GDPRException(string message, SecurityContext ctx)
             : base(message)
         {
@@ -19,6 +21,12 @@ namespace GDPR.Common.Exceptions
             : base(message)
         {
 
+        }
+
+        public GDPRException(string message, bool isSafe)
+            : base(message)
+        {
+            this.IsSafeToDisplay = isSafe;
         }
 
         public GDPRException(string message, string url)

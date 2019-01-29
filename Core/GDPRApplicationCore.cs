@@ -68,6 +68,11 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
+        {
+            throw new NotImplementedException();
+        }
+
         public Guid GetSystemId()
         {
             return Guid.Parse(ConfigurationManager.AppSettings["SystemId"].ToString());
