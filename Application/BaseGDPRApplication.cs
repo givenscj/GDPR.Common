@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using Configuration = GDPR.Common.Configuration;
 
 namespace GDPR.Applications
 {
@@ -77,7 +78,7 @@ namespace GDPR.Applications
                 return this._version;
             }
         }
-
+        
         public string ShortName
         {
             get
@@ -688,7 +689,7 @@ namespace GDPR.Applications
 
         public virtual void Discover(DateTime? checkPoint)
         {
-            EncryptionContext ctx = EncryptionContext.CreateForApplication(Guid.Parse(ConfigurationManager.AppSettings["ApplicationId"]), int.Parse(ConfigurationManager.AppSettings["ApplicationKeyVersion"]));
+            EncryptionContext ctx = EncryptionContext.CreateForApplication(this.ApplicationId);
 
             try
             {
@@ -715,8 +716,8 @@ namespace GDPR.Applications
                         var discoverMsg = new BaseDiscoverResponsesMessage();
                         discoverMsg.ApplicationId = ApplicationId;
                         discoverMsg.Subjects = newSubjects;
-                        discoverMsg.SystemId = core.GetSystemId();
-                        discoverMsg.ProcessorId = core.GetSystemId();
+                        discoverMsg.SystemId = GDPRCore.Current.GetSystemId();
+                        discoverMsg.ProcessorId = GDPRCore.Current.GetSystemId();
 
                         //have to wrap this in case the message is too big and it needs to be split...
                         SendDiscoveryMessage(discoverMsg);
@@ -731,8 +732,8 @@ namespace GDPR.Applications
                 BaseDiscoverResponsesMessage discoverMsg = new BaseDiscoverResponsesMessage();
                 discoverMsg.ApplicationId = ApplicationId;
                 discoverMsg.Subjects = subjects;
-                discoverMsg.SystemId = core.GetSystemId();
-                discoverMsg.ProcessorId = core.GetSystemId();
+                discoverMsg.SystemId = GDPRCore.Current.GetSystemId();
+                discoverMsg.ProcessorId = GDPRCore.Current.GetSystemId();
 
                 MessageHelper.SendMessage(discoverMsg, ctx);
             }
