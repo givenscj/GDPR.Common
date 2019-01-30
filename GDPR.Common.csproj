@@ -278,6 +278,7 @@
     <Compile Include="Messages\MessageHelper.cs" />
     <Compile Include="Messages\PongMessage.cs" />
     <Compile Include="Messages\PingMessage.cs" />
+    <Compile Include="Messages\PongMessage.cs" />
     <Compile Include="PGP\EncryptionContext.cs" />
     <Compile Include="PGP\KeyGeneration\KeysForPGPEncryptionDecryption.cs" />
     <Compile Include="PGP\Keys\PgpEncryptionKeys.cs" />
