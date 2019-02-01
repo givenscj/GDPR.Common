@@ -42,7 +42,7 @@ namespace GDPR.Common
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        GDPRCore.Current.Log(ex.Message);                        
                     }
                 }
             }
@@ -203,7 +203,7 @@ namespace GDPR.Common
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                GDPRCore.Current.Log(ex.Message);
             }
         }
 
@@ -273,7 +273,7 @@ namespace GDPR.Common
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        GDPRCore.Current.Log(ex.Message);
                     }
                 }
 

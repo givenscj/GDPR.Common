@@ -11,7 +11,7 @@ using System.IO;
 
 namespace GDPR.Common.Services
 {
-    public class AmazonStorageService : IStorageService
+    public class AmazonStorageService : StorageService, IStorageService
     {
         string _url;
         string _key;

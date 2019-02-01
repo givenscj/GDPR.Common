@@ -12,6 +12,7 @@ namespace GDPR.Common.Services
         string UploadBlob(string name, byte[] data);
         string UploadExportBlob(Guid applicationId, string fileName);
         string UploadBlob(string containerName, byte[] data, string name);
+        Guid TenantId { get; set; }
         string Url { get; set; }
         string Key { get; set; }
     }

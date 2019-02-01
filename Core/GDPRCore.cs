@@ -63,7 +63,7 @@ namespace GDPR.Common.Core
 
         public Guid GetApplicationTenantId(Guid applicationId)
         {
-            throw new NotImplementedException();
+            return Guid.Empty;
         }
 
         public string GetConfigurationProperty(string name)
@@ -78,7 +78,8 @@ namespace GDPR.Common.Core
 
         public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
         {
-            throw new NotImplementedException();
+            checkPoint = DateTime.Now;
+            offSet = "0";
         }
 
         public Guid GetSystemId()
@@ -120,17 +121,34 @@ namespace GDPR.Common.Core
         {
             Console.WriteLine(message);
 
-            FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
-            File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", message + "\n\r");
+            LogToFile(message);
         }
 
         public void Log(Exception ex, LogLevel level)
         {
             Console.WriteLine(ex.Message);
 
+            LogToFile(ex.Message);
+            LogToFile(ex.StackTrace);
+        }
+
+        public void LogToFile(string message)
+        {
             FileInfo fi = new FileInfo(Assembly.GetExecutingAssembly().Location);
-            File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", ex.Message + "\n\r");
-            File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", ex.StackTrace + "\n\r");
+            bool wasWritten = false;
+
+            while (!wasWritten)
+            {
+                try
+                {
+                    File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", message + "\n");
+                    wasWritten = true;
+                }
+                catch (Exception ex)
+                {
+                    System.Threading.Thread.Sleep(1);
+                }
+            }
         }
 
         public void Log(SecurityContext ctx, Exception ex, LogLevel level)
@@ -205,6 +223,8 @@ namespace GDPR.Common.Core
             }
             catch (Exception ex)
             {
+                GDPRCore.Current.Log(ex.Message);
+
                 if (ex.Message.Contains("Subject Request not found"))
                 {
                     msg.IsError = true;
@@ -227,7 +247,7 @@ namespace GDPR.Common.Core
 
             if (!success)
             {
-                Console.WriteLine("Error processing message");
+                GDPRCore.Current.Log("Error processing message");
 
                 if (msg.Retries < 3)
                 {
@@ -237,12 +257,21 @@ namespace GDPR.Common.Core
                     msg.IsError = true;
 
                 if (actionMessage != null && string.IsNullOrEmpty(actionMessage.ErrorMessage))
+                {
                     msg.ErrorMessage = actionMessage.ErrorMessage;
+                    msg.QueueUri = actionMessage.QueueUri;
+                }
 
                 if (msg.IsError)
                 {
-                    GDPRCore.Current.SaveSubjectRequestMessageData(actionMessage.SubjectRequestId, JsonConvert.SerializeObject(msg));
-                    GDPRCore.Current.SaveApplicationRequest(actionMessage.SubjectRequestId, actionMessage.ApplicationId, "Error", msg.ErrorMessage);
+                    BaseErrorMessage errMsg = new BaseErrorMessage();
+                    errMsg.SubjectRequestId = actionMessage.SubjectRequestId;
+                    errMsg.ApplicationId = actionMessage.ApplicationId;
+                    msg.Object = JsonConvert.SerializeObject(errMsg);
+                    msg.QueueUri = actionMessage.QueueUri;
+
+                    //GDPRCore.Current.SaveSubjectRequestMessageData(actionMessage.SubjectRequestId, JsonConvert.SerializeObject(msg));
+                    //GDPRCore.Current.SaveApplicationRequest(actionMessage.SubjectRequestId, actionMessage.ApplicationId, "Error", msg.ErrorMessage);
                 }
 
                 //update the message date so we process it again...

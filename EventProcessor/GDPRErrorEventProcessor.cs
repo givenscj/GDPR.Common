@@ -15,7 +15,8 @@ namespace GDPR.Util
 
         async Task IEventProcessor.CloseAsync(PartitionContext context, CloseReason reason)
         {
-            Console.WriteLine("Processor Shutting Down. Partition '{0}', Reason: '{1}'.", context.Lease.PartitionId, reason);
+            GDPRCore.Current.Log(string.Format("Processor Shutting Down. Partition '{0}', Reason: '{1}'.", context.Lease.PartitionId, reason));
+
             if (reason == CloseReason.Shutdown)
             {
                 await context.CheckpointAsync();
@@ -24,7 +25,8 @@ namespace GDPR.Util
 
         Task IEventProcessor.OpenAsync(PartitionContext context)
         {
-            Console.WriteLine("SimpleEventProcessor initialized.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset);
+            GDPRCore.Current.Log(string.Format("SimpleEventProcessor initialized.  Partition: '{0}', Offset: '{1}'", context.Lease.PartitionId, context.Lease.Offset));
+
             this.checkpointStopWatch = new Stopwatch();
             this.checkpointStopWatch.Start();
             return Task.FromResult<object>(null);
