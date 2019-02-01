@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Reflection;
 
@@ -40,6 +39,11 @@ namespace GDPR.Common.Core
         {
             BaseAddress a = new BaseAddress();
             return a;
+        }
+
+        public string GetApplicationClass(Guid applicationId)
+        {
+            throw new NotImplementedException();
         }
 
         public string GetApplicationKey(string applicationId)

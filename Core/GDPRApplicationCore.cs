@@ -38,6 +38,11 @@ namespace GDPR.Common.Core
             return a;
         }
 
+        public string GetApplicationClass(Guid applicationId)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetApplicationKey(string applicationId)
         {
             return Configuration.ApplicationPassword;

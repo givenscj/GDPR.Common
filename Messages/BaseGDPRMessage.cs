@@ -43,7 +43,10 @@ namespace GDPR.Common.Messages
             { 
                 CreateSecurityContext();
 
-                ApplicationClass = Configuration.ApplicationMap[this.ApplicationId.ToString().ToLower()].ToString();
+                if (Configuration.ApplicationMap.ContainsKey(this.ApplicationId.ToString().ToLower()))
+                    ApplicationClass = Configuration.ApplicationMap[this.ApplicationId.ToString().ToLower()].ToString();
+                else
+                    ApplicationClass = GDPRCore.Current.GetApplicationClass(this.ApplicationId);
 
                 //initalize the Application stub
                 

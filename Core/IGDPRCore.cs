@@ -34,6 +34,7 @@ namespace GDPR.Common.Core
         BaseAddress GeocodeAddress(object p, string address);
         string Decrypt(string value1, int value2);
         int GetApplicationKeyVersion(Guid applicationId);
+        string GetApplicationClass(Guid applicationId);
         int GetSystemKeyVersion(Guid systemId);
         DateTime GetOffset(string hubName, string partitionId);
         bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset);
