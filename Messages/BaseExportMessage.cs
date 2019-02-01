@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using System;
 
 namespace GDPR.Common.Messages
 {
@@ -7,9 +8,7 @@ namespace GDPR.Common.Messages
         public ExportInfo Info { get; set; }
         public override bool Process()
         {
-            base.Process();
-
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

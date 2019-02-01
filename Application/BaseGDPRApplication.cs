@@ -602,9 +602,9 @@ namespace GDPR.Applications
                 }, overwrite);
         }
 
-        public override void SetProperty(string name, string value, bool isHidden)
+        public override void SetProperty(string name, string value, bool isHidden, bool persist)
         {
-            base.SetProperty(name, value, isHidden);
+            base.SetProperty(name, value, isHidden, persist);
         }
 
         public string GetProperty(string name, string defaultValue)
