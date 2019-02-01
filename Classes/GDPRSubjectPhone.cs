@@ -1,12 +1,12 @@
 ﻿namespace GDPR.Common
 {
     using System;
-    using System.Collections.Generic;
 
-    public partial class GDPRSubjectPhone
+    public partial class GDPRSubjectPhone : IGDPRSubjectObject
     {
         public System.Guid PhoneId { get; set; }
         public System.Guid SubjectId { get; set; }
+        public System.Guid ObjectId { get; set; }
         public bool IsVerified { get; set; }
         public int PhoneTypeId { get; set; }
         public System.DateTime ModifyDate { get; set; }

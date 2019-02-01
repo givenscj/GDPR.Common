@@ -2,7 +2,7 @@
 
 namespace GDPR.Common
 {
-    public partial class GDPRSubjectSocialIdentity
+    public partial class GDPRSubjectSocialIdentity : IGDPRSubjectObject
     {
         public string Username { get; set; }
         public string UserId { get; set; }
@@ -12,5 +12,7 @@ namespace GDPR.Common
         public bool IsVerified { get; set; }
 
         public DateTime VerifiedDate { get; set; }
+        public Guid SubjectId { get; set; }
+        public Guid ObjectId { get; set; }
     }
 }

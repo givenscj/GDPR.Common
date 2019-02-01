@@ -243,6 +243,7 @@
     <Compile Include="Classes\CaptchaImage.cs" />
     <Compile Include="Classes\Configuration.cs" />
     <Compile Include="Classes\ExportInfo.cs" />
+    <Compile Include="Classes\IGDPRSubjectObject.cs" />
     <Compile Include="Classes\GoogleTranslation.cs" />
     <Compile Include="Classes\HttpHelper.cs" />
     <Compile Include="Classes\ImportSubject.cs" />

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GDPR.Common
 {
-    public partial class GDPRSubjectIpAddress
+    public partial class GDPRSubjectIpAddress : IGDPRSubjectObject
     {
+        public Guid SubjectId { get; set; }
+        public Guid ObjectId { get; set; }
     }
 }
