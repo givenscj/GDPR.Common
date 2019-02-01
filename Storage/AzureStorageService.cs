@@ -8,12 +8,12 @@ using System.IO;
 
 namespace GDPR.Common.Services
 {
-    public class AzureStorageService : IStorageService
+    public class AzureStorageService : StorageService, IStorageService
     {
         string _url;
         string _key;
 
-        public string Url
+        public override string Url
         {
             get
             {
@@ -24,7 +24,7 @@ namespace GDPR.Common.Services
                 _url = value;
             }
         }
-        public string Key
+        public override string Key
         {
             get
             {
@@ -155,6 +155,9 @@ namespace GDPR.Common.Services
         public string UploadExportBlob(Guid applicationId, string fileName)
         {
             Guid TenantId = GDPRCore.Current.GetApplicationTenantId(applicationId);
+
+            if (TenantId == Guid.Empty)
+                TenantId = this.TenantId;
 
             FileInfo fi = new FileInfo(fileName);
             BlobContext ctx = new BlobContext();

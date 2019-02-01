@@ -62,6 +62,8 @@ namespace GDPR.Common
 
         internal static Type LoadType(string applicationClass)
         {
+            GDPRCore.Current.Log($"Loading application class : {applicationClass}");
+
             Type t = System.Type.GetType(applicationClass);
             
             if (t == null)
@@ -76,6 +78,8 @@ namespace GDPR.Common
                 }
             }
 
+            GDPRCore.Current.Log($"Application class not found : {applicationClass}");
+
             return null;
         }
 
@@ -87,6 +91,8 @@ namespace GDPR.Common
 
         public static void LoadAssemblies(string dirPath)
         {
+            GDPRCore.Current.Log($"Loading application stubs : {dirPath}");
+
             if (!string.IsNullOrEmpty(dirPath))
             {
                 DirectoryInfo di = new DirectoryInfo(dirPath);
@@ -95,6 +101,7 @@ namespace GDPR.Common
                 {
                     try
                     {
+                        GDPRCore.Current.Log($"Loading : {fi.FullName}");
                         Assembly.LoadFrom(fi.FullName);
                     }
                     catch (Exception ex)
@@ -236,7 +243,7 @@ namespace GDPR.Common
             settings.NullValueHandling = NullValueHandling.Ignore;
             settings.Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args) 
             {
-                Console.WriteLine(args.ErrorContext.Error.Message);
+                GDPRCore.Current.Log(args.ErrorContext.Error.Message);
                 args.ErrorContext.Handled = true;
             };
             return Newtonsoft.Json.JsonConvert.SerializeObject(o, settings);
@@ -383,6 +390,8 @@ namespace GDPR.Common
 
         static public bool SendMessage(GDPRMessageWrapper message)
         {
+            GDPRCore.Current.Log($"Sending message wrapper : {message.Type}");
+
             string eventHubName = Configuration.EventHubName;
 
             if (message.IsError)

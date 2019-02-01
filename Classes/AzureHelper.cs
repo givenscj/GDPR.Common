@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Management.Eventhub.Fluent;
+﻿using GDPR.Common.Core;
+using Microsoft.Azure.Management.Eventhub.Fluent;
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
@@ -47,7 +48,7 @@ namespace GDPR.Common.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                GDPRCore.Current.Log(ex.Message);
             }
 
             return null;
@@ -62,7 +63,7 @@ namespace GDPR.Common.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                GDPRCore.Current.Log(ex.Message);
             }
 
             return null;

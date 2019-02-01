@@ -7,6 +7,7 @@ using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using GDPR.Common;
+using GDPR.Common.Core;
 using GDPR.Util.GDPRVerificationService;
 
 namespace GDPR.Common
@@ -368,7 +369,7 @@ namespace GDPR.Common
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                GDPRCore.Current.Log(ex.Message);
             }
 
             return "";

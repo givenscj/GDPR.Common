@@ -682,6 +682,7 @@ namespace GDPR.Applications
             }
 
             //upload to azure...
+            StorageContext.Current.TenantId = this.Request.TenantId;
             string url = StorageContext.Current.UploadExportBlob(this.ApplicationId, fileName);
             ei.Url = url;
 
