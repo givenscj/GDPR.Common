@@ -23,13 +23,15 @@ namespace GDPR.Common.Classes
             AzureInstance = Azure.Configure().Authenticate(AzureCredentials).WithDefaultSubscription();
 
             //create resource group...
-            AzureRegion = Region.USWest;
+            AzureRegion = Region.USCentral;
+
+            AzureResourceGroup = CreateResourceGroup();
         }
 
         static public AzureCredentials MakeAzureCredentials(string subscriptionId)
         {
-            var appId = Configuration.AzureClientId;
-            var appSecret = Configuration.AzureClientSecret;
+            var appId = Configuration.AdminAzureClientId;
+            var appSecret = Configuration.AdminAzureClientSecret;
             var tenantId = Configuration.TenantId;
             var environment = AzureEnvironment.AzureGlobalCloud;
 
@@ -37,6 +39,21 @@ namespace GDPR.Common.Classes
                                     .FromServicePrincipal(appId, appSecret, tenantId, environment);
 
             return credentials;
+        }
+
+        public static IResourceGroup CreateResourceGroup()
+        {
+            try
+            {
+                AzureResourceGroup = AzureInstance.ResourceGroups.Define(Configuration.ResourceGroupName).WithRegion(AzureRegion).Create();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
+            return AzureResourceGroup;
         }
 
         public static IEventHubNamespace CreateEventNamespace()

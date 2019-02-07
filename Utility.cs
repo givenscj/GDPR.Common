@@ -119,7 +119,7 @@ namespace GDPR.Common
         public static async Task<string> GetToken(string authority, string resource, string scope)
         {
             var authContext = new AuthenticationContext(authority);
-            ClientCredential clientCred = new ClientCredential(Configuration.AzureClientId, Configuration.AzureClientSecret);
+            ClientCredential clientCred = new ClientCredential(Configuration.AdminAzureClientId, Configuration.AdminAzureClientSecret);
             AuthenticationResult result = await authContext.AcquireTokenAsync(resource, clientCred);
 
             if (result == null)

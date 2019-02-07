@@ -337,6 +337,11 @@ namespace GDPR.Common.Core
                     ctx.ClientId = Configuration.AzureClientId;
                     ctx.ClientSecret = Configuration.AzureClientSecret;
                     break;
+                case "Dynamics":
+                    //fall back to the system application...
+                    ctx.ClientId = Configuration.DynamicsClientId;
+                    ctx.ClientSecret = Configuration.DynamicsClientSecret;
+                    break;
             }
         }
 

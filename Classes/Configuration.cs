@@ -123,16 +123,16 @@ namespace GDPR.Common
             }
         }
 
-        public static void Load()
+        public static void LoadWithMode(string mode)
         {
             GDPRCore.Current = new GDPRCore();
 
-            string filePath = HostingEnvironment.MapPath("~/configuration.json");
+            string filePath = HostingEnvironment.MapPath($"~/configuration.{mode}.json");
 
             if (string.IsNullOrEmpty(filePath))
             {
                 FileInfo fi = new FileInfo(filePath = Assembly.GetExecutingAssembly().Location);
-                filePath = fi.Directory.FullName + "\\configuration.json";
+                filePath = fi.Directory.FullName + $"\\configuration.{mode}.json";
             }
 
             //load configuartion
@@ -503,6 +503,18 @@ namespace GDPR.Common
                 return null;
         }
 
+        public static string AdminAzureClientId
+        {
+            get { return _adminAzureClientId; }
+            set { _adminAzureClientId = value; }
+        }
+
+        public static string AdminAzureClientSecret
+        {
+            get { return _adminAzureClientSecret; }
+            set { _adminAzureClientSecret = value; }
+        }
+
         public static string AzureClientId
         {
             get { return _azureClientId;}
@@ -513,6 +525,18 @@ namespace GDPR.Common
         {
             get { return _azureClientSecret; }
             set { _azureClientSecret = value; }
+        }
+
+        public static string DynamicsClientId
+        {
+            get { return _dynamicsClientId; }
+            set { _dynamicsClientId = value; }
+        }
+
+        public static string DynamicsClientSecret
+        {
+            get { return _dynamicsClientSecret; }
+            set { _dynamicsClientSecret = value; }
         }
 
         public static string ExternalDns
@@ -1233,8 +1257,14 @@ namespace GDPR.Common
         private static string _applicationId;
         private static string _applications;
 
+        private static string _adminAzureClientId;
+        private static string _adminAzureClientSecret;
+
         private static string _azureClientId;
         private static string _azureClientSecret;
+
+        private static string _dynamicsClientId;
+        private static string _dynamicsClientSecret;
 
         private static string _gitHubUrl;
         private static Guid _systemId;
