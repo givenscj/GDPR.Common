@@ -139,6 +139,10 @@ namespace GDPR.Common.Messages
             //BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
             //w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
+            //this should not go...
+            message.Database = null;
+
+            //send the message
             string toSend = JsonConvert.SerializeObject(message);
 
             if (ctx.Encrypt)

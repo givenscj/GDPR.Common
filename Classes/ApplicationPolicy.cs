@@ -13,6 +13,7 @@
         public Nullable<int> Order { get; set; }
         public string Legal { get; set; }
         public string ObjectIgnorePaths { get; set; }
+        public string ObjectMaskPaths { get; set; }
         public System.DateTime ModifyDate { get; set; }
         public System.DateTime CreateDate { get; set; }
         public bool AnonymizeRecordOnDelete { get; set; }

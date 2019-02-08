@@ -4,6 +4,7 @@ using GDPR.Common.Core;
 using GDPR.Common.Data;
 using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
+using GDPR.Common.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -276,6 +277,11 @@ namespace GDPR.Applications
                     MessageHelper.SendMessage(em, ctx);
                     return;
             }
+        }
+
+        public virtual ApplicationStatusModel CheckStatus()
+        {
+            throw new NotImplementedException();
         }
 
         public virtual bool RecordCreateIn(GDPRSubject subject)
