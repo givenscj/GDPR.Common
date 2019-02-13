@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GDPR.Common</RootNamespace>
     <AssemblyName>GDPR.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -245,6 +246,7 @@
     <Compile Include="Classes\BlobContext.cs" />
     <Compile Include="Classes\CaptchaImage.cs" />
     <Compile Include="Classes\Configuration.cs" />
+    <Compile Include="Classes\ErrorContext.cs" />
     <Compile Include="Classes\ExportInfo.cs" />
     <Compile Include="Classes\IGDPRSubjectObject.cs" />
     <Compile Include="Classes\GoogleTranslation.cs" />

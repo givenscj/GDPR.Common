@@ -9,6 +9,7 @@ namespace GDPR.Common.Models
         public Guid TenantId { get; set; }
         public string TenantName { get; set; }
         public Guid ApplicationId { get; set; }
+        public Guid AuthenticationTypeId { get; set; }
         public Guid ApplicationTemplateId { get; set; }
         public string TemplateName { get; set; }
         public string PrivacyUrl { get; set; }
@@ -20,6 +21,7 @@ namespace GDPR.Common.Models
         public string LongName { get; set; }
         public bool IsPublic { get; set; }
         public bool IsActive { get; set; }
+        public int SystemKeyVersion { get; set; }
         public DateTime ModifyDate { get; set; }
         public DateTime CreateDate { get; set; }
     }

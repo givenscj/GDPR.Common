@@ -279,9 +279,17 @@ namespace GDPR.Applications
             }
         }
 
-        public virtual ApplicationStatusModel CheckStatus()
+        public virtual bool TestApi()
         {
             throw new NotImplementedException();
+        }
+
+        public virtual ApplicationStatusModel CheckStatus()
+        {
+            ApplicationStatusModel asm = new ApplicationStatusModel();
+            asm.ApplicationId = this.ApplicationId;
+            asm.Status = "CheckStatus not implemented";
+            return asm;            
         }
 
         public virtual bool RecordCreateIn(GDPRSubject subject)

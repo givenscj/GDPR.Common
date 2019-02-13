@@ -649,6 +649,12 @@ namespace GDPR.Common
             set { _resourcePrefix = value; }
         }
 
+        public static string AppServicePlan
+        {
+            get { return _appServicePlan; }
+            set { _appServicePlan = value; }
+        }
+
         public static string AdminWebName
         {
             get { return _adminWebName; }
@@ -1226,9 +1232,8 @@ namespace GDPR.Common
         }
 
         public static string AzureKeyVaultUrl
-        {
-            get { return _azureKeyVaultUrl; }
-            set { _azureKeyVaultUrl = value; }
+        { 
+            get { return string.Format("https://{0}{1}.vault.azure.net", ResourcePrefix.ToLower(), KeyVaultName.ToLower()); }
         }
 
         private static string _dbLogLevel = "Verbose";
@@ -1294,6 +1299,7 @@ namespace GDPR.Common
 
         private static string _resourcePrefix;
 
+        private static string _appServicePlan;
         private static string _adminWebName;
         private static string _subjectWebName;
         private static string _ivrWebName;
