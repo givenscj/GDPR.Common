@@ -203,6 +203,11 @@ namespace GDPR.Common.Core
             }
         }
 
+        public void UpdateApplicationStatus(Guid applicationId, string v)
+        {
+            throw new NotImplementedException();
+        }
+
         public string UploadBlob(Guid applicationId, string filePath)
         {
             return StorageContext.Current.UploadExportBlob(applicationId, filePath);

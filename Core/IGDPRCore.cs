@@ -43,5 +43,6 @@ namespace GDPR.Common.Core
         void SaveApplicationRequest(BaseApplicationMessage am, string v);
         void SendMessage(GDPRMessageWrapper msg);
         void ErrorSubjectRequest(Exception ex, BaseGDPRMessage baseGDPRMessage);
+        void UpdateApplicationStatus(Guid applicationId, string v);
     }
 }

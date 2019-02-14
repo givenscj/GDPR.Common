@@ -15,9 +15,16 @@ namespace GDPR.Common
     public class Configuration
     {
         static Configuration()
-        {  
+        {
             //Get an access token for the Key Vault to get the secret out...
-            kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(Utility.GetToken));
+            try
+            {
+                kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(Utility.GetToken));
+            }
+            catch (Exception ex)
+            {
+                GDPRCore.Current.Log(ex, Enums.LogLevel.Error);
+            }
         }
 
         static public void SaveToKeyVault()
@@ -1253,8 +1260,7 @@ namespace GDPR.Common
         private static string _searchKey;
         private static bool _enableEncryption;
         private static string _storageRegion;
-        private static string _azureKeyVaultUrl;
-
+        
         private static string _eventLogLevel;
         private static string _consoleLogLevel;
         private static string _appStubPath;

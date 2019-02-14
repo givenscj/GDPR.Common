@@ -58,10 +58,15 @@ namespace GDPR.Common.Classes
 
         public static IEventHubNamespace CreateEventNamespace()
         {
+            return CreateEventNamespace(Configuration.EventHubNamespace);
+        }
+
+        public static IEventHubNamespace CreateEventNamespace(string name)
+        {
             //create namespace...
             try
             {
-                return AzureInstance.EventHubNamespaces.Define(Configuration.EventHubNamespace).WithRegion(AzureRegion).WithExistingResourceGroup(AzureResourceGroup.Name).Create();
+                return AzureInstance.EventHubNamespaces.Define(name).WithRegion(AzureRegion).WithExistingResourceGroup(AzureResourceGroup.Name).Create();
             }
             catch (Exception ex)
             {
@@ -85,5 +90,7 @@ namespace GDPR.Common.Classes
 
             return null;
         }
+
+        
     }
 }
