@@ -5,6 +5,8 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace GDPR.Common.Classes
 {
@@ -14,6 +16,7 @@ namespace GDPR.Common.Classes
         static public IAzure AzureInstance { get; set; }
         static public Region AzureRegion { get; set; }
         static public IResourceGroup AzureResourceGroup { get; set; }
+        static public IEventHubNamespace AzureEventNamespace { get; set; }
 
         public static void Initialize()
         {
@@ -23,7 +26,7 @@ namespace GDPR.Common.Classes
             AzureInstance = Azure.Configure().Authenticate(AzureCredentials).WithDefaultSubscription();
 
             //create resource group...
-            AzureRegion = Region.USCentral;
+            AzureRegion = Region.Create(Configuration.Region);
 
             AzureResourceGroup = CreateResourceGroup();
         }
@@ -45,6 +48,9 @@ namespace GDPR.Common.Classes
         {
             try
             {
+                if (AzureInstance == null)
+                    Initialize();
+
                 AzureResourceGroup = AzureInstance.ResourceGroups.Define(Configuration.ResourceGroupName).WithRegion(AzureRegion).Create();
             }
             catch (Exception ex)
@@ -66,7 +72,22 @@ namespace GDPR.Common.Classes
             //create namespace...
             try
             {
-                return AzureInstance.EventHubNamespaces.Define(name).WithRegion(AzureRegion).WithExistingResourceGroup(AzureResourceGroup.Name).Create();
+                if (AzureInstance == null)
+                    Initialize();
+
+                IEnumerable<IEventHubNamespace> list = AzureInstance.EventHubNamespaces.List();
+
+                foreach(IEventHubNamespace ns in list)
+                {
+                    if (ns.Name == name)
+                    {
+                        AzureEventNamespace = ns;
+                        return ns;
+                    }
+                }
+
+                AzureEventNamespace = AzureInstance.EventHubNamespaces.Define(name).WithRegion(AzureRegion).WithExistingResourceGroup(AzureResourceGroup.Name).Create();
+                return AzureEventNamespace;
             }
             catch (Exception ex)
             {
@@ -81,6 +102,9 @@ namespace GDPR.Common.Classes
             //create event hub
             try
             {
+                if (AzureInstance == null)
+                    Initialize();
+
                 return AzureInstance.EventHubs.Define(eventHubName).WithExistingNamespace(ns).Create();
             }
             catch (Exception ex)

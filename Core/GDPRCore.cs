@@ -71,15 +71,15 @@ namespace GDPR.Common.Core
             return "";
         }
 
-        public DateTime GetOffset(string hubName, string partitionId)
-        {
-            return DateTime.Now.AddMinutes(-60);
-        }
-
-        public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
+        public void GetOffset(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
         {
             checkPoint = DateTime.Now;
             offSet = "0";
+        }
+
+        public bool SetOffSet(string eventHubNamespace, string hubName, string consumerGroup, string partitionId, DateTime lastMessageDate, string offset)
+        {
+            return true;
         }
 
         public Guid GetSystemId()
@@ -323,10 +323,7 @@ namespace GDPR.Common.Core
             MessageHelper.SendMessage(msg);            
         }
 
-        public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
-        {
-            return true;
-        }
+        
 
         public void SetSystemOAuth(OAuthContext ctx, string type)
         {
@@ -353,6 +350,16 @@ namespace GDPR.Common.Core
         public void UpdateApplicationStatus(Guid applicationId, string status)
         {
             throw new NotImplementedException();
+        }
+
+        public string GetApplicationEventHub(string applicationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetEventHubConnectionString(string eventHubName)
+        {
+            return Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
         }
     }
 }

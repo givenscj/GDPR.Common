@@ -1,4 +1,5 @@
-﻿using GDPR.Common.Core;
+﻿using GDPR.Common;
+using GDPR.Common.Core;
 using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,10 @@ namespace GDPR.Util
 
         async Task IEventProcessor.ProcessEventsAsync(PartitionContext context, IEnumerable<EventData> messages)
         {
-            DateTime checkPoint = GDPRCore.Current.GetOffset(context.ConsumerGroupName, context.Lease.PartitionId);
+            DateTime checkPoint;
+            string offSet;
+            GDPRCore.Current.GetOffset(Configuration.EventHubNamespace, Configuration.EventErrorHubName, context.ConsumerGroupName, context.Lease.PartitionId, out checkPoint, out offSet);
+
             DateTime lastMessageDate = checkPoint;
 
             foreach (EventData eventData in messages)

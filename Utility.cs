@@ -397,11 +397,14 @@ namespace GDPR.Common
             if (message.IsError)
                 eventHubName = Configuration.EventErrorHubName;
 
+            string connectionStringBuilder = GDPRCore.Current.GetEventHubConnectionString(eventHubName);
+            //Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+
             if (!message.IsSystem)
-                eventHubName = message.ApplicationId;
-
-            string connectionStringBuilder = Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
-
+            {
+                connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+            }
+            
             //pick a different queue based on the message type..
             switch (message.Type)
             {
@@ -418,7 +421,15 @@ namespace GDPR.Common
             EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
 
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
-            eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+
+            try
+            {
+                eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
             //eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
             //eventHubClient.CloseAsync();
 

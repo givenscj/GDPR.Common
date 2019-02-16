@@ -43,6 +43,11 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public string GetApplicationEventHub(string applicationId)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetApplicationKey(string applicationId)
         {
             return Configuration.ApplicationPassword;
@@ -68,12 +73,13 @@ namespace GDPR.Common.Core
             return "";
         }
 
-        public DateTime GetOffset(string hubName, string partitionId)
+        
+        public void GetOffset(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
         {
             throw new NotImplementedException();
         }
 
-        public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
+        public bool SetOffSet(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, DateTime lastMessageDate, string offset)
         {
             throw new NotImplementedException();
         }
@@ -186,11 +192,6 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
-        public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
-        {
-            throw new NotImplementedException();
-        }
-
         public void SetSystemOAuth(OAuthContext ctx, string type)
         {
             switch (type)
@@ -211,6 +212,11 @@ namespace GDPR.Common.Core
         public string UploadBlob(Guid applicationId, string filePath)
         {
             return StorageContext.Current.UploadExportBlob(applicationId, filePath);
+        }
+
+        public string GetEventHubConnectionString(string eventHubName)
+        {
+            return Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
         }
     }
 }

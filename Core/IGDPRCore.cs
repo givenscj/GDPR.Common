@@ -29,20 +29,21 @@ namespace GDPR.Common.Core
         void SaveSubjectRequestMessageData(Guid subjectRequestId, string message);
         string Encrypt(string v, int systemKeyVersion);
         string UploadBlob(Guid applicationId, string filePath);
-        void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet);
+        void GetOffset(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet);
         void SendMessage(BaseGDPRMessage cm, EncryptionContext ctx);
         BaseAddress GeocodeAddress(object p, string address);
         string Decrypt(string value1, int value2);
         int GetApplicationKeyVersion(Guid applicationId);
         string GetApplicationClass(Guid applicationId);
         int GetSystemKeyVersion(Guid systemId);
-        DateTime GetOffset(string hubName, string partitionId);
-        bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset);
+        bool SetOffSet(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, DateTime lastMessageDate, string offset);
         void ProcessRequest(GDPRMessageWrapper msg);
         void SaveApplicationRequest(Guid subjectRequestId, Guid applicationId, string status, string errorMessage);
         void SaveApplicationRequest(BaseApplicationMessage am, string v);
         void SendMessage(GDPRMessageWrapper msg);
         void ErrorSubjectRequest(Exception ex, BaseGDPRMessage baseGDPRMessage);
         void UpdateApplicationStatus(Guid applicationId, string v);
+        string GetApplicationEventHub(string applicationId);
+        string GetEventHubConnectionString(string eventHubName);
     }
 }

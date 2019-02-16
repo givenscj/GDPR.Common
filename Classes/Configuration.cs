@@ -394,6 +394,11 @@ namespace GDPR.Common
         {
             get
             {
+                if (string.IsNullOrEmpty(_searchKey))
+                {
+                    _searchKey = LoadFromKeyVault("SearchKey");
+                }
+
                 return _searchKey;
             }
             set

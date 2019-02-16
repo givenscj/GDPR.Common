@@ -37,12 +37,13 @@ namespace GDPR.Common
             DateTime checkPoint;
             string offSet;
 
-            GDPRCore.Current.GetOffset(context.ConsumerGroupName, context.Lease.PartitionId, out checkPoint, out offSet);
+            GDPRCore.Current.GetOffset(GDPRCore.Current.GetSystemId().ToString(), Configuration.EventHubName, context.ConsumerGroupName, context.Lease.PartitionId, out checkPoint, out offSet);
             DateTime lastMessageDate = checkPoint;
             long currentOffset = long.Parse(offSet);
 
             foreach (EventData eventData in messages)
             {
+                /*
                 long messageOffset = long.Parse(eventData.Offset);
 
                 if (messageOffset < currentOffset)
@@ -50,6 +51,7 @@ namespace GDPR.Common
                     GDPRCore.Current.Log(string.Format("Skiping message {0}", eventData.Offset));
                     continue;
                 }
+                */
 
                 string data = Encoding.UTF8.GetString(eventData.GetBytes());
 
@@ -67,7 +69,7 @@ namespace GDPR.Common
                     GDPRCore.Current.ProcessRequest(w);
 
                     //save the position...
-                    GDPRCore.Current.SetOffSet(context.ConsumerGroupName, context.Lease.PartitionId, lastMessageDate, eventData.Offset);
+                    GDPRCore.Current.SetOffSet(GDPRCore.Current.GetSystemId().ToString(), Configuration.EventHubName, context.ConsumerGroupName, context.Lease.PartitionId, lastMessageDate, eventData.Offset);
                 }
                 catch (Exception ex)
                 {
