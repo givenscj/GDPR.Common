@@ -24,7 +24,7 @@ namespace GDPR.Common.Messages
             HttpHelper hh = new HttpHelper();
 
             //testing...
-            message.Source.ApiEndPoint = "www.thegdprregistry.com";
+            message.Source.ApiEndPoint = Configuration.ExternalDns;
 
             //ignore SSL
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
@@ -88,7 +88,7 @@ namespace GDPR.Common.Messages
             string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();
-            PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
+            PGPDecrypt.Decrypt(inputStream, null, keyIn, passPhrase, outputStream);
             return Utility.StreamToString(outputStream);
         }
 

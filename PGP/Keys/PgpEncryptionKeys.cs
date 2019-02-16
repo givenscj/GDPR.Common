@@ -174,13 +174,9 @@ namespace PGPSnippet.Keys
             foreach (PgpPublicKeyRing kRing in publicKeyRingBundle.GetKeyRings())
             {
 
-                PgpPublicKey key = kRing.GetPublicKeys()
+                PgpPublicKey key = kRing.GetPublicKeys().Cast<PgpPublicKey>().FirstOrDefault();
 
-                    .Cast<PgpPublicKey>()
-
-                    .Where(k => k.IsEncryptionKey && k.GetValidSeconds() > 0)
-
-                    .FirstOrDefault();
+                    //.Cast<PgpPublicKey>().Where(k => k.IsEncryptionKey && k.GetValidSeconds() > 0).FirstOrDefault();
 
                 if (key != null)
 

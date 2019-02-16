@@ -31,7 +31,6 @@ namespace GDPR.Common.Messages
         public Guid SubjectRequestId { get; set; }
         public BaseGDPRApplication Instance { get; set; }
         public BaseSubjectRequest SubjectRequest { get; set; }
-
         public MessageDirection Direction { get; set; }
         public string Status { get; set; }
         public string ErrorMessage { get; set; }

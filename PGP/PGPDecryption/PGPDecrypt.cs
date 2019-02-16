@@ -1,4 +1,5 @@
-﻿using Org.BouncyCastle.Bcpg;
+﻿using GDPR.Common.Exceptions;
+using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.IO;
@@ -334,7 +335,7 @@ namespace PGPSnippet.PGPDecryption
             }
         }
 
-        public static void Decrypt(Stream inputStream, Stream privateKeyStream, string passPhrase, Stream outputFile)
+        public static void Decrypt(Stream inputStream, PgpPublicKey publicKey, Stream privateKeyStream, string passPhrase, Stream outputFile)
         {
             try
             {
@@ -357,6 +358,8 @@ namespace PGPSnippet.PGPDecryption
                     enc = (PgpEncryptedDataList)o;
                 else
                     enc = (PgpEncryptedDataList)pgpF.NextPgpObject();
+
+                
 
                 // decrypt
                 foreach (PgpPublicKeyEncryptedData pked in enc.GetEncryptedDataObjects())
@@ -395,6 +398,11 @@ namespace PGPSnippet.PGPDecryption
                     message = of.NextPgpObject();
                     if (message is PgpOnePassSignatureList)
                     {
+                        PgpOnePassSignatureList pList = (PgpOnePassSignatureList)message;
+
+                        if (pList[0].KeyId != publicKey.KeyId)
+                            throw new GDPRException("Signature is invalid, wrong public key");
+
                         message = of.NextPgpObject();
                         PgpLiteralData Ld = null;
                         Ld = (PgpLiteralData) message;

@@ -112,6 +112,19 @@ namespace GDPR.Common
             }
         }
 
+        public static Guid GetCharacterGuid()
+        {
+            Guid g = Guid.NewGuid();
+
+            while (!Char.IsLetter(g.ToString().ToCharArray()[0]))
+            {
+                g = Guid.NewGuid();
+
+            }
+
+            return g;
+        }
+
         public static bool IsEmpty(JToken token)
         {
             return (token.Type == JTokenType.Null);

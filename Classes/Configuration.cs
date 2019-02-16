@@ -183,7 +183,8 @@ namespace GDPR.Common
         {
             PropertyInfo prop = typeof(Configuration).GetProperty(name);
 
-            SetProperty(prop, value);
+            if (prop != null)
+                SetProperty(prop, value);
         }
 
         private static void SetProperty(PropertyInfo pi, string inValue)
@@ -199,8 +200,11 @@ namespace GDPR.Common
                         pi.SetValue(null, value);
                         break;
                     case "System.Guid":
-                        value = Guid.Parse(inValue);
-                        pi.SetValue(null, value);
+                        if (!string.IsNullOrEmpty(inValue))
+                        {
+                            value = Guid.Parse(inValue);
+                            pi.SetValue(null, value);
+                        }
                         break;
                     case "System.String":
                         value = inValue;
@@ -302,6 +306,10 @@ namespace GDPR.Common
                 }
 
                 return _gdprSqlConnectionString;
+            }
+            set
+            {
+                _gdprSqlConnectionString = value;
             }
         }
 
@@ -491,6 +499,10 @@ namespace GDPR.Common
                 }
 
                 return _eventHubConnectionString;
+            }
+            set
+            {
+                _eventHubConnectionString = value;
             }
         }
 
@@ -1185,7 +1197,16 @@ namespace GDPR.Common
 
         public static Guid SystemId
         {
-            get { return _systemId; }
+            get
+            {
+                if (_systemId == Guid.Empty)
+                {
+                    _systemId = Guid.Parse(LoadFromKeyVault("SystemId"));
+                }
+
+                return _systemId;
+            }
+
             set { _systemId = value; }
         }
 

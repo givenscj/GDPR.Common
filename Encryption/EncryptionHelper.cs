@@ -303,26 +303,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
 
-            try
-            {
-                PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
-                PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
-
-                Stream inputData = Utility.GenerateStreamFromString(data);
-                Stream encryptedMessageStream = new MemoryStream();
-
-                encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
-
-                string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
-                return encryptedMessage;
-            }
-            catch (Exception e)
-            {
-                if (e.Message.Contains("Checksum mismatch"))
-                    throw new GDPRException("Private Key Password is invalid");
-            }
-
-            return null;
+            return SignAndEncrypt(publicKey, secretKey, passPhrase, data);
         }
 
         public static string Encrypt(string data, EncryptionContext ctx)
@@ -500,7 +481,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
                 //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
                 Stream outputStream = new MemoryStream();
-                PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
+                PGPDecrypt.Decrypt(inputStream, null, keyIn, passPhrase, outputStream);
                 return Utility.StreamToString(outputStream);
             }
             catch (Exception ex)
@@ -508,6 +489,73 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 GDPRCore.Current.Log(ex, Enums.LogLevel.Error);
                 return null;
             }
+        }
+
+        public static string SignAndEncrypt(PgpPublicKey publicKey, PgpSecretKey secretKey, string passPhrase, string data)
+        {
+            try
+            {
+                PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+                PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
+
+                Stream inputData = Utility.GenerateStreamFromString(data);
+                Stream encryptedMessageStream = new MemoryStream();
+
+                encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
+
+                string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
+                return encryptedMessage;
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("Checksum mismatch"))
+                    throw new GDPRException("Private Key Password is invalid");
+            }
+
+            return null;
+        }
+
+        public static string DecryptAndVerify(PgpPublicKey publicKey, Stream secretKey, string passPhrase, string data)
+        {
+            try
+            {
+                //PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+                
+                Stream inputData = Utility.GenerateStreamFromString(data);
+                Stream decryptedMessageStream = new MemoryStream();
+
+                PGPDecrypt.Decrypt(inputData, publicKey, secretKey, passPhrase, decryptedMessageStream);
+                
+                string message = Utility.StreamToString(decryptedMessageStream);
+                return message;
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("Checksum mismatch"))
+                    throw new GDPRException("Private Key Password is invalid");
+                else
+                    throw;
+            }
+
+            return null;
+        }
+
+        public static string SignAndEncrypt(string publicKeyStr, string privateKeyStr, string passPhrase, string message)
+        {
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+
+            return SignAndEncrypt(publicKey, secretKey, passPhrase, message);
+        }
+
+        public static string DecryptAndVerify(string publicKeyStr, string privateKeyStr, string passPhrase, string encMessage)
+        {
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+
+            Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
+
+            return DecryptAndVerify(publicKey, keyIn, passPhrase, encMessage);
         }
     }
 }
