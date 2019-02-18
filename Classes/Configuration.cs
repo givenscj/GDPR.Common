@@ -196,8 +196,11 @@ namespace GDPR.Common
                 switch (pi.PropertyType.FullName)
                 {
                     case "System.Int32":
-                        value = int.Parse(inValue);
-                        pi.SetValue(null, value);
+                        if (!string.IsNullOrEmpty(inValue))
+                        {
+                            value = int.Parse(inValue);
+                            pi.SetValue(null, value);
+                        }
                         break;
                     case "System.Guid":
                         if (!string.IsNullOrEmpty(inValue))
@@ -209,6 +212,12 @@ namespace GDPR.Common
                     case "System.String":
                         value = inValue;
                         pi.SetValue(null, value);
+                        break;
+                    case "System.Boolean":
+                        pi.SetValue(null, Boolean.Parse(inValue));
+                        break;
+                    default:
+                        GDPRCore.Current.Log($"Configuration property type not supported {pi.PropertyType.FullName}");
                         break;
                 }
             }
@@ -294,6 +303,20 @@ namespace GDPR.Common
             {
                 _apiContext = value;
             }
+        }
+
+        public static string SystemKeyVersion
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_systemKeyVersion))
+                {
+                    _systemKeyVersion = LoadFromKeyVault("SystemKeyVersion");
+                }
+
+                return _systemKeyVersion;
+            }
+            set { _systemKeyVersion = value; }
         }
 
         public static string GDPRSQLConnectionString
@@ -731,6 +754,12 @@ namespace GDPR.Common
         {
             get { return _speechApiKey; }
             set { _speechApiKey = value; }
+        }
+
+        public static string EventHubNamespacePrefix
+        {
+            get { return _eventHubNamespacePrefix; }
+            set { _eventHubNamespacePrefix = value; }
         }
 
         public static string EventHubNamespace
@@ -1252,12 +1281,6 @@ namespace GDPR.Common
             set { _faceApiKey = value; }
         }
 
-        public static int SystemKeyVersion
-        {
-            get { return _systemKeyVersion; }
-            set { _systemKeyVersion = value; }
-        }
-
         public static string EventLogLevel
         {
             get { return _eventLogLevel; }
@@ -1352,9 +1375,10 @@ namespace GDPR.Common
         private static string graphUrl = "https://graph.microsoft.com";
         private static string graphVersion = "v1.0";
 
-        private static int _systemKeyVersion = 1;
+        private static string _systemKeyVersion;
 
         /*event hub processing*/
+        private static string _eventHubNamespacePrefix;
         private static string _eventHubNamespace;
         private static string _eventHubName;
         private static string _eventErrorHubName;

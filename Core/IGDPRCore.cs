@@ -20,8 +20,10 @@ namespace GDPR.Common.Core
         void Log(string message);
         Hashtable LoadProperties(Guid entityId);
         void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite);
+        string GetSystemPin(int keyVersion);
         void SetSystemOAuth(OAuthContext oAuthContext, string type);
         void SaveRequestRecords(Guid subjectRequestApplicationId, List<Record> records);
+        string GetApplicationPin(string applicationId, int keyVersion);
         string GetSystemKey(string systemId, int keyVersion);
         string GetApplicationKey(string applicationId, int keyVersion);
         Guid GetApplicationTenantId(Guid applicationId);
@@ -45,5 +47,7 @@ namespace GDPR.Common.Core
         void UpdateApplicationStatus(Guid applicationId, string v);
         string GetApplicationEventHub(string applicationId);
         string GetEventHubConnectionString(string eventHubName);
+        string GetSystemKey(string id, string version);
+        string GetApplicationKey(string id, string version);
     }
 }

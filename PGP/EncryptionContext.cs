@@ -26,13 +26,13 @@ namespace GDPR.Common
             if (msg.IsSystem)
             {
                 this.Id = msg.SystemId;
-                this.Password = GDPRCore.Current.GetSystemKey(msg.SystemId, msg.KeyVersion);
+                this.Password = GDPRCore.Current.GetSystemPin(msg.KeyVersion);
                 this.IsApplication = false;
             }
             else
             {
                 this.Id = msg.ApplicationId;
-                this.Password = GDPRCore.Current.GetApplicationKey(msg.ApplicationId, msg.KeyVersion);
+                this.Password = GDPRCore.Current.GetApplicationPin(msg.ApplicationId, msg.KeyVersion);
                 this.IsApplication = true;
             }
 
@@ -50,7 +50,7 @@ namespace GDPR.Common
                 ctx.Id = systemId;
                 int version = GDPRCore.Current.GetSystemKeyVersion(Guid.Parse(systemId));
                 ctx.Version = version;
-                ctx.Password = GDPRCore.Current.GetSystemKey(systemId, version);
+                ctx.Password = GDPRCore.Current.GetSystemPin(version);
                 ctx.IsApplication = false;
                 ctx.Path = Utility.GetCertPath();
                 

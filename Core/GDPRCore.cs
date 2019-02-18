@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 
 namespace GDPR.Common.Core
@@ -99,7 +100,7 @@ namespace GDPR.Common.Core
 
         public int GetSystemKeyVersion(Guid systemId)
         {
-            return Configuration.SystemKeyVersion;
+            return int.Parse(Configuration.SystemKeyVersion);
         }
 
         public bool IsValidEmail(string email)
@@ -360,6 +361,36 @@ namespace GDPR.Common.Core
         public string GetEventHubConnectionString(string eventHubName)
         {
             return Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+        }
+
+        public string GetSystemKey(string id, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetSystemPublicKey?SystemId={id}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public string GetApplicationKey(string applicationId, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetApplicationPublicKey?ApplicationId={applicationId}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public string GetSystemPin(int keyVersion)
+        {
+            return Configuration.GetProperty("SystemPassword").ToString();
+        }
+
+        public string GetApplicationPin(string applicationId, int keyVersion)
+        {
+            return Configuration.GetProperty("ApplicationPassword").ToString();
         }
     }
 }

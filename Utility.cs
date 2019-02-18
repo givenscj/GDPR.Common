@@ -262,6 +262,28 @@ namespace GDPR.Common
             return Newtonsoft.Json.JsonConvert.SerializeObject(o, settings);
         }
 
+        public static byte[] String_To_Bytes2(string strInput)
+        {
+            int numBytes = (strInput.Length) / 2;
+            byte[] bytes = new byte[numBytes];
+            for (int x = 0; x < numBytes; ++x)
+            {
+                bytes[x] = Convert.ToByte(strInput.Substring(x * 2, 2), 16);
+            }
+            return bytes;
+        }
+
+        public static string BytesToString(byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes);
+        }
+
+        public static byte[] StringToBytes(string str)
+        {
+            return ASCIIEncoding.UTF8.GetBytes(str);
+        }
+
+
         public static string StreamToString(Stream stream)
         {
             stream.Position = 0;
@@ -368,7 +390,16 @@ namespace GDPR.Common
             string path = "";
 
             if (System.Web.HttpContext.Current != null)
-                path = System.Web.HttpContext.Current.Server.MapPath("");
+            {
+                try
+                {
+                    path = System.Web.HttpContext.Current.Server.MapPath("../");
+                }
+                catch (Exception ex)
+                {
+                    path = System.Web.HttpContext.Current.Server.MapPath("");
+                }
+            }
             else
                 path = Assembly.GetExecutingAssembly().Location;
 

@@ -83,13 +83,28 @@ namespace GDPR.Common.Messages
 
         static public string DecryptMessage(string message, EncryptionContext ctx)
         {
+            string publicKeyStr = "";
+            string privateKeyStr = "";
+
+            if (!ctx.IsApplication)
+                publicKeyStr = GDPRCore.Current.GetSystemKey(ctx.Id, ctx.Version);
+            else
+                publicKeyStr = GDPRCore.Current.GetApplicationKey(ctx.Id, ctx.Version);
+            
+
+            privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
+
+            /*
             Stream inputStream = Utility.GenerateStreamFromString(message);
             string passPhrase = ctx.Password;
-            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();
             PGPDecrypt.Decrypt(inputStream, null, keyIn, passPhrase, outputStream);
-            return Utility.StreamToString(outputStream);
+            */
+
+            return EncryptionHelper.DecryptAndVerify(publicKeyStr, privateKeyStr, ctx.Password, message);
+
+            //return Utility.StreamToString(outputStream);
         }
 
         static public string SignAndEncryptMessage(BaseGDPRMessage message, EncryptionContext ctx)
@@ -98,9 +113,9 @@ namespace GDPR.Common.Messages
             string publicKeyStr = "";
 
             if (ctx.IsApplication)
-                publicKeyStr = EncryptionHelper.GetApplicationKey(message.ApplicationId.ToString(), ctx.Version.ToString());
+                publicKeyStr = GDPRCore.Current.GetApplicationKey(message.ApplicationId.ToString(), ctx.Version.ToString());
             else
-                publicKeyStr = EncryptionHelper.GetSystemKey(message.SystemId.ToString(), ctx.Version.ToString());
+                publicKeyStr = GDPRCore.Current.GetSystemKey(message.SystemId.ToString(), ctx.Version.ToString());
 
             string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
 

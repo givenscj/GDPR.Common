@@ -40,6 +40,8 @@ namespace GDPR.Common
             GDPRCore.Current.GetOffset(GDPRCore.Current.GetSystemId().ToString(), Configuration.EventHubName, context.ConsumerGroupName, context.Lease.PartitionId, out checkPoint, out offSet);
             DateTime lastMessageDate = checkPoint;
             long currentOffset = long.Parse(offSet);
+            string lastOffset = offSet;
+            bool messageProcessed = false;
 
             foreach (EventData eventData in messages)
             {
@@ -55,18 +57,27 @@ namespace GDPR.Common
 
                 string data = Encoding.UTF8.GetString(eventData.GetBytes());
 
-                GDPRCore.Current.Log(string.Format("Message received.  Partition: '{0}', Data: '{1}'", context.Lease.PartitionId, data));
-
                 try
                 {
                     Type t = typeof(GDPRMessageWrapper);
                     GDPRMessageWrapper w = (GDPRMessageWrapper)Newtonsoft.Json.JsonConvert.DeserializeObject(data, t);
                     w.OffSet = eventData.Offset;
+                    lastOffset = eventData.Offset;
+
+                    if (w.MessageDate < lastMessageDate)
+                    {
+                        GDPRCore.Current.Log(string.Format("Skiping message {0} [Date]", eventData.Offset));
+                        continue;
+                    }
+
+                    GDPRCore.Current.Log(string.Format("Message received.  Partition: '{0}', Data: '{1}'", context.Lease.PartitionId, data));
 
                     //start a new thread to process the request...
                     //await Task.Run(() => GDPRCore.Current.ProcessRequest(w));
 
                     GDPRCore.Current.ProcessRequest(w);
+
+                    messageProcessed = true;
 
                     //save the position...
                     GDPRCore.Current.SetOffSet(GDPRCore.Current.GetSystemId().ToString(), Configuration.EventHubName, context.ConsumerGroupName, context.Lease.PartitionId, lastMessageDate, eventData.Offset);
@@ -77,6 +88,10 @@ namespace GDPR.Common
                     GDPRCore.Current.Log(ex, LogLevel.Error);
                 }                                
             }
+
+            //save the position
+            if (messageProcessed)
+                GDPRCore.Current.SetOffSet(GDPRCore.Current.GetSystemId().ToString(), Configuration.EventHubName, context.ConsumerGroupName, context.Lease.PartitionId, DateTime.Now, lastOffset);
 
             //Call checkpoint every 5 minutes, so that worker can resume processing from 5 minutes back if it restarts.
             if (this.checkpointStopWatch.Elapsed > TimeSpan.FromMinutes(5))
