@@ -169,7 +169,7 @@ namespace GDPR.Common.Messages
             w.Type = message.GetType().AssemblyQualifiedName;
             w.Object = toSend;
             w.QueueUri = message.QueueUri;
-            w.MessageDate = DateTime.Now;
+            w.MessageDate = DateTime.Now.AddMinutes(5);
 
             //throw message if message is not encrypted...
             if (!ctx.Encrypt)
