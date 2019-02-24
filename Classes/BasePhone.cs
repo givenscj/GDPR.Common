@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using String = java.lang.String;
 
 namespace GDPR.Common
 {
@@ -17,17 +13,23 @@ namespace GDPR.Common
         //ideally all phone numbers should be in E.164 format in order for them to be searched
         public static BasePhone Parse(string phoneNumber)
         {
-            string parsedNumber = GetNumbers(phoneNumber);
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                string parsedNumber = GetNumbers(phoneNumber);
 
-            if (phoneNumber.Contains("+"))
-                parsedNumber = "+" + parsedNumber;
+                if (phoneNumber.Contains("+"))
+                    parsedNumber = "+" + parsedNumber;
 
-            libphonenumber.PhoneNumber pn = libphonenumber.PhoneNumberUtil.Instance.Parse(parsedNumber, "US");
-            BasePhone p = new BasePhone();
-            p.CountryCode = pn.CountryCode.ToString();
-            p.NationalNumber = pn.NationalNumber.ToString();
+                libphonenumber.PhoneNumber pn = libphonenumber.PhoneNumberUtil.Instance.Parse(parsedNumber, "US");
+                BasePhone p = new BasePhone();
+                p.CountryCode = pn.CountryCode.ToString();
+                p.NationalNumber = pn.NationalNumber.ToString();
+                p.Raw = p.ToString();
 
-            return p;
+                return p;
+            }
+
+            return null;
         }
 
         public static string Parse(string phoneNumber, bool useDots, bool includePlus, bool includeCountry, bool addParentheses, bool addSpace, bool addDashes)
@@ -98,7 +100,10 @@ namespace GDPR.Common
 
         static public string GetNumbers(string input)
         {
-            return new string(input.Where(c => char.IsDigit(c)).ToArray());
+            if (input != null)
+                return new string(input.Where(c => char.IsDigit(c)).ToArray());
+
+            return input;
         }
 
         public override string ToString()

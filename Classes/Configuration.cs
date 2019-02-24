@@ -277,12 +277,15 @@ namespace GDPR.Common
             {
                 if (_apiContext == null)
                 {
-                    Dictionary<string, string> config = new Dictionary<string, string>();
-                    config.Add("clientId", PaypalClientId);
-                    config.Add("clientSecret", PaypalClientSecret);
-                    config.Add("mode", "sandbox");
-                    config.Add("requestRetries", "1");
-                    config.Add("connectionTimeout", "360000");
+                    Dictionary<string, string> config = new Dictionary<string, string>
+                    {
+                        { "clientId", PaypalClientId },
+                        { "clientSecret", PaypalClientSecret },
+                        { "mode", "sandbox" },
+                        { "requestRetries", "1" },
+                        { "connectionTimeout", "360000" }
+                    };
+
                     ConfigManager.GetConfigWithDefaults(config);
 
                     try
@@ -506,8 +509,11 @@ namespace GDPR.Common
                 }
             }
 
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Formatting = Formatting.Indented;
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+
             string json = JsonConvert.SerializeObject(obj, settings);
             File.AppendAllText(filePath, json);
         }

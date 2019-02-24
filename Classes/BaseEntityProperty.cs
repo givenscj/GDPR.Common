@@ -14,6 +14,7 @@
         virtual public bool IsSecure { get; set; }
         virtual public bool IsEncrypted { get; set; }
         virtual public bool IsMasked { get; set; }
+        virtual public bool IsReadOnly { get; set; }
         virtual public string Description { get; set; }
         virtual public string DisplayName { get; set; }
         virtual public string Type { get; set; }
