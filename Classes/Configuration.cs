@@ -864,6 +864,12 @@ namespace GDPR.Common
             set { _coreSystemUrl = value; }
         }
 
+        public static string IvrUrl
+        {
+            get { return _ivrUrl; }
+            set { _ivrUrl = value; }
+        }
+
         public static Guid CoreApplicationId
         {
             get { return _coreApplicationId; }
@@ -1408,6 +1414,7 @@ namespace GDPR.Common
         private static string _noReplyEmailAddress;
 
         private static string _coreSystemUrl;
+        private static string _ivrUrl;
         private static Guid _coreApplicationId;
         private static string _tenantSystemUrl;
 
