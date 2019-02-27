@@ -1242,7 +1242,14 @@ namespace GDPR.Common
             {
                 if (_systemId == Guid.Empty)
                 {
-                    _systemId = Guid.Parse(LoadFromKeyVault("SystemId"));
+                    try
+                    {
+                        _systemId = Guid.Parse(LoadFromKeyVault("SystemId"));
+                    }
+                    catch (Exception ex)
+                    {
+                        return Guid.Empty;
+                    }
                 }
 
                 return _systemId;
