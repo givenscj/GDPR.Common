@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Core;
+using Microsoft.Azure.Management.AppService.Fluent;
 using Microsoft.Azure.Management.Eventhub.Fluent;
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
@@ -7,6 +8,9 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Text;
 
 namespace GDPR.Common.Classes
 {
@@ -115,6 +119,31 @@ namespace GDPR.Common.Classes
             return null;
         }
 
-        
+        public static IWebApp GetWebApp(string v)
+        {
+            if (AzureInstance == null)
+                Initialize();
+
+            return AzureInstance.WebApps.GetById(v);
+        }
+
+        public static void UploadWebAppFile(IWebAppBase webApp, byte[] file, string path)
+        {
+            Console.WriteLine("Uploading Configuration");
+
+            var profile = webApp.GetPublishingProfile();
+            var base64Auth = Convert.ToBase64String(Encoding.Default.GetBytes($"{profile.GitUsername}:{profile.GitPassword}"));
+            MemoryStream stream = new MemoryStream(file);
+
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("If-Match", "*");
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + base64Auth);
+                var baseUrl = new Uri($"https://" + webApp.Name + ".scm.azurewebsites.net/");
+                var requestURl = baseUrl + path;
+                var httpContent = new StreamContent(stream);
+                var response = client.PutAsync(requestURl, httpContent).Result;
+            }
+        }
     }
 }
