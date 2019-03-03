@@ -26,8 +26,17 @@ namespace GDPR.Common.Classes
         {
             AzureCredentials = MakeAzureCredentials(Configuration.SubscriptionId);
 
+            var client = RestClient
+            .Configure()
+            .WithEnvironment(AzureEnvironment.AzureGlobalCloud)
+            .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
+            .WithCredentials(AzureCredentials)
+            .Build();
+
             //connect to azure...
-            AzureInstance = Azure.Configure().Authenticate(AzureCredentials).WithDefaultSubscription();
+            Azure.IConfigurable ic = Azure.Configure();
+            Azure.IAuthenticated auth = ic.Authenticate(AzureCredentials);
+            AzureInstance = auth.WithDefaultSubscription();
 
             //create resource group...
             AzureRegion = Region.Create(Configuration.Region);
@@ -43,7 +52,7 @@ namespace GDPR.Common.Classes
             var environment = AzureEnvironment.AzureGlobalCloud;
 
             var credentials = new AzureCredentialsFactory()
-                                    .FromServicePrincipal(appId, appSecret, tenantId, environment);
+                                    .FromServicePrincipal(appId, appSecret, tenantId, environment);            
 
             return credentials;
         }
@@ -124,7 +133,16 @@ namespace GDPR.Common.Classes
             if (AzureInstance == null)
                 Initialize();
 
-            return AzureInstance.WebApps.GetById(v);
+            IEnumerable<IWebApp> apps = AzureInstance.WebApps.List();
+            IEnumerator<IWebApp> e = apps.GetEnumerator();
+
+            while(e.MoveNext())
+            {
+                if (e.Current.Name.ToLower() == v.ToLower() && e.Current.ResourceGroupName == AzureResourceGroup.Name)
+                    return e.Current;
+            }
+
+            return null;
         }
 
         public static void UploadWebAppFile(IWebAppBase webApp, byte[] file, string path)
