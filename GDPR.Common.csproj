@@ -56,22 +56,22 @@
       <HintPath>..\GDPR.SDK\GDPR.SDK\packages\Google.LibPhoneNumber.1.0.0\lib\libphonenumber.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.SDK\GDPR.SDK\packages\Microsoft.Azure.KeyVault.3.0.1\lib\net452\Microsoft.Azure.KeyVault.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.KeyVault.3.0.3\lib\net452\Microsoft.Azure.KeyVault.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\GDPR.SDK\GDPR.SDK\packages\Microsoft.Azure.KeyVault.Core.3.0.0\lib\net452\Microsoft.Azure.KeyVault.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.WebKey, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.SDK\GDPR.SDK\packages\Microsoft.Azure.KeyVault.WebKey.3.0.1\lib\net452\Microsoft.Azure.KeyVault.WebKey.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.KeyVault.WebKey.3.0.3\lib\net452\Microsoft.Azure.KeyVault.WebKey.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.AppService.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.AppService.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.AppService.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.AppService.Fluent.1.17.0\lib\net452\Microsoft.Azure.Management.AppService.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Batch.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Batch.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.Batch.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.BatchAI.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.BatchAI.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.BatchAI.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.BatchAI.Fluent.1.17.0\lib\net452\Microsoft.Azure.Management.BatchAI.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Cdn.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Cdn.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.Cdn.Fluent.dll</HintPath>
@@ -98,13 +98,13 @@
       <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.EventHub.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.EventHub.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Fluent.1.17.0\lib\net452\Microsoft.Azure.Management.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Graph.RBAC.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Graph.RBAC.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.Graph.RBAC.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.KeyVault.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.KeyVault.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.KeyVault.Fluent.dll</HintPath>
+      <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.KeyVault.Fluent.1.17.0\lib\net452\Microsoft.Azure.Management.KeyVault.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Locks.Fluent, Version=1.0.0.60, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\GDPR.Application\packages\Microsoft.Azure.Management.Locks.Fluent.1.19.0\lib\net452\Microsoft.Azure.Management.Locks.Fluent.dll</HintPath>
