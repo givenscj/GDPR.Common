@@ -11,6 +11,7 @@ namespace GDPR.Common.Messages
 
         public int Version { get; set; }
         public string Type { get; set; }
+        public string IpAddress { get; set; }
         public string Code { get; set; }
         public bool IsLocked { get; set; }
         public DateTime LockedDate { get; set; }

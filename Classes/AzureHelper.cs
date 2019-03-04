@@ -163,5 +163,13 @@ namespace GDPR.Common.Classes
                 var response = client.PutAsync(requestURl, httpContent).Result;
             }
         }
+
+        public static bool AddEventHubIpAddress(string ipAddress)
+        {
+            if (AzureInstance == null)
+                Initialize();
+
+            return false;
+        }
     }
 }

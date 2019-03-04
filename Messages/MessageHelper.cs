@@ -224,14 +224,58 @@ namespace GDPR.Common.Messages
             SendMessage(message, connectionString);
         }
 
-        static public void SendMessage(GDPRMessageWrapper message, string connectionString)
+        static public bool SendMessage(GDPRMessageWrapper message, string connectionString)
         {
+            //set the ipaddress for tenant and application logging (used for firewall rule evaluation reporting)
+            message.IpAddress = Utility.GetInternetIp();
+
+            GDPRCore.Current.Log($"Sending message wrapper : {message.Type}");
+
+            string eventHubName = Configuration.EventHubName;
+
+            if (message.IsError)
+                eventHubName = Configuration.EventErrorHubName;
+
+            string connectionStringBuilder = GDPRCore.Current.GetEventHubConnectionString(eventHubName);
+            //Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+
+            if (!message.IsSystem)
+            {
+                connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+            }
+
+            //pick a different queue based on the message type..
+            switch (message.Type)
+            {
+                case "DiscoverResponsesMessage":
+                    break;
+                case "DiscoverMessage":
+                    break;
+                case "PreApprovalMessage":
+                    break;
+                case "PostApprovalMessage":
+                    break;
+            }
+
             EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
-            eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+
+            try
+            {
+                eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            //eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
+            //eventHubClient.CloseAsync();
+
+            return true;
         }
 
-        static public void SendMessage(GDPRMessageWrapper message)
+        static public bool SendMessage(GDPRMessageWrapper message)
         {
             string connString = Configuration.EventHubConnectionString;
 
@@ -239,7 +283,18 @@ namespace GDPR.Common.Messages
                 connString = message.QueueUri;
 
             SendMessage(message, connString);
+
+            return true;
         }
+
+        /*
+        static public bool SendMessage(GDPRMessageWrapper message)
+        {
+            
+
+            return true;
+        }
+        */
 
         static public void SendMessageViaQueue(GDPRMessageWrapper message, string connectionString)
         {
@@ -262,8 +317,12 @@ namespace GDPR.Common.Messages
         static public void SendMessageViaQueue(GDPRMessageWrapper inMsg)
         {
             string hubName = Utility.GetConfigurationValue("EventHubName");
+
             string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
+
             SendMessageViaQueue(inMsg, connectionStringBuilder);
         }
+
+        
     }
 }

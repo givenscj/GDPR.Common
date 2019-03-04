@@ -11,6 +11,7 @@ using System;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -21,6 +22,25 @@ namespace GDPR.Common
 {
     public class Utility
     {
+        public static string GetInternetIp()
+        {
+            HttpHelper hh = new HttpHelper();
+            string html = hh.DoGet("https://www.google.com/search?q=what+is+my+ip", "");
+            string temp = Utility.ParseValue(html, "w-answer-desktop>", "/div>");
+            string ipAddress = Utility.ParseValue(temp, ">", "<");
+
+            try
+            {
+                IPAddress.Parse(ipAddress);
+                return ipAddress;
+            }
+            catch (Exception ex)
+            {
+                GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Error);
+            }
+
+            return null;
+        }
         public static JToken RemoveEmptyChildren(JToken token)
         {
             if (token.Type == JTokenType.Object)
@@ -449,52 +469,5 @@ namespace GDPR.Common
             return code;
         }
 
-        static public bool SendMessage(GDPRMessageWrapper message)
-        {
-            GDPRCore.Current.Log($"Sending message wrapper : {message.Type}");
-
-            string eventHubName = Configuration.EventHubName;
-
-            if (message.IsError)
-                eventHubName = Configuration.EventErrorHubName;
-
-            string connectionStringBuilder = GDPRCore.Current.GetEventHubConnectionString(eventHubName);
-            //Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
-
-            if (!message.IsSystem)
-            {
-                connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
-            }
-            
-            //pick a different queue based on the message type..
-            switch (message.Type)
-            {
-                case "DiscoverResponsesMessage":
-                    break;
-                case "DiscoverMessage":
-                    break;
-                case "PreApprovalMessage":
-                    break;
-                case "PostApprovalMessage":
-                    break;
-            }
-
-            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
-
-            string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
-
-            try
-            {
-                eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            //eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
-            //eventHubClient.CloseAsync();
-
-            return true;
-        }
     }
 }
