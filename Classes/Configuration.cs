@@ -21,7 +21,6 @@ namespace GDPR.Common
         private static string _gdprSqlConnectionString;
         private static string _eventHubConnectionString;
         private static string _mode;
-        private static string _aesKey;
         private static string _eventHubConnectionStringWithPath;
         private static string _storageAccountKey;
         private static string _storageAccountSecret;
@@ -49,6 +48,7 @@ namespace GDPR.Common
         private static string _dynamicsClientSecret;
 
         private static string _gitHubUrl;
+        private static string _systemPin;
         private static Guid _systemId;
         private static string _externalDns;
         private static string _hashSalt;
@@ -543,23 +543,6 @@ namespace GDPR.Common
             set
             {
                 _gdprSqlConnectionString = value;
-            }
-        }
-
-        public static string AesKey
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_aesKey))
-                {
-                    _aesKey = LoadFromKeyVault("AesKey");
-                }
-
-                return _aesKey;
-            }
-            set
-            {
-                _aesKey = value;
             }
         }
 
@@ -1346,6 +1329,23 @@ namespace GDPR.Common
         {
             get { return yammerClientSecret; }
             set { yammerClientSecret = value; }
+        }
+
+        public static string SystemPin
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_systemPin))
+                {
+                    _systemPin = LoadFromKeyVault("SystemPin");
+                }
+
+                return _systemPin;
+            }
+            set
+            {
+                _systemPin = value;
+            }
         }
 
         public static Guid SystemId

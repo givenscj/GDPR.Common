@@ -6,6 +6,8 @@ namespace GDPR.Common
 {
     public class EncryptionContext
     {
+        private int keyVersion;
+
         public bool Encrypt { get; set; }
         public string Path { get; set; }
         public string Password { get; set; }
@@ -39,22 +41,25 @@ namespace GDPR.Common
             this.Path = Utility.GetCertPath();
         }
 
+        public static EncryptionContext Get(int keyVersion)
+        { 
+            string systemId = GDPRCore.Current.GetSystemId().ToString();
+
+            EncryptionContext ctx = new EncryptionContext();
+            ctx.Encrypt = Configuration.EnableEncryption;
+            ctx.Id = systemId;
+            ctx.Version = keyVersion;
+            ctx.Password = GDPRCore.Current.GetSystemPin(keyVersion);
+            ctx.IsApplication = false;
+            ctx.Path = Utility.GetCertPath();
+            return ctx;
+        }
+
         public static EncryptionContext Default
         {
             get
             {
-                string systemId = GDPRCore.Current.GetSystemId().ToString();
-
-                EncryptionContext ctx = new EncryptionContext();
-                ctx.Encrypt = Configuration.EnableEncryption;
-                ctx.Id = systemId;
-                int version = GDPRCore.Current.GetSystemKeyVersion(Guid.Parse(systemId));
-                ctx.Version = version;
-                ctx.Password = GDPRCore.Current.GetSystemPin(version);
-                ctx.IsApplication = false;
-                ctx.Path = Utility.GetCertPath();
-                
-                return ctx;
+                return Get(int.Parse(Configuration.SystemKeyVersion));
             }
         }
 
