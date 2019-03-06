@@ -257,7 +257,7 @@ namespace GDPR.Common.Messages
                     break;
             }
 
-            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
+            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder);
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
 
             try
