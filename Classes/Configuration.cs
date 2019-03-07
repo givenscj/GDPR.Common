@@ -31,6 +31,8 @@ namespace GDPR.Common
         private static bool _enableEncryption;
         private static string _storageRegion;
 
+        private static string _siteName;
+
         private static string _eventLogLevel;
         private static string _consoleLogLevel;
         private static string _appStubPath;
@@ -98,6 +100,7 @@ namespace GDPR.Common
         private static string graphVersion = "v1.0";
 
         private static string _systemKeyVersion;
+        private static string _systemPinVersion;
 
         /*event hub processing*/
         private static string _eventHubNamespacePrefix;
@@ -527,6 +530,20 @@ namespace GDPR.Common
                 return _systemKeyVersion;
             }
             set { _systemKeyVersion = value; }
+        }
+
+        public static string SystemPinVersion
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_systemPinVersion))
+                {
+                    _systemPinVersion = LoadFromKeyVault("SystemPinVersion");
+                }
+
+                return _systemPinVersion;
+            }
+            set { _systemPinVersion = value; }
         }
 
         public static string GDPRSQLConnectionString
@@ -1416,6 +1433,12 @@ namespace GDPR.Common
         {
             get { return _eventLogLevel; }
             set { _eventLogLevel = value; }
+        }
+
+        public static string SiteName
+        {
+            get { return _siteName; }
+            set { _siteName = value; }
         }
 
         public static string AzureKeyVaultUrl

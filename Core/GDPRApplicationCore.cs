@@ -102,7 +102,7 @@ namespace GDPR.Common.Core
 
         public int GetSystemKeyVersion(Guid systemId)
         {
-            return int.Parse(Configuration.SystemKeyVersion);
+            return int.Parse(Configuration.SystemPinVersion);
         }
 
         public bool IsValidEmail(string email)

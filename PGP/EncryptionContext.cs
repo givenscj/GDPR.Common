@@ -59,7 +59,7 @@ namespace GDPR.Common
         {
             get
             {
-                return Get(int.Parse(Configuration.SystemKeyVersion));
+                return Get(int.Parse(Configuration.SystemPinVersion));
             }
         }
 
