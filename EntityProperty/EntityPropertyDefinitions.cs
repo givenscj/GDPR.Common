@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GDPR.Common.EntityProperty
 {
-    public class EntityPropertyType
+    public class EntityPropertyTypeBase
     {
         public System.Guid EntityPropertyTypeId { get; set; }
         public string Name { get; set; }
@@ -20,22 +20,22 @@ namespace GDPR.Common.EntityProperty
         public System.DateTime ModifyDate { get; set; }
         public System.DateTime CreateDate { get; set; }
 
-        public static List<EntityPropertyType> LoadEntityPropertyTypes()
+        public static List<EntityPropertyTypeBase> LoadEntityPropertyTypes()
         {
-            List<EntityPropertyType> types = new List<EntityPropertyType>();
+            List<EntityPropertyTypeBase> types = new List<EntityPropertyTypeBase>();
 
             
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "AllowUnverifiedData", Name = "AllowUnverifiedData", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "BatchSize", Name = "BatchSize", DefaultValue = "100", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DaysBetweenRequests", Name = "DaysBetweenRequests", DefaultValue = "90", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DataIsSold", Name = "DataIsSold", DefaultValue = "true", Type = "checkbox", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DeleteRequiresApproval", Name = "DeleteRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "ExportRequiresApproval", Name = "ExportRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "MinNumberOfVerifiedTypes", Name = "MinNumberOfVerifiedTypes", Type = "textbox", DefaultValue = "1", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "MaxQueryRequestsPerYear", Name = "MaxQueryRequestsPerYear", DefaultValue = "1", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyType() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "PerQueryRequestCost", Name = "PerQueryRequestCost", DefaultValue = "5.00", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "AllowUnverifiedData", Name = "AllowUnverifiedData", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "BatchSize", Name = "BatchSize", DefaultValue = "100", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DaysBetweenRequests", Name = "DaysBetweenRequests", DefaultValue = "90", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DataIsSold", Name = "DataIsSold", DefaultValue = "true", Type = "checkbox", Category = "Compliance", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DeleteRequiresApproval", Name = "DeleteRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "ExportRequiresApproval", Name = "ExportRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "MinNumberOfVerifiedTypes", Name = "MinNumberOfVerifiedTypes", Type = "textbox", DefaultValue = "1", Category = "Compliance", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "MaxQueryRequestsPerYear", Name = "MaxQueryRequestsPerYear", DefaultValue = "1", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "PerQueryRequestCost", Name = "PerQueryRequestCost", DefaultValue = "5.00", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
 
-            types.Add(new EntityPropertyType(){EntityPropertyTypeId = Guid.Parse(""),
+            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse(""),
                 DisplayName = "ClientId",
                     Name = "ClientId",
                     Category = "Security",
@@ -44,7 +44,7 @@ namespace GDPR.Common.EntityProperty
                     IsMasked = false,
                     IsSecure = true
                 });
-            types.Add(new EntityPropertyType(){EntityPropertyTypeId = Guid.Parse(""),
+            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse(""),
                     DisplayName = "ClientSecret",
                     Name = "ClientSecret",
                     Category = "Security",
@@ -53,7 +53,7 @@ namespace GDPR.Common.EntityProperty
                     IsMasked = true,
                     IsSecure = true
                 });
-            types.Add(new EntityPropertyType()
+            types.Add(new EntityPropertyTypeBase()
                 {
                 EntityPropertyTypeId = Guid.Parse(""),
                 DisplayName = "ApiKey",
@@ -65,7 +65,7 @@ namespace GDPR.Common.EntityProperty
                     IsSecure = true
                 });
             types.Add(
-                new EntityPropertyType()
+                new EntityPropertyTypeBase()
                 {
                     EntityPropertyTypeId = Guid.Parse(""),
                     DisplayName = "AccessToken",
@@ -77,7 +77,7 @@ namespace GDPR.Common.EntityProperty
                     IsSecure = true
                 });
             types.Add(
-                new EntityPropertyType()
+                new EntityPropertyTypeBase()
                 {
                     EntityPropertyTypeId = Guid.Parse(""),
                     DisplayName = "Username",
@@ -89,7 +89,7 @@ namespace GDPR.Common.EntityProperty
                     IsSecure = true
                 });
             types.Add(
-                new EntityPropertyType()
+                new EntityPropertyTypeBase()
                 {
                     EntityPropertyTypeId = Guid.Parse(""),
                     DisplayName = "Password",
