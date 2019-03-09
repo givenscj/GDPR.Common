@@ -227,7 +227,7 @@ namespace GDPR.Common.Messages
         static public bool SendMessage(GDPRMessageWrapper message, string connectionString)
         {
             //set the ipaddress for tenant and application logging (used for firewall rule evaluation reporting)
-            message.IpAddress = Utility.GetInternetIp();
+            message.IpAddress = Utility.GetInternetIp()[0];
 
             GDPRCore.Current.Log($"Sending message wrapper : {message.Type}");
 

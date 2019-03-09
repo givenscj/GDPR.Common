@@ -5,6 +5,7 @@ using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -170,6 +171,74 @@ namespace GDPR.Common.Classes
                 Initialize();
 
             return false;
+        }
+
+        public static void CreateDeployment(string jsonFile, string parametersFile, Hashtable tokens)
+        {
+            if (AzureInstance == null)
+                Initialize();
+
+            string json = "{}";
+            string parameters = "{}";
+
+            if (!string.IsNullOrEmpty(jsonFile))
+                json = jsonFile;
+
+            if (!string.IsNullOrEmpty(parametersFile))
+                parameters = parametersFile;
+
+            foreach (string key in tokens.Keys)
+            {
+                json = json.Replace("{" + key + "}", tokens[key].ToString());
+                parameters = parameters.Replace("{" + key + "}", tokens[key].ToString());
+            }
+
+            CreateDeployment(json, parameters);
+        }
+
+        public static void CreateDeployment(FileInfo jsonFile, FileInfo paramatersFile, Hashtable tokens)
+        {
+            if (AzureInstance == null)
+                Initialize();
+
+            string json = "{}";
+            string parameters = "{}";
+
+            if (jsonFile != null)
+                json = File.ReadAllText(jsonFile.FullName);
+
+            if (paramatersFile != null)
+                parameters = File.ReadAllText(paramatersFile.FullName);
+
+            CreateDeployment(json, parameters, tokens);
+        }
+
+        public static void CreateDeployment(string templateJson, string parameters)
+        {
+            if (AzureInstance == null)
+                Initialize();
+
+            if (string.IsNullOrEmpty(parameters))
+                parameters = "{}";
+
+            Guid id = Guid.NewGuid();
+
+            try
+            {
+
+                IDeployment deploy = AzureInstance.Deployments.Define(id.ToString())
+                        .WithExistingResourceGroup(AzureResourceGroup.Name)
+                        .WithTemplate(templateJson)
+                        .WithParameters(parameters)
+                        .WithMode(DeploymentMode.Incremental)
+                        .Create();
+
+                Console.WriteLine(deploy.ProvisioningState);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
         }
     }
 }

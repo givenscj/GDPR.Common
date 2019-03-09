@@ -6,8 +6,6 @@ namespace GDPR.Common
 {
     public class EncryptionContext
     {
-        private int keyVersion;
-
         public bool Encrypt { get; set; }
         public string Path { get; set; }
         public string Password { get; set; }

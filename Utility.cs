@@ -8,6 +8,7 @@ using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
@@ -23,8 +24,10 @@ namespace GDPR.Common
 {
     public class Utility
     {
-        public static string GetInternetIp()
+        public static List<string> GetInternetIp()
         {
+            List<string> items = new List<string>();
+
             HttpHelper hh = new HttpHelper();
             string html = hh.DoGet("https://www.google.com/search?q=what+is+my+ip", "");
             string temp = Utility.ParseValue(html, "w-answer-desktop>", "/div>");
@@ -32,15 +35,32 @@ namespace GDPR.Common
 
             try
             {
-                IPAddress.Parse(ipAddress);
-                return ipAddress;
+                IPAddress ip = IPAddress.Parse(ipAddress);
+                items.Add(ip.MapToIPv6().ToString());
+                items.Add(ip.MapToIPv4().ToString());
             }
             catch (Exception ex)
             {
                 GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Error);
             }
 
-            return null;
+            html = hh.DoGet("http://whatismyip.host/ ", "");
+            ipAddress = Utility.ParseValue(html, "<p class=\"ipaddress\">", "<");
+
+            try
+            {
+                IPAddress ip = IPAddress.Parse(ipAddress);
+                items.Add(ip.MapToIPv6().ToString());
+                items.Add(ip.MapToIPv4().ToString());
+            }
+            catch (Exception ex)
+            {
+                GDPRCore.Current.Log(ex, GDPR.Common.Enums.LogLevel.Error);
+            }
+
+            items.Add("127.0.0.1");
+
+            return items;
         }
         public static JToken RemoveEmptyChildren(JToken token)
         {

@@ -1,4 +1,6 @@
 ﻿using GDPR.Common.Core;
+using GDPR.Common.Enums;
+using GDPR.Common.Exceptions;
 using Microsoft.Azure.KeyVault;
 using Newtonsoft.Json;
 using PayPal.Api;
@@ -15,6 +17,8 @@ namespace GDPR.Common
     public class Configuration
     {
         private static string _dbLogLevel = "Verbose";
+        private static string _eventLogLevel = "Verbose";
+        private static string _consoleLogLevel = "Verbose";
 
         static Hashtable _settings;
         static readonly KeyVaultClient kv;
@@ -33,8 +37,6 @@ namespace GDPR.Common
 
         private static string _siteName;
 
-        private static string _eventLogLevel;
-        private static string _consoleLogLevel;
         private static string _appStubPath;
 
         private static string _applicationId;
@@ -251,7 +253,7 @@ namespace GDPR.Common
             }
             catch (Exception ex)
             {
-                //GDPRCore.Current.Log(new GDPRException($"{name} was not found in {AzureKeyVaultUrl}"), LogLevel.Error);
+                GDPRCore.Current.Log(ex, LogLevel.Error);
                 return null;
             }
         }
@@ -541,6 +543,9 @@ namespace GDPR.Common
                     _systemPinVersion = LoadFromKeyVault("SystemPinVersion");
                 }
 
+                if (string.IsNullOrEmpty(_systemPinVersion))
+                    _systemPinVersion = "1";
+
                 return _systemPinVersion;
             }
             set { _systemPinVersion = value; }
@@ -553,6 +558,9 @@ namespace GDPR.Common
                 if (string.IsNullOrEmpty(_gdprSqlConnectionString))
                 {
                     _gdprSqlConnectionString = LoadFromKeyVault("GDPRSQLConnectionString");
+
+                    if (string.IsNullOrEmpty(_gdprSqlConnectionString))
+                        throw new GDPRException("Database connection string is empty.  Check the configuration, keyvault firewall or azure credentials.");
                 }
 
                 return _gdprSqlConnectionString;
@@ -748,14 +756,8 @@ namespace GDPR.Common
             set { _mode = value; }
         }
 
-        public static string DbLogLevel
-        {
-            get { return _dbLogLevel; }
-            set { _dbLogLevel = value; }
-        }
-
-
         
+
 
         public static string AdminAzureClientId
         {
@@ -1075,6 +1077,18 @@ namespace GDPR.Common
         {
             get { return _coreApplicationId; }
             set { _coreApplicationId = value; }
+        }
+
+        public static string DbLogLevel
+        {
+            get { return _dbLogLevel; }
+            set { _dbLogLevel = value; }
+        }
+
+        public static string EventLogLevel
+        {
+            get { return _eventLogLevel; }
+            set { _eventLogLevel = value; }
         }
 
         public static string ConsoleLogLevel
@@ -1429,11 +1443,7 @@ namespace GDPR.Common
             set { _faceApiKey = value; }
         }
 
-        public static string EventLogLevel
-        {
-            get { return _eventLogLevel; }
-            set { _eventLogLevel = value; }
-        }
+        
 
         public static string SiteName
         {
