@@ -24,6 +24,7 @@ namespace GDPR.Common
         public String fileName = "";
         public String acceptOverride = String.Empty;
         public String contentTypeOverride = "";
+        public bool ignoreContentDisposition = false;
         public String methodOverride = "";
         public Hashtable headers = new Hashtable();
         public String Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36";
@@ -421,7 +422,7 @@ namespace GDPR.Common
                     fileName = "";
                 }
 
-                if (fileName.Length > 0)
+                if (fileName.Length > 0 && !ignoreContentDisposition)
                 {
                     // Define buffer and buffer size
                     int bufferSize = 2048;
