@@ -24,82 +24,97 @@ namespace GDPR.Common.EntityProperty
         {
             List<EntityPropertyTypeBase> types = new List<EntityPropertyTypeBase>();
 
-            
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "AllowUnverifiedData", Name = "AllowUnverifiedData", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "BatchSize", Name = "BatchSize", DefaultValue = "100", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DaysBetweenRequests", Name = "DaysBetweenRequests", DefaultValue = "90", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DataIsSold", Name = "DataIsSold", DefaultValue = "true", Type = "checkbox", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "DeleteRequiresApproval", Name = "DeleteRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "ExportRequiresApproval", Name = "ExportRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "MinNumberOfVerifiedTypes", Name = "MinNumberOfVerifiedTypes", Type = "textbox", DefaultValue = "1", Category = "Compliance", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "MaxQueryRequestsPerYear", Name = "MaxQueryRequestsPerYear", DefaultValue = "1", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "PerQueryRequestCost", Name = "PerQueryRequestCost", DefaultValue = "5.00", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false });
+            //default application properties
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("5a45b15f-7d44-47de-96f8-b4baa94c3d71"), DisplayName = "AllowUnverifiedData", Name = "AllowUnverifiedData", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("3af231bd-a7ec-4922-8ad7-78b234705223"), DisplayName = "BatchSize", Name = "BatchSize", DefaultValue = "100", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("a7c1041c-9a67-4ff8-8b70-be3a7771aa3b"), DisplayName = "DaysBetweenRequests", Name = "DaysBetweenRequests", DefaultValue = "90", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("3dfd0327-3b5c-4e67-aa9e-694bd5cee6b4"), DisplayName = "DataIsSold", Name = "DataIsSold", DefaultValue = "true", Type = "checkbox", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("c3125b19-5937-4c3d-a323-57f0c085c4b0"), DisplayName = "DeleteRequiresApproval", Name = "DeleteRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("19561589-41d8-40a4-8f4d-ee48e993583a"), DisplayName = "ExportRequiresApproval", Name = "ExportRequiresApproval", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("2559e2b8-1ae3-4c7a-8129-1ba0ce55df62"), DisplayName = "MinNumberOfVerifiedTypes", Name = "MinNumberOfVerifiedTypes", Type = "textbox", DefaultValue = "1", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("e6507d74-e3d8-4f3d-bbab-9eb7b391f55f"), DisplayName = "MaxQueryRequestsPerYear", Name = "MaxQueryRequestsPerYear", DefaultValue = "1", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("ae099068-29fa-4c13-979a-563c6411ef49"), DisplayName = "PerQueryRequestCost", Name = "PerQueryRequestCost", DefaultValue = "5.00", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
 
-            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse(""),
-                DisplayName = "ClientId",
-                    Name = "ClientId",
-                    Category = "Security",
-                    Type = "textbox",
-                    DefaultValue = "",
-                    IsMasked = false,
-                    IsSecure = true
-                });
-            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse(""),
-                    DisplayName = "ClientSecret",
-                    Name = "ClientSecret",
-                    Category = "Security",
-                    Type = "textbox",
-                    DefaultValue = "",
-                    IsMasked = true,
-                    IsSecure = true
-                });
-            types.Add(new EntityPropertyTypeBase()
-                {
-                EntityPropertyTypeId = Guid.Parse(""),
+            //paypal
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("5ac728e9-8639-4ec7-8494-d3f268115e10"), Category = "Payment", Type = "textbox", Name = "PaypalClientId", DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("e8984fc7-dda7-46cf-8a22-911266dc7af7"), Category = "Payment", Type = "textbox", Name = "PaypalClientSecret", DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("11e88b0d-b308-47b9-953c-bdffdb018aa5"), Category = "Payment", Type = "textbox", Name = "PaypalMode", DefaultValue = "sandbox", IsMasked = true, IsSecure = true, Description = "" });
+
+            //hidden
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("c47a6ca9-4f8d-4b54-bd3b-62996efc1d96"), DisplayName = "Hidden", Name = "Hidden", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = true, Description = "" });
+
+
+            //OAuth properties
+            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("039a78ba-802a-4155-9126-b43931197afd"),DisplayName = "ClientId",Name = "ClientId",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = false,IsSecure = true, Description = "" });
+            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("7bc7d139-bf37-44a1-ae51-c0f989dfb634"),DisplayName = "ClientSecret",Name = "ClientSecret",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true, Description = "" });
+            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("7ead7711-918b-473b-b742-f498e9e12443"),
                 DisplayName = "ApiKey",
                     Name = "ApiKey",
                     Category = "Security",
                     Type = "textbox",
                     DefaultValue = "",
                     IsMasked = false,
-                    IsSecure = true
-                });
+                    IsSecure = true,
+                Description = ""
+            });
             types.Add(
-                new EntityPropertyTypeBase()
-                {
-                    EntityPropertyTypeId = Guid.Parse(""),
+                new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("4408690c-8e81-40fe-9de2-d3a8c85704b4"),
                     DisplayName = "AccessToken",
                     Name = "AccessToken",
                     Category = "Security",
                     Type = "textbox",
                     DefaultValue = "",
                     IsMasked = true,
-                    IsSecure = true
+                    IsSecure = true,
+                    Description = ""
                 });
             types.Add(
-                new EntityPropertyTypeBase()
-                {
-                    EntityPropertyTypeId = Guid.Parse(""),
+                new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("2c24c170-2330-4224-9b64-cf347806ec63"),
                     DisplayName = "Username",
                     Name = "Username",
                     Category = "Security",
                     Type = "textbox",
                     DefaultValue = "",
                     IsMasked = true,
-                    IsSecure = true
+                    IsSecure = true,
+                    Description = ""
                 });
             types.Add(
-                new EntityPropertyTypeBase()
-                {
-                    EntityPropertyTypeId = Guid.Parse(""),
+                new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("89340c3a-80f3-4913-abe0-5d3a76e9815c"),
                     DisplayName = "Password",
                     Name = "Password",
                     Category = "Security",
                     Type = "textbox",
                     DefaultValue = "",
                     IsMasked = true,
-                    IsSecure = true
+                    IsSecure = true,
+                    Description = ""
                 });
+
+            //maps type...
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("783962fd-238b-46ef-a01d-ec83c1e2524e"), Category = "Maps", Type = "textbox", Name = "BingMapsApiKey",DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("3b2967c1-eb7d-43df-8794-67cf274a6a0a"), Category = "Maps", Type = "textbox", Name = "GoogleMapsApiKey",DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
+
+            //system/tenant level configuration props
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("01206917-63ae-420f-babf-99b9bbe6b178"), Category = "Supported Data", Type = "checkbox", Name = "EnableAddress",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("bc7d8fb1-4909-40d9-81fc-4dee4cd4243a"), Category = "Supported Data", Type = "checkbox", Name = "EnableBiometrics",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("1532bca6-c5a8-45e1-ad84-d008074d2b92"), Category = "Supported Data", Type = "checkbox", Name = "EnableDevices",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("ae747daf-de52-4346-b71c-3fa7f3d4696f"), Category = "Supported Data", Type = "checkbox", Name = "EnableDNA",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("9477aa30-6a4d-4eea-a806-4475c9c8e326"), Category = "Supported Data", Type = "checkbox", Name = "EnableEmails",DefaultValue = "1", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("429610e9-5fc4-481e-943f-a21830415682"), Category = "Supported Data", Type = "checkbox", Name = "EnableFido",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("97388fc7-effb-4386-82b9-f454239d6dd4"), Category = "Supported Data", Type = "checkbox", Name = "EnableIdentity",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("4f8fc982-3d99-4b6f-9aec-65e64eecde74"), Category = "Supported Data", Type = "checkbox", Name = "EnableIpAddress",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("d077718a-5858-4a70-8c7b-df7f7dd09fce"), Category = "Supported Data", Type = "checkbox", Name = "EnablePhone",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("45183a98-e682-4219-9691-231a60900217"), Category = "Supported Data", Type = "checkbox", Name = "EnableSocialIdentity",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });
+
+            //mail
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("4b77e942-6e70-4b6d-9a50-a2021b530b8d"), Category = "Mail", Type = "textbox", Name = "MailServer", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("dd2dcb81-31aa-490a-8cc7-705151cd0fc3"), Category = "Mail", Type = "textbox", Name = "MailPort", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("dd98811a-f03c-42d0-b117-e70307ab6a9a"), Category = "Mail", Type = "textbox", Name = "MailUsername", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("a9e768d5-e926-4765-a82e-f02098abdb9f"), Category = "Mail", Type = "textbox", Name = "MailPassword", DefaultValue = "", IsMasked = true, IsSecure = true });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("26f28152-af40-4b8a-bcb2-d830d1120f37"), Category = "Mail", Type = "checkbox", Name = "UseSecurity", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("5d4164f4-9b77-4d88-b1e3-351efdcde547"), Category = "Mail", Type = "textbox", Name = "MailFrom", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("1aaf343c-cff4-44a1-8085-4962c26bacd9"), Category = "Mail", Type = "textbox", Name = "MailReplyTo", DefaultValue = "", IsMasked = false, IsSecure = false });
 
             return types;
         }

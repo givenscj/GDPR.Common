@@ -2,6 +2,7 @@
 using GDPR.Common.Classes;
 using GDPR.Common.Core;
 using GDPR.Common.Data;
+using GDPR.Common.EntityProperty;
 using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
 using GDPR.Common.Models;
@@ -784,6 +785,16 @@ namespace GDPR.Applications
 
                 MessageHelper.SendMessage(discoverMsg, ctx);
             }
+        }
+
+        public virtual List<EntityPropertyTypeBase> GetEntityPropertyDefinitions()
+        {
+            List<EntityPropertyTypeBase> types = new List<EntityPropertyTypeBase>();
+
+            //default application properties
+            //types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "", Name = "", Type = "checkbox", DefaultValue = "", Category = "", IsMasked = false, IsSecure = false, Description = "" });
+
+            return types;
         }
 
         public abstract List<Record> GetAllRecordTypes();
