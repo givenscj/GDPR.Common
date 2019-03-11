@@ -24,6 +24,15 @@ namespace GDPR.Common.EntityProperty
         {
             List<EntityPropertyTypeBase> types = new List<EntityPropertyTypeBase>();
 
+            //temp
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("00cde8c3-4c98-45be-b2b4-cea75146b93e"), Category = "Link", Name = "RedirectUrl", DefaultValue = "", Type = "textbox", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("65090127-f010-450c-9681-3218268ad671"), Category = "General", Name = "TenantId", DefaultValue = "", Type = "textbox", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("d161faca-aef2-48a6-b246-cd152a8b35ed"), Category = "General", Name = "TenantDomain", DefaultValue = "", Type = "textbox", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("9e326753-1adb-400c-8722-458baf5a0f15"), Category = "General", DisplayName="Office365Domain", Name = "Office365Domain", DefaultValue = "", Type = "textbox", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("99c3dfde-fc38-4102-a0e8-a4a7f90d0563"), Category = "Security", DisplayName = "AccountId", Name = "AccountId", DefaultValue = "", Type = "textbox", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("4eeff7db-e55b-4f2f-bf29-83f3a121910e"), Category = "General", DisplayName = "Domain", Name = "Domain", DefaultValue = "", Type = "textbox", IsMasked = false, IsSecure = false });
+
+
             //default application properties
             types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("5a45b15f-7d44-47de-96f8-b4baa94c3d71"), DisplayName = "AllowUnverifiedData", Name = "AllowUnverifiedData", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "" });
             types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("3af231bd-a7ec-4922-8ad7-78b234705223"), DisplayName = "BatchSize", Name = "BatchSize", DefaultValue = "100", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
@@ -43,6 +52,15 @@ namespace GDPR.Common.EntityProperty
             //hidden
             types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("c47a6ca9-4f8d-4b54-bd3b-62996efc1d96"), DisplayName = "Hidden", Name = "Hidden", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = true, Description = "" });
 
+            //core system props
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("1a4cf053-2c3c-4832-a1ec-e6a467971496"), DisplayName = "PhoneNumber", Name = "PhoneNumber", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("2b8162aa-ef4d-4c08-a863-88b7f4c5598f"), DisplayName = "RegistrationPassword", Name = "RegistrationPassword", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("4af73175-8408-465b-8f82-3972cfeaa366"), DisplayName = "SystemPassword", Name = "SystemPassword", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("09683fed-dcae-4bb1-aa9e-48f01d95061c"), DisplayName = "LicenseKey", Name = "LicenseKey", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("d64b5ee7-013c-4409-8023-7e7c8af33562"), DisplayName = "ExternalDns", Name = "ExternalDns", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("cc394ae0-2a0a-4f37-8eb8-5ad974d3a433"), DisplayName = "EnableIpAddressResolution", Name = "EnableIpAddressResolution", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("332ea56f-c6a9-4011-aedb-888bb4457cdb"), DisplayName = "NotifyOnDiscovery", Name = "NotifyOnDiscovery", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("4369045b-c6c3-4e18-8b3d-bb86866513a0"), DisplayName = "ExportTimeout", Name = "ExportTimeout", DefaultValue = "", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "" });
 
             //OAuth properties
             types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("039a78ba-802a-4155-9126-b43931197afd"),DisplayName = "ClientId",Name = "ClientId",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = false,IsSecure = true, Description = "" });
