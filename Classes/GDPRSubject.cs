@@ -8,6 +8,8 @@ namespace GDPR.Common
         public List<GDPRSubjectPhone> Phones { get; set; }
         public List<GDPRSubjectAddress> Addresses { get; set; }
         public List<GDPRSubjectIdentity> Identities { get; set; }
+        public List<GDPRSubjectBiometric> Biometrics { get; set; }
+        public List<GDPRSubjectDna> Dnas { get; set; }
         public List<GDPRSubjectEmail> EmailAddresses { get; set; }
         public List<GDPRSubjectSocialIdentity> SocialIdentities { get; set; }
         public List<GDPRSubjectIpAddress> IpAddresses { get; set; }
@@ -41,6 +43,8 @@ namespace GDPR.Common
             this.Identities = new List<GDPRSubjectIdentity>();
             this.SocialIdentities = new List<GDPRSubjectSocialIdentity>();
             this.IpAddresses = new List<GDPRSubjectIpAddress>();
+            this.Dnas = new List<GDPRSubjectDna>();
+            this.Biometrics = new List<GDPRSubjectBiometric>();
         }
 
         public void AddEmail(string email)
@@ -59,6 +63,8 @@ namespace GDPR.Common
             this.Identities = subject.Identities;
             this.Addresses = subject.Addresses;
             this.SocialIdentities = subject.SocialIdentities;
+            this.Dnas = subject.Dnas;
+            this.Biometrics = subject.Biometrics;
 
         }
     }

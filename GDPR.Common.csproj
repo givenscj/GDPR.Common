@@ -254,6 +254,8 @@
     <Compile Include="Classes\Configuration.cs" />
     <Compile Include="Classes\ErrorContext.cs" />
     <Compile Include="Classes\ExportInfo.cs" />
+    <Compile Include="Classes\GDPRSubjectBiometric.cs" />
+    <Compile Include="Classes\GDPRSubjectDna.cs" />
     <Compile Include="Classes\IGDPRSubjectObject.cs" />
     <Compile Include="Classes\GoogleTranslation.cs" />
     <Compile Include="Classes\HttpHelper.cs" />
