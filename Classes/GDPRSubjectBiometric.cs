@@ -7,6 +7,7 @@
     {
         public System.Guid SubjectId { get; set; }
         public System.Guid ObjectId { get; set; }
+        public string Name { get; set; }
         public string Type { get; set; }
         public string Url { get; set; }
         public bool IsVerified { get; set; }

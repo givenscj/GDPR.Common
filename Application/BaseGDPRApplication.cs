@@ -17,6 +17,7 @@ namespace GDPR.Applications
 {
     public abstract class BaseGDPRApplication : GDPRApplicationCore, IGDPRDataSubjectActions
     {
+        //application search support 
         protected bool _supportsPersonalSearch;
         protected bool _supportsEmailSearch;
         protected bool _supportsPhoneSearch;
@@ -28,31 +29,41 @@ namespace GDPR.Applications
         protected bool _supportsDeviceSearch;
         protected bool _supportsDnaSearch;
 
+        //misc search 
+        //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
         protected bool _enableNameSearch;
         protected bool _enablePhoneFormatsSearch;
 
+        //GDPR
         protected bool _supportsGDPRUpdate;
         protected bool _supportsGDPRHold;
         protected bool _supportsGDPRInsert;
 
+        //records
         protected bool _supportsRecords;
+        protected bool _supportsAnonymization;
+        protected bool _allowUnverifiedRecords;
 
+        //Approval
         protected bool _manualApprovalOnly;
         protected bool _manualDataExportOnly;
 
-        protected bool _supportsAnonymization;
+        //webhook support
+        protected bool _supportsWebHookCreate;
+        protected bool _supportsWebHookDelete;
+        protected bool _supportsWebHookUpdate;
 
-        protected bool _allowUnverifiedRecords;
-
-        //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
+        //basic properties
         protected string _version;
         protected string _shortName;
         protected string _longName;
         protected IGDPRCore core;
 
+        //in and out message for higher level processing
         protected BaseApplicationMessage _request;
         protected BaseApplicationMessage _response;
 
+        //how to encrypt the messasges that are outgoing
         public EncryptionContext ctx { get; set; }
 
         public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
@@ -76,6 +87,8 @@ namespace GDPR.Applications
         public bool SupportsAnonymization { get { return this._supportsAnonymization; } }
 
         public bool SupportsRecords { get { return this._supportsRecords; } }
+
+        public int Tier { get; set; }
 
         public bool ZipAndLock { get; set; }
 
@@ -787,6 +800,8 @@ namespace GDPR.Applications
             }
         }
 
+        public abstract List<Record> GetAllRecordTypes();
+
         public virtual List<EntityPropertyTypeBase> GetEntityPropertyDefinitions()
         {
             List<EntityPropertyTypeBase> types = new List<EntityPropertyTypeBase>();
@@ -796,8 +811,6 @@ namespace GDPR.Applications
 
             return types;
         }
-
-        public abstract List<Record> GetAllRecordTypes();
 
         public virtual List<BaseApplicationPolicy> GetRecordPolicy()
         {
