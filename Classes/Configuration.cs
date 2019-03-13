@@ -943,7 +943,14 @@ namespace GDPR.Common
 
         public static string VisionApiKey
         {
-            get { return _visionApiKey; }
+            get {
+                if (string.IsNullOrEmpty(_visionApiKey))
+                {
+                    _visionApiKey = LoadFromKeyVault("VisionApiKey");
+                }
+
+                return _visionApiKey;
+            }
             set { _visionApiKey = value; }
         }
 
@@ -961,7 +968,14 @@ namespace GDPR.Common
 
         public static string SpeechApiKey
         {
-            get { return _speechApiKey; }
+            get {
+                if (string.IsNullOrEmpty(_speechApiKey))
+                {
+                    _speechApiKey = LoadFromKeyVault("SpeechApiKey");
+                }
+
+                return _speechApiKey;
+            }
             set { _speechApiKey = value; }
         }
 
@@ -1439,7 +1453,14 @@ namespace GDPR.Common
 
         public static string FaceApiKey
         {
-            get { return _faceApiKey; }
+            get {
+                if (string.IsNullOrEmpty(_faceApiKey))
+                {
+                    _faceApiKey = LoadFromKeyVault("FaceApiKey");
+                }
+
+                return _faceApiKey;
+            }
             set { _faceApiKey = value; }
         }
 
