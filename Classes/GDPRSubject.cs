@@ -67,5 +67,10 @@ namespace GDPR.Common
             this.Biometrics = subject.Biometrics;
 
         }
+
+        public void AddPhone(string phone)
+        {
+            this.Phones.Add(new GDPRSubjectPhone { Raw = phone });
+        }
     }
 }

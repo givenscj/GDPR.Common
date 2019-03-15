@@ -8,6 +8,9 @@ namespace GDPR.Common.Classes
         public string IpAddress { get; set; }
         public Guid ImpersonatingUserId { get; set; }
         public Guid UserId { get; set; }
+
+        public bool AllowTrials { get; set; }
+        public bool IsTrial { get; set; }
         public bool IsAdmin { get; set; }
         public bool ReadOnly { get; set; }
         public Guid TenantId { get; set; }
