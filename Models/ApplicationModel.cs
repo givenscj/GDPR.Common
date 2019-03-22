@@ -13,6 +13,7 @@ namespace GDPR.Common.Models
         public Guid AuthenticationTypeId { get; set; }
         public Guid ApplicationTemplateId { get; set; }
         public string TemplateName { get; set; }
+        public int Tier { get; set; }
         public string PrivacyUrl { get; set; }
         public string TermsUrl { get; set; }
         public string ApplicationName { get; set; }

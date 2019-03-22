@@ -12,10 +12,22 @@ using System.Reflection;
 
 namespace GDPR.Common.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GDPRCore : IGDPRCore
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static IGDPRCore Current;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="systemKeyVersion"></param>
+        /// <returns></returns>
         public string Decrypt(string input, int systemKeyVersion)
         {
             return input;

@@ -13,11 +13,124 @@ using PGPSnippet.PGPEncryption;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace GDPR.Common.Encryption
 {
+    public static class EncryptionExtension
+    {
+        public static byte[] ReadAllBytes(this BinaryReader reader)
+        {
+            const int bufferSize = 4096;
+            using (var ms = new MemoryStream())
+            {
+                byte[] buffer = new byte[bufferSize];
+                int count;
+                while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                    ms.Write(buffer, 0, count);
+                return ms.ToArray();
+            }
+
+        }
+    }
+
     public class EncryptionHelper
     {
+        private static byte[][] GetHashKeys(string key)
+        {
+            byte[][] result = new byte[2][];
+            Encoding enc = Encoding.UTF8;
+
+            SHA256 sha2 = new SHA256CryptoServiceProvider();
+
+            byte[] rawKey = enc.GetBytes(key);
+            byte[] rawIV = enc.GetBytes(key);
+
+            byte[] hashKey = sha2.ComputeHash(rawKey);
+            byte[] hashIV = sha2.ComputeHash(rawIV);
+
+            Array.Resize(ref hashIV, 16);
+
+            result[0] = hashKey;
+            result[1] = hashIV;
+
+            return result;
+        }
+
+        public static byte[] EncryptStream(string key, byte[] data)
+        {
+            byte[] encrypted = null;
+
+            byte[][] keys = GetHashKeys(key);
+
+            try
+            {
+                encrypted = EncryptStream(data, keys[0], keys[1]);
+            }
+            catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+
+            return encrypted;
+        }
+
+        public static byte[] DecryptStream(string key, byte[] data)
+        {
+            byte[] unEnc = null;
+
+            byte[][] keys = GetHashKeys(key);
+
+            try
+            {
+                unEnc = DecryptStream(data, keys[0], keys[1]);
+            }
+            catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+
+            return unEnc;
+        }
+        
+        public static byte[] EncryptStream(byte[] plain, byte[] Key, byte[] IV)
+        {
+            byte[] encrypted;
+            using (MemoryStream mstream = new MemoryStream())
+            {
+                using (AesManaged aesProvider = new AesManaged())
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream(mstream,
+                        aesProvider.CreateEncryptor(Key, IV), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(plain, 0, plain.Length);
+                    }
+                    encrypted = mstream.ToArray();
+                }
+            }
+            return encrypted;
+        }
+        public static byte[] DecryptStream(byte[] encrypted, byte[] Key, byte[] IV)
+        {
+            byte[] data = null;
+            using (MemoryStream mStream = new MemoryStream(encrypted)) //add encrypted
+            {
+                using (AesManaged aesProvider = new AesManaged())
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream,
+                        aesProvider.CreateDecryptor(Key, IV), CryptoStreamMode.Read))
+                    {
+                        //cryptoStream.Read(encrypted, 0, encrypted.Length);
+                        using (BinaryReader stream = new BinaryReader(cryptoStream))
+                        {
+                            data = stream.ReadAllBytes();
+                        }
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        
+
         public static void GenerateKeys(string username, string password, string keyStoreUrl, string applicationId)
         {
             IAsymmetricCipherKeyPairGenerator kpg = new RsaKeyPairGenerator();

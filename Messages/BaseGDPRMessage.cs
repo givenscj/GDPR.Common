@@ -29,7 +29,7 @@ namespace GDPR.Common.Messages
         public string QueueUri { get; set; }
         public Guid ProcessorId { get; set; }
         public Guid SubjectRequestId { get; set; }
-        public BaseGDPRApplication Instance { get; set; }
+        public GDPRApplicationBase Instance { get; set; }
         public BaseSubjectRequest SubjectRequest { get; set; }
         public MessageDirection Direction { get; set; }
         public string Status { get; set; }
@@ -53,7 +53,7 @@ namespace GDPR.Common.Messages
 
                 if (pType != null)
                 {
-                    Instance = (BaseGDPRApplication)Activator.CreateInstance(pType);
+                    Instance = (GDPRApplicationBase)Activator.CreateInstance(pType);
 
                     //need to set the application id BEFORE init to get the proper properties
                     Instance.ApplicationId = this.ApplicationId;

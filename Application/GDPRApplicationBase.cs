@@ -15,7 +15,7 @@ using Configuration = GDPR.Common.Configuration;
 
 namespace GDPR.Applications
 {
-    public abstract class BaseGDPRApplication : GDPRApplicationCore, IGDPRDataSubjectActions
+    public abstract class GDPRApplicationBase : GDPRApplicationCore, IGDPRDataSubjectActions
     {
         //application search support 
         protected bool _supportsPersonalSearch;
@@ -157,7 +157,7 @@ namespace GDPR.Applications
             }
         }
 
-        public BaseGDPRApplication()
+        public GDPRApplicationBase()
         {
             _version = "1.0.0.0";
         }
@@ -184,12 +184,12 @@ namespace GDPR.Applications
             set { _enablePhoneFormatsSearch = value; }
         }
 
-        public virtual void Consent()
+        public virtual void Consent(string applicationSubjectId)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void Unconsent()
+        public virtual void Unconsent(string applicationSubjectId)
         {
             throw new NotImplementedException();
         }
@@ -227,6 +227,11 @@ namespace GDPR.Applications
         public virtual void Discover()
         {
             Discover(null);
+        }
+
+        public virtual void PhoneNormalization()
+        {
+            throw new NotImplementedException();
         }
 
         public virtual void ProcessRequest(BaseGDPRMessage message, EncryptionContext ctx)
@@ -498,27 +503,22 @@ namespace GDPR.Applications
 
         public void CreateOAuthProperties(bool overwrite)
         {
-            AddProperty(
-                new BaseEntityProperty
-                {
-                    DisplayName = "ClientId", Name = "ClientId", Category = "Security", Type = "textbox", Value = "",
-                    IsMasked = false, IsSecure = true
-                }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
-                {
+            AddProperty(new BaseEntityProperty() { EntityId = this.ApplicationId, EntityPropertyId = Guid.NewGuid(), DisplayName = "ClientId", Name = "ClientId", Category = "Security", Type = "textbox", Value = "",IsMasked = false, IsSecure = true}, overwrite);
+            AddProperty(new BaseEntityProperty() {EntityId = this.ApplicationId, EntityPropertyId = Guid.NewGuid(),
                     DisplayName = "ClientSecret", Name = "ClientSecret", Category = "Security", Type = "textbox",
                     Value = "", IsMasked = true, IsSecure = true
                 }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
+            AddProperty(new BaseEntityProperty()
                 {
+                    EntityId = this.ApplicationId,
+                    EntityPropertyId = Guid.NewGuid(),
                     DisplayName = "ApiKey", Name = "ApiKey", Category = "Security", Type = "textbox", Value = "",
                     IsMasked = false, IsSecure = true
                 }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
+            AddProperty(new BaseEntityProperty()
                 {
+                    EntityId = this.ApplicationId,
+                    EntityPropertyId = Guid.NewGuid(),
                     DisplayName = "AccessToken", Name = "AccessToken", Category = "Security", Type = "textbox",
                     Value = "", IsMasked = true, IsSecure = true
                 }, overwrite);
@@ -832,6 +832,11 @@ namespace GDPR.Applications
             }
 
             return policies;
+        }
+
+        public virtual void AnonymizeSubject(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
         }
     }
 }

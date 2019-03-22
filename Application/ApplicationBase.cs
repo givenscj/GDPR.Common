@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class BaseApplication
+    public partial class ApplicationBase
     {
-        public BaseApplication()
+        public ApplicationBase()
         {
         }
 

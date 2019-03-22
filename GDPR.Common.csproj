@@ -246,9 +246,9 @@
     <Compile Include="Classes\AzureHelper.cs" />
     <Compile Include="Classes\BaseAddress.cs" />
     <Compile Include="Classes\ApplicationPolicy.cs" />
-    <Compile Include="Application\BaseApplication.cs" />
+    <Compile Include="Application\ApplicationBase.cs" />
     <Compile Include="Classes\BaseEntityProperty.cs" />
-    <Compile Include="Application\BaseGDPRApplication.cs" />
+    <Compile Include="Application\GDPRApplicationBase.cs" />
     <Compile Include="Classes\BlobContext.cs" />
     <Compile Include="Classes\CaptchaImage.cs" />
     <Compile Include="Classes\Configuration.cs" />
@@ -280,7 +280,7 @@
     <Compile Include="Messages\BaseErrorMessage.cs" />
     <Compile Include="Messages\BaseQueryMessage.cs" />
     <Compile Include="Messages\GDPRMessageWrapper.cs" />
-    <Compile Include="Application\GDPROAuthApplication.cs" />
+    <Compile Include="Application\GDPROAuthApplicationBase.cs" />
     <Compile Include="Messages\BaseApplicationMessage.cs" />
     <Compile Include="Classes\OAuthContext.cs" />
     <Compile Include="Enums\MessageDirection.cs" />
