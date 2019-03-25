@@ -139,6 +139,7 @@ namespace GDPR.Common
         private static string _recaptchaApiVersion;
 
         /* maps apis */
+        private static string _azureMapsApiKey;
         private static string _bingMapsApiKey;
         private static string _googleMapsApiKey;
 
@@ -1194,6 +1195,12 @@ namespace GDPR.Common
         {
             get { return _paypalMode; }
             set { _paypalMode = value; }
+        }
+
+        public static string AzureMapsApiKey
+        {
+            get { return _azureMapsApiKey; }
+            set { _azureMapsApiKey = value; }
         }
 
         public static string BingMapsApiKey

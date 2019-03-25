@@ -17,7 +17,7 @@ namespace GDPR.Common.Services
         {
             get
             {
-                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.StorageAccountName, Configuration.StorageAccountKey);
+                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.ResourcePrefix + Configuration.StorageAccountName, Configuration.StorageAccountKey);
             }
             set
             {
@@ -115,7 +115,7 @@ namespace GDPR.Common.Services
 
                     //tenantid is the container...
                     //name should be in format of tenantid\applicationid\subjectrequestid.blah...
-                    name = string.Format("{0}\\{1}.{2}", ctx.ApplicationId, ctx.ApplicationRequestId, ctx.Type);
+                    name = string.Format("{0}\\{1}.{2}.{3}", ctx.ApplicationId, ctx.ApplicationRequestId, ctx.Type, ctx.Name);
 
                     CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(name);
                     cloudBlockBlob.UploadFromByteArray(data, 0, data.Length);

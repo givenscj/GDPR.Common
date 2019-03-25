@@ -16,10 +16,13 @@ namespace GDPR.Common.Classes
 
         public void AddRecord(Record r)
         {
-            if (!keys.ContainsKey(r.Type + r.RecordId))
+            if (r != null)
             {
-                keys.Add(r.Type + r.RecordId, r.Type + r.RecordId);
-                records.Add(r);
+                if (!keys.ContainsKey(r.Type + r.RecordId))
+                {
+                    keys.Add(r.Type + r.RecordId, r.Type + r.RecordId);
+                    records.Add(r);
+                }
             }
         }
 

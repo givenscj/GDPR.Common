@@ -107,6 +107,7 @@ namespace GDPR.Common.EntityProperty
             //maps type...
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("783962fd-238b-46ef-a01d-ec83c1e2524e"), Category = "Maps", Type = "textbox", Name = "BingMapsApiKey",DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("3b2967c1-eb7d-43df-8794-67cf274a6a0a"), Category = "Maps", Type = "textbox", Name = "GoogleMapsApiKey",DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("bcf5c431-74ad-4e8b-887b-ba3326558ee0"), Category = "Maps", Type = "textbox", Name = "AzureMapsApiKey", DefaultValue = "", IsMasked = true, IsSecure = true, Description = "" });
 
             //system/tenant level configuration props
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("01206917-63ae-420f-babf-99b9bbe6b178"), Category = "Supported Data", Type = "checkbox", Name = "EnableAddress",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "" });

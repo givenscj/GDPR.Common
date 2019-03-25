@@ -197,6 +197,19 @@ namespace GDPR.Common
             return DoPut(url, data, cookies);
         }
 
+        public string DoPatch(string url, string postData, string cookies)
+        {
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            byte[] data = encoding.GetBytes(postData);
+
+            return DoPatch(url, data, cookies);
+        }
+
+        public string DoPatch(string url, byte[] data, string cookies)
+        {
+            return DoPostWork(url, data, "PATCH", cookies);
+        }
+
         public string DoPut(string url, byte[] data, string cookies)
         {
             return DoPostWork(url, data, "PUT", cookies);
