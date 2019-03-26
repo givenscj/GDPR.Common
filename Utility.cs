@@ -519,6 +519,22 @@ namespace GDPR.Common
             }
         }
 
+        public static bool ParseBoolean(string inVal)
+        {
+            switch(inVal)
+            {
+                case "1":
+                    return true;
+                case "0":
+                    return false;
+            }
+
+            bool bAllowTrials = false;
+            bool.TryParse(inVal, out bAllowTrials);
+
+            return bAllowTrials;
+        }
+
         public static string Unzip(byte[] bytes)
         {
             using (var msi = new MemoryStream(bytes))

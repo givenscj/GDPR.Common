@@ -35,6 +35,7 @@ namespace GDPR.Common
         private static bool _enableEncryption;
         private static string _storageRegion;
 
+        private static bool _allowTrials;
         private static string _siteName;
 
         private static string _appStubPath;
@@ -1477,6 +1478,12 @@ namespace GDPR.Common
         {
             get { return _siteName; }
             set { _siteName = value; }
+        }
+
+        public static bool AllowTrials
+        {
+            get { return _allowTrials; }
+            set { _allowTrials = value; }
         }
 
         public static string AzureKeyVaultUrl
