@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace GDPR.Common.Models
 {
@@ -14,13 +15,18 @@ namespace GDPR.Common.Models
         public Guid ApplicationTemplateId { get; set; }
         public string TemplateName { get; set; }
         public int Tier { get; set; }
+        [Required]
         public string PrivacyUrl { get; set; }
+        [Required]
         public string TermsUrl { get; set; }
+        public string EndPointUrl { get; set; }
         public string ApplicationName { get; set; }
         public string FullName { get; set; }
         public string PublicKey { get; set; }
         public string ApplicationType { get; set; }
+        [Required]
         public string ShortName { get; set; }
+        [Required]
         public string LongName { get; set; }
         public string Version { get; set; }
         public bool IsPublic { get; set; }
