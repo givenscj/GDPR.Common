@@ -36,6 +36,7 @@ namespace GDPR.Common
         private static string _storageRegion;
 
         private static bool _allowTrials;
+        private static bool _notHosted;
         private static string _siteName;
 
         private static string _appStubPath;
@@ -1484,6 +1485,84 @@ namespace GDPR.Common
         {
             get { return _allowTrials; }
             set { _allowTrials = value; }
+        }
+
+        public static bool NotHosted
+        {
+            get { return _notHosted; }
+            set { _notHosted = value; }
+        }
+
+        static string _linkSecurity;
+
+        public static string LinkSecurity
+        {
+            get { return _linkSecurity; }
+            set { _linkSecurity = value; }
+        }
+
+        static string _linkSupport;
+
+        public static string LinkSupport
+        {
+            get { return _linkSupport; }
+            set { _linkSupport = value; }
+        }
+
+        static string _linkTerms;
+
+        public static string LinkTerms
+        {
+            get { return _linkTerms; }
+            set { _linkTerms = value; }
+        }
+
+        static string _linkEula;
+
+        public static string LinkEula
+        {
+            get { return _linkEula; }
+            set { _linkEula = value; }
+        }
+
+        static string _linkPrivacy;
+
+        public static string LinkPrivacy
+        {
+            get { return _linkPrivacy; }
+            set { _linkPrivacy = value; }
+        }
+
+        static string _linkFeedback;
+
+        public static string LinkFeedback
+        {
+            get { return _linkFeedback; }
+            set { _linkFeedback = value; }
+        }
+
+        static string _linkContact;
+
+        public static string LinkContact
+        {
+            get { return _linkContact; }
+            set { _linkContact = value; }
+        }
+
+        static string _linkPhone;
+
+        public static string LinkPhone
+        {
+            get { return _linkPhone; }
+            set { _linkPhone = value; }
+        }
+
+        static string _emailDomain;
+
+        public static string EmailDomain
+        {
+            get { return _emailDomain; }
+            set { _emailDomain = value; }
         }
 
         public static string AzureKeyVaultUrl

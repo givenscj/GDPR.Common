@@ -199,7 +199,7 @@ namespace GDPR.Common.Messages
 
             //send the message to the processor endpoint...
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://admin.thegdprregistry.com");
+            client.BaseAddress = new Uri(GDPR.Common.Configuration.ExternalDns);
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("", post)
