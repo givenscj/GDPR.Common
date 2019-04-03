@@ -35,6 +35,8 @@ namespace GDPR.Applications
         protected bool _enablePhoneFormatsSearch;
 
         //GDPR
+        protected bool _supportsGDPRQuery;
+        protected bool _supportsGDPRDelete;
         protected bool _supportsGDPRUpdate;
         protected bool _supportsGDPRHold;
         protected bool _supportsGDPRInsert;
@@ -580,8 +582,24 @@ namespace GDPR.Applications
             BuildProperties(overwrite);
         }
 
+        public Guid GetEntityPropertyTypeId(string name, string category)
+        {
+            List<EntityPropertyTypeBase> types = this.GetEntityPropertyDefinitions();
+            types.AddRange(GDPRCore.Current.GetEntityPropertyDefinitions());
+
+            EntityPropertyTypeBase b = types.Find(e => e.Name == name && e.Category == category);
+
+            if (b != null)
+                return b.EntityPropertyTypeId;
+
+            return Guid.Empty;
+        }
+
         public void AddProperty(BaseEntityProperty ep, bool overwrite)
         {
+            Guid entityPropertyTypeId = GetEntityPropertyTypeId(ep.Name, ep.Category);
+            ep.EntityPropertyTypeId = entityPropertyTypeId;
+
             if (Properties.ContainsKey(ep.Name))
             {
                 if (overwrite)

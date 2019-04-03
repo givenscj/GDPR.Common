@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Messages;
 using System;
@@ -268,5 +269,10 @@ namespace GDPR.Common.Core
         /// <param name="version"></param>
         /// <returns></returns>
         string GetApplicationKey(string id, string version);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        List<EntityPropertyTypeBase> GetEntityPropertyDefinitions();
     }
 }

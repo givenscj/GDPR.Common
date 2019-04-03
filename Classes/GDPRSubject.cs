@@ -5,19 +5,22 @@ namespace GDPR.Common
 {
     public class GDPRSubject
     {
-        public List<GDPRSubjectPhone> Phones { get; set; }
+        public List<GDPRSubjectAlias> Aliases { get; set; }
         public List<GDPRSubjectAddress> Addresses { get; set; }
-        public List<GDPRSubjectIdentity> Identities { get; set; }
         public List<GDPRSubjectBiometric> Biometrics { get; set; }
         public List<GDPRSubjectDna> Dnas { get; set; }
         public List<GDPRSubjectEmail> EmailAddresses { get; set; }
-        public List<GDPRSubjectSocialIdentity> SocialIdentities { get; set; }
+        public List<GDPRSubjectIdentity> Identities { get; set; }
         public List<GDPRSubjectIpAddress> IpAddresses { get; set; }
+        public List<GDPRSubjectPhone> Phones { get; set; }
+        public List<GDPRSubjectSocialIdentity> SocialIdentities { get; set; }
+        
         public string ApplicationSubjectId { get; set; }
         public string ProcessorId { get; set; }
         public bool IsLocked { get; set; }
         public DateTime LockedDate { get; set; }
         public Guid SubjectId { get; set; }
+        public decimal VerificationScore { get; set; }
         public bool IsMinor { get; set; }
         public bool IsEmployee { get; set; }
         public DateTime BirthDate { get; set; }
@@ -37,6 +40,7 @@ namespace GDPR.Common
         
         public GDPRSubject()
         {
+            this.Aliases = new List<GDPRSubjectAlias>();
             this.Addresses = new List<GDPRSubjectAddress>();
             this.EmailAddresses = new List<GDPRSubjectEmail>();
             this.Phones = new List<GDPRSubjectPhone>();

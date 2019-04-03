@@ -252,8 +252,10 @@
     <Compile Include="Classes\BlobContext.cs" />
     <Compile Include="Classes\CaptchaImage.cs" />
     <Compile Include="Classes\Configuration.cs" />
+    <Compile Include="Classes\Constants.cs" />
     <Compile Include="Classes\ErrorContext.cs" />
     <Compile Include="Classes\ExportInfo.cs" />
+    <Compile Include="Classes\GDPRSubjectAlias.cs" />
     <Compile Include="Classes\GDPRSubjectBiometric.cs" />
     <Compile Include="Classes\GDPRSubjectDna.cs" />
     <Compile Include="Classes\IGDPRSubjectObject.cs" />

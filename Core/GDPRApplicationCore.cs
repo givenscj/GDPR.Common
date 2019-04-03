@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Messages;
 using System;
@@ -248,6 +249,11 @@ namespace GDPR.Common.Core
         public string GetApplicationPin(string applicationId, int keyVersion)
         {
             return Configuration.GetProperty("ApplicationPassword").ToString();
+        }
+
+        public List<EntityPropertyTypeBase> GetEntityPropertyDefinitions()
+        {
+            return new List<EntityPropertyTypeBase>();
         }
     }
 }
