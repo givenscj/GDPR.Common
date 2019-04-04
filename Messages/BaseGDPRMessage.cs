@@ -22,6 +22,7 @@ namespace GDPR.Common.Messages
         public int Retries { get; set; }
         public GDPRSubject Subject { get; set; }
         public SecurityContext Context { get; set; }
+        public Guid TokenId { get; set; }
         public Guid TenantId { get; set; }
         public Guid SystemId { get; set; }
         public Guid ApplicationId { get; set; }

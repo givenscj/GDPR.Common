@@ -110,6 +110,9 @@ namespace GDPR.Common.EntityProperty
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("d077718a-5858-4a70-8c7b-df7f7dd09fce"), Category = "Supported Data", Type = "checkbox", Name = "EnablePhone",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "Turns on phone input and submission" });
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("45183a98-e682-4219-9691-231a60900217"), Category = "Supported Data", Type = "checkbox", Name = "EnableSocialIdentity",DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "Turns on social identity input and submission" });
 
+            //search
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("0783ebc1-a12d-4a41-bcab-c7436e045c45"), Category = "Search", Type = "checkbox", Name = "EnablePhoneFormatsSearch", DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "Turns on the phone number permutation search" });
+
             //mail
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("4b77e942-6e70-4b6d-9a50-a2021b530b8d"), Category = "Mail", Type = "textbox", Name = "MailServer", DefaultValue = "", IsMasked = false, IsSecure = false, Description = "SMTP Mail server" });
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("dd2dcb81-31aa-490a-8cc7-705151cd0fc3"), Category = "Mail", Type = "textbox", Name = "MailPort", DefaultValue = "", IsMasked = false, IsSecure = false, Description = "SMTP Mail Port" });

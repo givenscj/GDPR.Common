@@ -375,6 +375,7 @@ namespace GDPR.Applications
             AddProperty(
                 new BaseEntityProperty
                 {
+                    EntityId = this.ApplicationId,
                     DisplayName = "Username", Category = "Security",
                     Type = "textbox", Name = "Username", Value = "", IsMasked = false,
                     IsSecure = true
@@ -382,6 +383,7 @@ namespace GDPR.Applications
             AddProperty(
                 new BaseEntityProperty
                 {
+                    EntityId = this.ApplicationId,
                     DisplayName = "Password", Category = "Security",
                     Type = "textbox", Name = "Password", Value = "", IsMasked = true,
                     IsSecure = true
@@ -393,8 +395,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsAddressSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsAddressSearch",
                      Value = "",
                      Type = "checkbox",
@@ -404,8 +407,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsBioidentitySearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsBioidentitySearch",
                      Value = "false",
                      Type = "checkbox",
@@ -415,8 +419,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsDeviceSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsDeviceSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -426,8 +431,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsDnaSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsDnaSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -437,8 +443,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsEmailSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsEmailSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -448,8 +455,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsIdentitySearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsIdentitySearch",
                      Value = "false",
                      Type = "checkbox",
@@ -459,8 +467,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsIpAddressSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsIpAddressSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -470,8 +479,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsPersonalSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsPersonalSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -481,8 +491,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsPhoneSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsPhoneSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -492,36 +503,48 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsSocialSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsSocialSearch",
                      Value = "false",
                      Type = "checkbox",
                      IsMasked = false,
                      IsSecure = false
                  }, overwrite);
-            
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "EnablePhoneFormatsSearch",
+                     Category = "Search",
+                     Name = "EnablePhoneFormatsSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
         }
 
         public void CreateOAuthProperties(bool overwrite)
         {
             AddProperty(new BaseEntityProperty() { EntityId = this.ApplicationId, EntityPropertyId = Guid.NewGuid(), DisplayName = "ClientId", Name = "ClientId", Category = "Security", Type = "textbox", Value = "",IsMasked = false, IsSecure = true}, overwrite);
             AddProperty(new BaseEntityProperty() {EntityId = this.ApplicationId, EntityPropertyId = Guid.NewGuid(),
-                    DisplayName = "ClientSecret", Name = "ClientSecret", Category = "Security", Type = "textbox",
+                    DisplayName = "Client Secret", Name = "ClientSecret", Category = "Security", Type = "textbox",
                     Value = "", IsMasked = true, IsSecure = true
                 }, overwrite);
             AddProperty(new BaseEntityProperty()
                 {
                     EntityId = this.ApplicationId,
                     EntityPropertyId = Guid.NewGuid(),
-                    DisplayName = "ApiKey", Name = "ApiKey", Category = "Security", Type = "textbox", Value = "",
+                    DisplayName = "Api Key", Name = "ApiKey", Category = "Security", Type = "textbox", Value = "",
                     IsMasked = false, IsSecure = true
                 }, overwrite);
             AddProperty(new BaseEntityProperty()
                 {
                     EntityId = this.ApplicationId,
                     EntityPropertyId = Guid.NewGuid(),
-                    DisplayName = "AccessToken", Name = "AccessToken", Category = "Security", Type = "textbox",
+                    DisplayName = "Access Token", Name = "AccessToken", Category = "Security", Type = "textbox",
                     Value = "", IsMasked = true, IsSecure = true
                 }, overwrite);
         }

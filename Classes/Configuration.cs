@@ -2,11 +2,13 @@
 using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
 using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using PayPal.Api;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -202,10 +204,21 @@ namespace GDPR.Common
         {
             _settings = new Hashtable();
 
+            string mode = ConfigurationManager.AppSettings["Mode"];
+            Configuration.LoadWithMode(mode);
+
             //Get an access token for the Key Vault to get the secret out...
+            //https://azure.microsoft.com/en-us/resources/samples/app-service-msi-keyvault-dotnet/
             try
             {
-                kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(Utility.GetToken));
+                if (Configuration.IsManaged || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
+                {
+                    AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
+                    //this is for managed service identities...
+                    kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+                }
+                else
+                    kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(Utility.GetToken));
             }
             catch (Exception ex)
             {
@@ -1563,6 +1576,14 @@ namespace GDPR.Common
         {
             get { return _emailDomain; }
             set { _emailDomain = value; }
+        }
+
+        static bool _isManaged;
+
+        public static bool IsManaged
+        {
+            get { return _isManaged; }
+            set { _isManaged = value; }
         }
 
         public static string AzureKeyVaultUrl
