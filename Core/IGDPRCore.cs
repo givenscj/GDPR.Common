@@ -274,5 +274,6 @@ namespace GDPR.Common.Core
         /// </summary>
         /// <returns></returns>
         List<EntityPropertyTypeBase> GetEntityPropertyDefinitions();
+        GDPRSubject GetSubjectWithToken(Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId);
     }
 }

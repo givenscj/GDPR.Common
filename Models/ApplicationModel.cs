@@ -21,6 +21,9 @@ namespace GDPR.Common.Models
         public string TermsUrl { get; set; }
         public string EndPointUrl { get; set; }
         public string ApplicationName { get; set; }
+        public string DeleteMessage { get; set; }
+        public string UpdateMessage { get; set; }
+        public string HoldMessage { get; set; }
         public string FullName { get; set; }
         public string PublicKey { get; set; }
         public string ApplicationType { get; set; }

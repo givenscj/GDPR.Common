@@ -879,5 +879,45 @@ namespace GDPR.Applications
         {
             throw new NotImplementedException();
         }
+
+        public bool SubjectCreateIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectCreateOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectDeleteIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectDeleteOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectUpdateIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectUpdateOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectHoldIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SubjectHoldOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

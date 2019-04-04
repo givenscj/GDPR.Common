@@ -21,18 +21,6 @@ namespace GDPR.Common
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="subject"></param>
-        /// <returns></returns>
-        bool RecordCreateIn(GDPRSubject subject);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <returns></returns>
-        bool RecordCreateOut(GDPRSubject subject);
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="r"></param>
         void AnonymizeRecord(Record r);
         void AnonymizeSubject(GDPRSubject subject);
@@ -53,6 +41,65 @@ namespace GDPR.Common
         /// </summary>
         /// <param name="subject"></param>
         void RecordNotify(GDPRSubject subject);
+        bool SubjectCreateIn(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectCreateOut(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectDeleteIn(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectDeleteOut(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectUpdateIn(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectUpdateOut(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectHoldIn(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool SubjectHoldOut(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool RecordCreateIn(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool RecordCreateOut(GDPRSubject subject);
         /// <summary>
         /// 
         /// </summary>

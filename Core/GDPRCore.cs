@@ -410,5 +410,10 @@ namespace GDPR.Common.Core
         {
             return new List<EntityPropertyTypeBase>();
         }
+
+        public GDPRSubject GetSubjectWithToken(Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId)
+        {
+            return new GDPRSubject();
+        }
     }
 }

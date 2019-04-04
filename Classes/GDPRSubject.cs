@@ -20,6 +20,7 @@ namespace GDPR.Common
         public bool IsLocked { get; set; }
         public DateTime LockedDate { get; set; }
         public Guid SubjectId { get; set; }
+        public Guid TokenId { get; set; }
         public decimal VerificationScore { get; set; }
         public bool IsMinor { get; set; }
         public bool IsEmployee { get; set; }
