@@ -40,7 +40,12 @@ namespace GDPR.Common
         /// 
         /// </summary>
         /// <param name="subject"></param>
-        void RecordNotify(GDPRSubject subject);
+        void SubjectNotify(GDPRSubject subject);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
         bool SubjectCreateIn(GDPRSubject subject);
         /// <summary>
         /// 
@@ -93,42 +98,42 @@ namespace GDPR.Common
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        bool RecordCreateIn(GDPRSubject subject);
+        bool RecordCreateIn(Record r);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        bool RecordCreateOut(GDPRSubject subject);
+        bool RecordCreateOut(Record r);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        bool RecordDeleteIn(GDPRSubject subject);
+        bool RecordDeleteIn(Record r);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        bool RecordDeleteOut(GDPRSubject subject);
+        bool RecordDeleteOut(Record r);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="subject"></param>
-        void RecordHold(GDPRSubject subject);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <returns></returns>
-        bool RecordUpdateIn(GDPRSubject subject);
+        void RecordHold(Record r);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        bool RecordUpdateOut(GDPRSubject subject);
+        bool RecordUpdateIn(Record old, Record update);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        bool RecordUpdateOut(Record r);
         /// <summary>
         /// 
         /// </summary>

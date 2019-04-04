@@ -265,7 +265,13 @@ namespace GDPR.Applications
                     Discover();
                     break;
                 case "DeleteMessage":
-                    RecordDeleteIn(message.Subject);
+                    SubjectDeleteIn(message.Subject);
+                    break;
+                case "UpdateMessage":
+                    SubjectUpdateIn(message.Subject);
+                    break;
+                case "HoldMessage":
+                    SubjectHoldIn(message.Subject);
                     break;
                 case "DataRequestMessage":
                     BaseExportMessage em = null;
@@ -318,32 +324,7 @@ namespace GDPR.Applications
             return asm;            
         }
 
-        public virtual bool RecordCreateIn(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RecordCreateOut(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RecordDeleteIn(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RecordDeleteOut(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void RecordHold(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void RecordNotify(GDPRSubject subject)
+        public virtual void SubjectNotify(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
@@ -352,16 +333,6 @@ namespace GDPR.Applications
         {
             var results = new List<Record>();
             return results;
-        }
-
-        public virtual bool RecordUpdateIn(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RecordUpdateOut(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
         }
 
         public virtual void ValidateSubject(GDPRSubject subject)
@@ -880,42 +851,77 @@ namespace GDPR.Applications
             throw new NotImplementedException();
         }
 
-        public bool SubjectCreateIn(GDPRSubject subject)
+        public virtual bool SubjectCreateIn(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectCreateOut(GDPRSubject subject)
+        public virtual bool SubjectCreateOut(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectDeleteIn(GDPRSubject subject)
+        public virtual bool SubjectDeleteIn(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectDeleteOut(GDPRSubject subject)
+        public virtual bool SubjectDeleteOut(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectUpdateIn(GDPRSubject subject)
+        public virtual bool SubjectUpdateIn(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectUpdateOut(GDPRSubject subject)
+        public virtual bool SubjectUpdateOut(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectHoldIn(GDPRSubject subject)
+        public virtual bool SubjectHoldIn(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
 
-        public bool SubjectHoldOut(GDPRSubject subject)
+        public virtual bool SubjectHoldOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RecordCreateIn(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RecordCreateOut(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RecordDeleteIn(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RecordDeleteOut(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RecordHold(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RecordUpdateIn(Record old, Record update)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RecordUpdateOut(Record r)
         {
             throw new NotImplementedException();
         }
