@@ -1,6 +1,7 @@
 ﻿using GDPR.Common.Core;
 using GDPR.Common.Encryption;
 using GDPR.Common.Exceptions;
+using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Bcpg.OpenPgp;
@@ -290,11 +291,28 @@ namespace GDPR.Common.Messages
         /*
         static public bool SendMessage(GDPRMessageWrapper message)
         {
-            
-
             return true;
         }
         */
+
+        static public void SendMessageViaQueueMSI(GDPRMessageWrapper message, string eventHubName)
+        {
+            MessagingFactorySettings messagingFactorySettings = new MessagingFactorySettings
+            {
+                //TokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider(new Uri("https://servicesbus.microsoft.net")),
+                TokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider(ServiceAudience.EventHubsAudience),
+                TransportType = TransportType.Amqp
+            };
+
+            MessagingFactory messagingFactory = MessagingFactory.Create($"sb://{Configuration.ResourcePrefix + "ns-" + GDPRCore.Current.GetSystemId()}.servicebus.windows.net/",
+                messagingFactorySettings);
+
+            EventHubClient ehClient = messagingFactory.CreateEventHubClient(eventHubName);
+            string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+            ehClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+            ehClient.Close();
+            messagingFactory.Close();
+        }
 
         static public void SendMessageViaQueue(GDPRMessageWrapper message, string connectionString)
         {

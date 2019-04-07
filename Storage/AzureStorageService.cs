@@ -22,22 +22,31 @@ namespace GDPR.Common.Services
         {
             get
             {
-                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.ResourcePrefix + Configuration.StorageAccountName, Configuration.StorageAccountKey);
+                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.ResourcePrefix + Configuration.StorageAccountName, Key);
             }
             set
             {
                 _url = value;
             }
         }
+
+        string _token;
+
         public override string Key
         {
             get
             {
                 if (Configuration.IsManaged)
                 {
-                    string token = Utility.GetMSIToken("", "https://storage.azure.com/", "").Result;
-                    StorageKeys keys = GetStorageKeysAsync(token).Result;
-                    return "TODO";
+                    if (string.IsNullOrEmpty(_token))
+                    {
+                        string token = Utility.GetMSIToken("", "https://management.azure.com", "").Result;
+                        dynamic keys = GetStorageKeysAsync(token).Result;
+                        _token = keys.keys[0].value;
+                        return _token;
+                    }
+                    else
+                        return _token;
                 }
                 else
                     return Configuration.StorageAccountKey;
@@ -48,9 +57,9 @@ namespace GDPR.Common.Services
             }
         }
 
-        internal async Task<StorageKeys> GetStorageKeysAsync(string token)
+        internal async Task<dynamic> GetStorageKeysAsync(string token)
         {
-            var uri = new Uri($"{Constants.AzureManagementApi}subscriptions/{Configuration.SubscriptionId}/resourceGroups/{Configuration.ResourceGroupName}/providers/Microsoft.Storage/storageAccounts/{Configuration.StorageAccountName}/listKeys?api-version=2016-01-01");
+            var uri = new Uri($"{Constants.AzureManagementApi}/subscriptions/{Configuration.SubscriptionId}/resourceGroups/{Configuration.ResourceGroupName}/providers/Microsoft.Storage/storageAccounts/{Configuration.ResourcePrefix + Configuration.StorageAccountName}/listKeys?api-version=2016-01-01");
             var content = new StringContent(string.Empty, Encoding.UTF8, "text/html");
 
             using (var httpClient = new HttpClient())
@@ -61,7 +70,7 @@ namespace GDPR.Common.Services
                 using (var response = await httpClient.PostAsync(uri, content))
                 {
                     var responseText = await response.Content.ReadAsStringAsync();
-                    var keys = JsonConvert.DeserializeObject<StorageKeys>(responseText);
+                    var keys = JsonConvert.DeserializeObject(responseText);
                     return keys;
                 }
             }
