@@ -3,6 +3,7 @@ using GDPR.Common.Core;
 using GDPR.Common.Messages;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -166,10 +168,44 @@ namespace GDPR.Common
             return g;
         }
 
+        public async Task<dynamic> DoAzureCall(string url, string token)
+        {
+            var uri = new Uri(url);
+            var content = new StringContent(string.Empty, Encoding.UTF8, "text/html");
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization
+                    = new AuthenticationHeaderValue("Bearer", token);
+
+                using (var response = await httpClient.PostAsync(uri, content))
+                {
+                    var responseText = await response.Content.ReadAsStringAsync();
+
+                    dynamic json = JsonConvert.DeserializeObject(responseText);
+                    return json;
+                }
+            }
+
+            return null;
+        }
+
         public static bool IsEmpty(JToken token)
         {
             return (token.Type == JTokenType.Null);
         }
+
+        public static async Task<string> GetMSIToken(string authority, string resource, string scope)
+        {
+            AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
+            string token = await azureServiceTokenProvider.GetAccessTokenAsync(resource);
+            
+            if (token == null)
+                throw new InvalidOperationException("Failed to obtain the JWT token");
+
+            return token;
+        }
+
         public static async Task<string> GetToken(string authority, string resource, string scope)
         {
             var authContext = new AuthenticationContext(authority);

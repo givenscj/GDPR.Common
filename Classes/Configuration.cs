@@ -1578,6 +1578,14 @@ namespace GDPR.Common
             set { _emailDomain = value; }
         }
 
+        static string _appInsightsKey;
+
+        public static string AppInsightsKey
+        {
+            get { return _appInsightsKey; }
+            set { _appInsightsKey = value; }
+        }
+
         static bool _isManaged;
 
         public static bool IsManaged

@@ -891,37 +891,47 @@ namespace GDPR.Applications
             throw new NotImplementedException();
         }
 
-        public bool RecordCreateIn(Record r)
+        public virtual bool RecordCreateIn(Record r)
         {
             throw new NotImplementedException();
         }
 
-        public bool RecordCreateOut(Record r)
+        public virtual bool RecordCreateOut(Record r)
         {
             throw new NotImplementedException();
         }
 
-        public bool RecordDeleteIn(Record r)
+        public virtual bool RecordDeleteIn(Record r)
         {
             throw new NotImplementedException();
         }
 
-        public bool RecordDeleteOut(Record r)
+        public virtual bool RecordDeleteOut(Record r)
         {
             throw new NotImplementedException();
         }
 
-        public void RecordHold(Record r)
+        public virtual void RecordHold(Record r)
         {
             throw new NotImplementedException();
         }
 
-        public bool RecordUpdateIn(Record old, Record update)
+        public virtual bool RecordUpdateIn(Record old, Record update)
         {
             throw new NotImplementedException();
         }
 
-        public bool RecordUpdateOut(Record r)
+        public virtual bool RecordUpdateOut(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void RecordDelete(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void RecordUpdate(Record r, GDPRSubject subject)
         {
             throw new NotImplementedException();
         }

@@ -3,8 +3,13 @@ using GDPR.Common.Core;
 using GDPR.Common.Exceptions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GDPR.Common.Services
 {
@@ -28,11 +33,37 @@ namespace GDPR.Common.Services
         {
             get
             {
-                return Configuration.StorageAccountKey;
+                if (Configuration.IsManaged)
+                {
+                    string token = Utility.GetMSIToken("", "https://storage.azure.com/", "").Result;
+                    StorageKeys keys = GetStorageKeysAsync(token).Result;
+                    return "TODO";
+                }
+                else
+                    return Configuration.StorageAccountKey;
             }
             set
             {
                 _key = value;
+            }
+        }
+
+        internal async Task<StorageKeys> GetStorageKeysAsync(string token)
+        {
+            var uri = new Uri($"{Constants.AzureManagementApi}subscriptions/{Configuration.SubscriptionId}/resourceGroups/{Configuration.ResourceGroupName}/providers/Microsoft.Storage/storageAccounts/{Configuration.StorageAccountName}/listKeys?api-version=2016-01-01");
+            var content = new StringContent(string.Empty, Encoding.UTF8, "text/html");
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization
+                    = new AuthenticationHeaderValue("Bearer", token);
+
+                using (var response = await httpClient.PostAsync(uri, content))
+                {
+                    var responseText = await response.Content.ReadAsStringAsync();
+                    var keys = JsonConvert.DeserializeObject<StorageKeys>(responseText);
+                    return keys;
+                }
             }
         }
 

@@ -264,6 +264,7 @@
     <Compile Include="Classes\ImportSubject.cs" />
     <Compile Include="Classes\Question.cs" />
     <Compile Include="Classes\StorageContext.cs" />
+    <Compile Include="Classes\StorageKeys.cs" />
     <Compile Include="Classes\TokenManager.cs" />
     <Compile Include="Classes\Validation.cs" />
     <Compile Include="Core\GDPRApplicationCore.cs" />

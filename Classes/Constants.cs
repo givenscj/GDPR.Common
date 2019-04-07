@@ -10,5 +10,7 @@ namespace GDPR.Common.Classes
     {
         public const string MessageUsername = "hello";
         public const string MessagePassword = "world";
+
+        static public string AzureManagementApi = "https://management.azure.com";
     }
 }
