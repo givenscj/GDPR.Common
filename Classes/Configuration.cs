@@ -211,7 +211,7 @@ namespace GDPR.Common
             //https://azure.microsoft.com/en-us/resources/samples/app-service-msi-keyvault-dotnet/
             try
             {
-                if (Configuration.IsManaged || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
+                if (Configuration.IsManaged && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
                 {
                     AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
                     //this is for managed service identities...

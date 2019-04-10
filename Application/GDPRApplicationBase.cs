@@ -59,6 +59,7 @@ namespace GDPR.Applications
         protected string _version;
         protected string _shortName;
         protected string _longName;
+        protected string _link;
         protected IGDPRCore core;
 
         //in and out message for higher level processing
@@ -101,7 +102,15 @@ namespace GDPR.Applications
                 return this._version;
             }
         }
-        
+
+        public string Link
+        {
+            get
+            {
+                return this._link;
+            }
+        }
+
         public string ShortName
         {
             get

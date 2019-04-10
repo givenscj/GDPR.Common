@@ -36,7 +36,7 @@ namespace GDPR.Common.Services
         {
             get
             {
-                if (Configuration.IsManaged)
+                if (Configuration.IsManaged && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
                 {
                     if (string.IsNullOrEmpty(_token))
                     {

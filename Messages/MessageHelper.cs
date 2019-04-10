@@ -338,7 +338,7 @@ namespace GDPR.Common.Messages
 
             string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
 
-            if (Configuration.IsManaged)
+            if (Configuration.IsManaged && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
             {
                 SendMessageViaQueueMSI(inMsg, hubName);
             }
