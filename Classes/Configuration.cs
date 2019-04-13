@@ -40,6 +40,8 @@ namespace GDPR.Common
         private static bool _allowTrials;
         private static bool _notHosted;
         private static string _siteName;
+        private static string _companyName;
+        private static string _companyShortName;
 
         private static string _appStubPath;
 
@@ -59,6 +61,7 @@ namespace GDPR.Common
         private static string _systemPin;
         private static Guid _systemId;
         private static string _externalDns;
+        private static string _consumerSystemUrl;
         private static string _hashSalt;
         private static int _hashVersion;
         private static string _certKeyPath;
@@ -811,6 +814,12 @@ namespace GDPR.Common
             set { _dynamicsClientSecret = value; }
         }
 
+        public static string ConsumerSystemUrl
+        {
+            get { return _consumerSystemUrl; }
+            set { _consumerSystemUrl = value; }
+        }
+
         public static string ExternalDns
         {
             get { return _externalDns; }
@@ -1492,6 +1501,19 @@ namespace GDPR.Common
         {
             get { return _siteName; }
             set { _siteName = value; }
+        }
+
+
+        public static string CompanyName
+        {
+            get { return _companyName; }
+            set { _companyName = value; }
+        }
+
+        public static string CompanyShortName
+        {
+            get { return _companyShortName; }
+            set { _companyShortName = value; }
         }
 
         public static bool AllowTrials

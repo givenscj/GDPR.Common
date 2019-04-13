@@ -297,7 +297,7 @@ namespace GDPR.Applications
                         em.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
 
                         ExportInfo ei = new ExportInfo();
-                        ei.Url = "http://empty";
+                        ei.Urls.Add("http://empty");
                         em.Info = ei;
                     }
                     else
@@ -603,6 +603,9 @@ namespace GDPR.Applications
             Guid entityPropertyTypeId = GetEntityPropertyTypeId(ep.Name, ep.Category);
             ep.EntityPropertyTypeId = entityPropertyTypeId;
 
+            if (string.IsNullOrEmpty(ep.DisplayName))
+                ep.DisplayName = ep.Name;
+
             if (Properties.ContainsKey(ep.Name))
             {
                 if (overwrite)
@@ -668,17 +671,31 @@ namespace GDPR.Applications
                     EntityPropertyId = Guid.NewGuid(), Name = "DeleteRequiresApproval", Type = "checkbox",
                     Value = "true", Category = "Compliance", IsMasked = false, IsSecure = false
                 }, overwrite);
+
             AddProperty(
                 new BaseEntityProperty
                 {
                     EntityPropertyId = Guid.NewGuid(), Name = "ExportRequiresApproval", Type = "checkbox",
                     Value = "true", Category = "Compliance", IsMasked = false, IsSecure = false
                 }, overwrite);
+
             AddProperty(
                 new BaseEntityProperty
                 {
                     EntityPropertyId = Guid.NewGuid(), Name = "AllowUnverifiedData", Type = "checkbox", Value = "true",
                     Category = "Compliance", IsMasked = false, IsSecure = false
+                }, overwrite);
+
+            AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityPropertyId = Guid.NewGuid(),
+                    Name = "RemoveMinors",
+                    Type = "checkbox",
+                    Value = "true",
+                    Category = "Configuration",
+                    IsMasked = false,
+                    IsSecure = false
                 }, overwrite);
         }
 
@@ -764,7 +781,7 @@ namespace GDPR.Applications
             //upload to azure...
             StorageContext.Current.TenantId = this.Request.TenantId;
             string url = StorageContext.Current.UploadExportBlob(this.ApplicationId, fileName);
-            ei.Url = url;
+            ei.Urls.Add(url);
 
             return ei;
         }

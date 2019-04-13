@@ -371,6 +371,8 @@ namespace GDPR.Common
 
         public String ProcessResponse(HttpWebRequest req)
         {
+            this.fileName = "";
+
             try
             {
                 HttpWebResponse res = (HttpWebResponse)req.GetResponse();
