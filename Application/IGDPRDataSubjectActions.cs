@@ -58,7 +58,7 @@ namespace GDPR.Common
         /// </summary>
         /// <param name="subject"></param>
         /// <returns></returns>
-        bool SubjectDeleteIn(GDPRSubject subject);
+        RecordCollection SubjectDeleteIn(GDPRSubject subject);
         /// <summary>
         /// 
         /// </summary>

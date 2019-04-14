@@ -415,5 +415,13 @@ namespace GDPR.Common.Core
         {
             return new GDPRSubject();
         }
+
+        public string GenerateDestructionCertificate(Guid requestId, RecordCollection records)
+        {
+            //create a PDF or word document...
+
+            //return the URL to that documents
+            throw new NotImplementedException();
+        }
     }
 }

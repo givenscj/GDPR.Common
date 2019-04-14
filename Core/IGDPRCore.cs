@@ -262,6 +262,8 @@ namespace GDPR.Common.Core
         /// <param name="version"></param>
         /// <returns></returns>
         string GetSystemKey(string id, string version);
+        string GenerateDestructionCertificate(Guid requestId, RecordCollection records);
+
         /// <summary>
         /// 
         /// </summary>

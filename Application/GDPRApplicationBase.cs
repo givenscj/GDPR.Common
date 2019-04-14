@@ -274,7 +274,37 @@ namespace GDPR.Applications
                     Discover();
                     break;
                 case "DeleteMessage":
-                    SubjectDeleteIn(message.Subject);
+                    
+                    //delete based on the records user submitted...
+                    if (message.Records != null && message.Records.Records.Count > 0)
+                    {
+                        foreach(Record r in message.Records.Records)
+                        {
+                            RecordDelete(r);
+                        }
+                    }
+                    else
+                        SubjectDeleteIn(message.Subject);
+
+                    //create a destruction certification
+                    string url = GDPRCore.Current.GenerateDestructionCertificate(message.Records);
+
+                    BaseDeleteMessage msgD = new BaseDeleteMessage();
+                    msgD.Status = "Delete Processed";
+                    msgD.ApplicationId = Request.ApplicationId;
+                    msgD.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
+                    msgD.SubjectRequestId = Request.SubjectRequestId;
+                    msgD.Subject = Request.Subject;
+                    msgD.ProcessorId = Request.ProcessorId;
+                    msgD.SystemId = Request.SystemId;
+                    Response = msgD;
+
+                    DeleteInfo di = new DeleteInfo();
+                    di.Urls.Add(url);
+                    msgD.Info = di;
+
+                    MessageHelper.SendMessage(msgD, ctx);
+
                     break;
                 case "UpdateMessage":
                     SubjectUpdateIn(message.Subject);
@@ -887,7 +917,7 @@ namespace GDPR.Applications
             throw new NotImplementedException();
         }
 
-        public virtual bool SubjectDeleteIn(GDPRSubject subject)
+        public virtual RecordCollection SubjectDeleteIn(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
@@ -958,6 +988,11 @@ namespace GDPR.Applications
         }
 
         public virtual void RecordUpdate(Record r, GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void DeleteRecord(Record r)
         {
             throw new NotImplementedException();
         }

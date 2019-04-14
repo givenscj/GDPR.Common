@@ -2,7 +2,8 @@
 
 namespace GDPR.Common.Classes
 {
-    public class ExportInfo : RequestInfo
+    public class DeleteInfo : RequestInfo
     {
+        
     }
 }

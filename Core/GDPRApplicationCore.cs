@@ -261,5 +261,10 @@ namespace GDPR.Common.Core
             //TODO - get the subject via the token...
             throw new NotImplementedException();
         }
+
+        public string GenerateDestructionCertificate(Guid requestId, RecordCollection records)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
