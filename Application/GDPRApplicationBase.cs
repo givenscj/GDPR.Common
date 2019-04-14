@@ -287,7 +287,7 @@ namespace GDPR.Applications
                         SubjectDeleteIn(message.Subject);
 
                     //create a destruction certification
-                    string url = GDPRCore.Current.GenerateDestructionCertificate(message.Records);
+                    string url = GDPRCore.Current.GenerateDestructionCertificate(this.Request.SubjectRequestApplicationId, message.Records);
 
                     BaseDeleteMessage msgD = new BaseDeleteMessage();
                     msgD.Status = "Delete Processed";

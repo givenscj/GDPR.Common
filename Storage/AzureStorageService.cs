@@ -22,7 +22,7 @@ namespace GDPR.Common.Services
         {
             get
             {
-                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.ResourcePrefix + Configuration.StorageAccountName, Key);
+                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.ResourcePrefix.ToLower() + Configuration.StorageAccountName, Key);
             }
             set
             {
