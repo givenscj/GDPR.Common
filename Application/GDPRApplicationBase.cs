@@ -630,8 +630,13 @@ namespace GDPR.Applications
 
         public void AddProperty(BaseEntityProperty ep, bool overwrite)
         {
-            Guid entityPropertyTypeId = GetEntityPropertyTypeId(ep.Name, ep.Category);
-            ep.EntityPropertyTypeId = entityPropertyTypeId;
+            BaseEntityProperty ept = GDPRCore.Current.GetEntityPropertyType(ep.Name, ep.Category);
+
+            if (ept != null)
+            {
+                ep.EntityPropertyTypeId = ept.EntityPropertyTypeId;
+                ep.Options = ept.Options;
+            }
 
             if (string.IsNullOrEmpty(ep.DisplayName))
                 ep.DisplayName = ep.Name;

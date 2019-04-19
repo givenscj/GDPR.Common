@@ -12,6 +12,7 @@ namespace GDPR.Common.EntityProperty
         public string Category { get; set; }
         public string Type { get; set; }
         public string DefaultValue { get; set; }
+        public string Options { get; set; }
         public bool IsMasked { get; set; }
         public bool IsSecure { get; set; }
         public System.DateTime ModifyDate { get; set; }

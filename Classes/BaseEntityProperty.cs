@@ -11,6 +11,7 @@
         virtual public string EntityType { get; set; }
         virtual public string Name { get; set; }
         virtual public string Value { get; set; }
+        virtual public string Options { get; set; }
         virtual public System.DateTime ModifyDate { get; set; }
         virtual public System.DateTime CreateDate { get; set; }
         virtual public System.Guid IsNew { get; set; }

@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Data;
 using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Messages;
@@ -263,6 +264,11 @@ namespace GDPR.Common.Core
         }
 
         public string GenerateDestructionCertificate(Guid requestId, RecordCollection records)
+        {
+            throw new NotImplementedException();
+        }
+
+        public BaseEntityProperty GetEntityPropertyType(string name, string category)
         {
             throw new NotImplementedException();
         }

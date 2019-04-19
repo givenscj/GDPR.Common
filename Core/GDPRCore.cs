@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Data;
 using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
@@ -421,6 +422,11 @@ namespace GDPR.Common.Core
             //create a PDF or word document...
 
             //return the URL to that documents
+            throw new NotImplementedException();
+        }
+
+        public BaseEntityProperty GetEntityPropertyType(string name, string category)
+        {
             throw new NotImplementedException();
         }
     }

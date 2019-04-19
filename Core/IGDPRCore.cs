@@ -1,4 +1,5 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Data;
 using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Messages;
@@ -277,5 +278,6 @@ namespace GDPR.Common.Core
         /// <returns></returns>
         List<EntityPropertyTypeBase> GetEntityPropertyDefinitions();
         GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId);
+        BaseEntityProperty GetEntityPropertyType(string name, string category);
     }
 }

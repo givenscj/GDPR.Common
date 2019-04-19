@@ -149,8 +149,11 @@ namespace GDPR.Common.Services
 
                     if (ctx.FileInfo != null)
                     {
-                        name = ctx.Name;
+                        name = ctx.FileInfo.Name;
                         data = File.ReadAllBytes(ctx.FileInfo.FullName);
+
+                        if (string.IsNullOrEmpty(ctx.Name))
+                            ctx.Name = ctx.FileInfo.Name;
                     }
 
                     //tenantid is the container...
