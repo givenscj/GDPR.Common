@@ -17,5 +17,7 @@
         public System.DateTime ModifyDate { get; set; }
         public System.DateTime CreateDate { get; set; }
         public bool AnonymizeRecordOnDelete { get; set; }
+
+        public bool DisableExport { get; set; }
     }
 }

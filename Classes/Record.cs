@@ -13,6 +13,7 @@ namespace GDPR.Common.Classes
         public string LinkUrl { get; set; }
         public string Message { get; set; }
         public bool CanDelete { get; set; }
+        public bool CanExport { get; set; }
         [JsonIgnore]
         public bool AnonymizeOnDelete { get; set; }
         [JsonIgnore]
