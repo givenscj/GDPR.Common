@@ -289,14 +289,17 @@ namespace GDPR.Applications
                     //create a destruction certification
                     string url = GDPRCore.Current.GenerateDestructionCertificate(this.Request.SubjectRequestApplicationId, message.Records);
 
-                    BaseDeleteMessage msgD = new BaseDeleteMessage();
-                    msgD.Status = "Delete Processed";
-                    msgD.ApplicationId = Request.ApplicationId;
-                    msgD.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
-                    msgD.SubjectRequestId = Request.SubjectRequestId;
-                    msgD.Subject = Request.Subject;
-                    msgD.ProcessorId = Request.ProcessorId;
-                    msgD.SystemId = Request.SystemId;
+                    BaseDeleteMessage msgD = new BaseDeleteMessage
+                    {
+                        Status = "Delete Processed",
+                        ApplicationId = Request.ApplicationId,
+                        ApplicationSubjectId = Guid.Empty.ToString(), //no id on the app side...
+                        SubjectRequestId = Request.SubjectRequestId,
+                        Subject = Request.Subject,
+                        ProcessorId = Request.ProcessorId,
+                        SystemId = Request.SystemId
+                    };
+
                     Response = msgD;
 
                     DeleteInfo di = new DeleteInfo();
@@ -847,11 +850,13 @@ namespace GDPR.Applications
                     if (newSubjects.Count == BatchSize)
                     {
                         //create a new message with the batch size...
-                        var discoverMsg = new BaseDiscoverResponsesMessage();
-                        discoverMsg.ApplicationId = ApplicationId;
-                        discoverMsg.Subjects = newSubjects;
-                        discoverMsg.SystemId = GDPRCore.Current.GetSystemId();
-                        discoverMsg.ProcessorId = GDPRCore.Current.GetSystemId();
+                        var discoverMsg = new BaseDiscoverResponsesMessage
+                        {
+                            ApplicationId = ApplicationId,
+                            Subjects = newSubjects,
+                            SystemId = GDPRCore.Current.GetSystemId(),
+                            ProcessorId = GDPRCore.Current.GetSystemId()
+                        };
 
                         //have to wrap this in case the message is too big and it needs to be split...
                         SendDiscoveryMessage(discoverMsg);
@@ -863,11 +868,13 @@ namespace GDPR.Applications
             else
             {
                 //create a new message with the batch size...
-                BaseDiscoverResponsesMessage discoverMsg = new BaseDiscoverResponsesMessage();
-                discoverMsg.ApplicationId = ApplicationId;
-                discoverMsg.Subjects = subjects;
-                discoverMsg.SystemId = GDPRCore.Current.GetSystemId();
-                discoverMsg.ProcessorId = GDPRCore.Current.GetSystemId();
+                BaseDiscoverResponsesMessage discoverMsg = new BaseDiscoverResponsesMessage
+                {
+                    ApplicationId = ApplicationId,
+                    Subjects = subjects,
+                    SystemId = GDPRCore.Current.GetSystemId(),
+                    ProcessorId = GDPRCore.Current.GetSystemId()
+                };
 
                 MessageHelper.SendMessage(discoverMsg, ctx);
             }

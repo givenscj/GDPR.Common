@@ -140,11 +140,13 @@ namespace GDPR.Common.Messages
         {
             ctx.Encrypt = Configuration.EnableEncryption;
 
-            GDPRMessageWrapper w = new GDPRMessageWrapper();
-            w.IsEncrypted = ctx.Encrypt;
-            w.IsSystem = message.IsSystem;
-            w.KeyVersion = ctx.Version;
-            w.SystemId = message.SystemId.ToString();
+            GDPRMessageWrapper w = new GDPRMessageWrapper
+            {
+                IsEncrypted = ctx.Encrypt,
+                IsSystem = message.IsSystem,
+                KeyVersion = ctx.Version,
+                SystemId = message.SystemId.ToString()
+            };
 
             if (ctx.Encrypt)
             {
