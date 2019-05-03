@@ -1627,6 +1627,14 @@ namespace GDPR.Common
             set { _surveyLink = value; }
         }
 
+        static decimal _creditPrice;
+
+        public static decimal CreditPrice
+        {
+            get { return _creditPrice; }
+            set { _creditPrice = value; }
+        }
+
         public static string AzureKeyVaultUrl
         { 
             get { return string.Format("https://{0}{1}.vault.azure.net", ResourcePrefix.ToLower(), KeyVaultName.ToLower()); }
