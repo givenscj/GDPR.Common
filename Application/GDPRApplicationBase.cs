@@ -71,6 +71,7 @@ namespace GDPR.Applications
 
         public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
 
+        public bool SupportsGDPRDelete { get { return this._supportsGDPRDelete; } }
         public bool SupportsGDPRUpdate { get { return this._supportsGDPRUpdate; } }
         public bool SupportsGDPRHold { get { return this._supportsGDPRHold; } }
         public bool SupportsGDPRInsert { get { return this._supportsGDPRInsert; } }

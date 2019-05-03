@@ -19,10 +19,21 @@ namespace GDPR.Common.Core
     /// </summary>
     public class GDPRCore : IGDPRCore
     {
+        static private IGDPRCore _current;
         /// <summary>
         /// 
         /// </summary>
-        public static IGDPRCore Current;
+        public static IGDPRCore Current
+        {
+            get
+            {
+                return _current;
+            }
+            set
+            {
+                _current = value;
+            }
+        }
 
         /// <summary>
         /// 

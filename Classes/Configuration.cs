@@ -334,7 +334,8 @@ namespace GDPR.Common
 
         public static void LoadWithMode(string mode, string filePath)
         {
-            GDPRCore.Current = new GDPRCore();
+            if (GDPRCore.Current == null)
+                GDPRCore.Current = new GDPRCore();
 
             filePath += $"/configuration.{mode}.json";
 
@@ -362,7 +363,9 @@ namespace GDPR.Common
 
         public static void LoadWithMode(string mode)
         {
-            GDPRCore.Current = new GDPRCore();
+            //may have loaded previously...
+            if (GDPRCore.Current == null)
+                GDPRCore.Current = new GDPRCore();
 
             string filePath = HostingEnvironment.MapPath($"~/");
 
@@ -1614,6 +1617,14 @@ namespace GDPR.Common
         {
             get { return _isManaged; }
             set { _isManaged = value; }
+        }
+
+        static string _surveyLink;
+
+        public static string SurveyLink
+        {
+            get { return _surveyLink; }
+            set { _surveyLink = value; }
         }
 
         public static string AzureKeyVaultUrl

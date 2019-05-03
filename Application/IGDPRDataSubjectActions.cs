@@ -181,5 +181,7 @@ namespace GDPR.Common
         /// </summary>
         /// <param name="applicationSubjectId"></param>
         void Unconsent(string applicationSubjectId);
+
+        void PhoneNormalization();
     }
 }
