@@ -436,6 +436,13 @@ namespace GDPR.Common
                             pi.SetValue(null, value);
                         }
                         break;
+                    case "System.Decimal":
+                        if (!string.IsNullOrEmpty(inValue))
+                        {
+                            value = decimal.Parse(inValue);
+                            pi.SetValue(null, value);
+                        }
+                        break;
                     case "System.Guid":
                         if (!string.IsNullOrEmpty(inValue))
                         {

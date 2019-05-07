@@ -6,22 +6,17 @@ using System.Threading.Tasks;
 
 namespace GDPR.Common.Classes
 {
-    public class Question
+    public class AnswerOption
     {
-        public Question()
+        public AnswerOption()
         {
-            this.Options = new List<AnswerOption>();
             this.Id = Guid.NewGuid();
         }
 
         public Guid Id { get; set; }
-
+        public bool IsAnswer { get; set; }
         public string Text { get; set; }
-
-        public string Type { get; set; }
-
-        public List<AnswerOption> Options { get; set; }
-
-        public AnswerOption Answer { get; set; }
+        public string Value { get; set; }
+        public string Type { get; set; }        
     }
 }

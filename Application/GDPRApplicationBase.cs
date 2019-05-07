@@ -29,6 +29,8 @@ namespace GDPR.Applications
         protected bool _supportsDeviceSearch;
         protected bool _supportsDnaSearch;
 
+        protected bool _supportsMFA;
+
         //misc search 
         //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
         protected bool _enableNameSearch;
@@ -71,6 +73,7 @@ namespace GDPR.Applications
 
         public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
 
+        public bool SupportsMFA { get { return this._supportsMFA; } }
         public bool SupportsGDPRDelete { get { return this._supportsGDPRDelete; } }
         public bool SupportsGDPRUpdate { get { return this._supportsGDPRUpdate; } }
         public bool SupportsGDPRHold { get { return this._supportsGDPRHold; } }
@@ -402,6 +405,22 @@ namespace GDPR.Applications
                     Type = "textbox", Name = "Password", Value = "", IsMasked = true,
                     IsSecure = true
                 }, overwrite);
+
+            if (this.SupportsMFA)
+            {
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityId = this.ApplicationId,
+                    DisplayName = "MFA Secret",
+                    Category = "Security",
+                    Type = "textbox",
+                    Name = "MFASecret",
+                    Value = "",
+                    IsMasked = true,
+                    IsSecure = true
+                }, overwrite);
+            }
         }
 
         public void CreateRequestProperties(bool overwrite)

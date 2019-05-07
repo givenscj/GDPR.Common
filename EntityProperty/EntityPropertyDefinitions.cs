@@ -82,17 +82,8 @@ namespace GDPR.Common.EntityProperty
                     IsSecure = true,
                     Description = "The username used for auth events"
                 });
-            types.Add(
-                new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("89340c3a-80f3-4913-abe0-5d3a76e9815c"),
-                    DisplayName = "Password",
-                    Name = "Password",
-                    Category = "Security",
-                    Type = "textbox",
-                    DefaultValue = "",
-                    IsMasked = true,
-                    IsSecure = true,
-                    Description = "The password used for auth events"
-                });
+            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("89340c3a-80f3-4913-abe0-5d3a76e9815c"),DisplayName = "Password",Name = "Password",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true, Description = "The password used for auth events"});
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("0ec6bb9b-8bcf-4935-af63-7bb01fa80dc4"), DisplayName = "MFA Secret", Name = "MFASecret", Category = "Security", Type = "textbox", DefaultValue = "", IsMasked = true, IsSecure = true, Description = "The TOTP MFA Secret for MFA logins" });
 
             //maps type...
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("783962fd-238b-46ef-a01d-ec83c1e2524e"), Category = "Maps", Type = "textbox", DisplayName = "BingMapsApiKey", Name = "BingMapsApiKey",DefaultValue = "", IsMasked = true, IsSecure = true, Description = "Your Bing maps API key for geolocation lookups" });
