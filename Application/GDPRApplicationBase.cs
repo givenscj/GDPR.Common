@@ -211,12 +211,12 @@ namespace GDPR.Applications
 
         public virtual ExportInfo ExportData(string applicationSubjectId, GDPRSubject s)
         {
-            throw new GDPRException("ExportData[string,GDPRSubject] is not implemented.  Check the SupportsRecords flag on the applicaiton");
+            throw new GDPRException("ExportData[string,GDPRSubject] is not implemented.  Check the SupportsRecords flag on the application");
         }
 
         public virtual ExportInfo ExportData(string applicationSubjectId)
         {
-            throw new GDPRException("ExportData[string]  is not implemented.  Check the SupportsRecords flag on the applicaiton");
+            throw new GDPRException("ExportData[string]  is not implemented.  Check the SupportsRecords flag on the application");
         }
 
         public virtual List<GDPRSubject> GetAllSubjects(int skip, int count, DateTime? changeDate)
