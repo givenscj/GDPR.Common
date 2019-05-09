@@ -264,11 +264,14 @@ namespace GDPR.Common
         {
             Hashtable ht = new Hashtable();
 
+            if (string.IsNullOrEmpty(html))
+                return ht;
+
             String[] cookies = html.Split(';');
 
             foreach (String c in cookies)
             {
-                String c1 = c.Replace("HttpOnly,", "");
+                String c1 = c.Replace("HttpOnly,", "").Replace("httponly,", ""); ;
 
                 c1 = c1.Replace("secure,", "");
 
