@@ -271,9 +271,10 @@ namespace GDPR.Common
 
             foreach (String c in cookies)
             {
-                String c1 = c.Replace("HttpOnly,", "").Replace("httponly,", ""); ;
+                String c1 = c.Replace("HttpOnly,", "").Replace("httponly,", "").Replace("HTTPOnly,", ""); ;
 
                 c1 = c1.Replace("secure,", "");
+                c1 = c1.Replace("Secure,", "");
 
                 if (c1.Trim().Contains("HttpOnly"))
                     continue;
@@ -282,6 +283,9 @@ namespace GDPR.Common
                 c1 = c1.Replace("expires=" + expireText + "GMT,", "");
 
                 if (c1.Contains("expires="))
+                    continue;
+
+                if (c1.Contains("Expires="))
                     continue;
 
                 if (c1.Contains("domain="))

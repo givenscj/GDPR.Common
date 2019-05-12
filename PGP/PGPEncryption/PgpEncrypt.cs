@@ -1,4 +1,5 @@
-﻿using Org.BouncyCastle.Bcpg;
+﻿using GDPR.Common.Encryption;
+using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Security;
 using PGPSnippet.Keys;
@@ -94,7 +95,7 @@ namespace PGPSnippet.PGPEncryption
 
             // Init encrypted data generator
             PgpEncryptedDataGenerator encryptedDataGenerator =
-                new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+                new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             encryptedDataGenerator.AddMethod(encKey);
             Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
  

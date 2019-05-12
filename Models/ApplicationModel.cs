@@ -10,6 +10,7 @@ namespace GDPR.Common.Models
         public Guid TenantId { get; set; }
         public string TenantName { get; set; }
         public Guid ApplicationId { get; set; }
+        public bool IsRedirect { get; set; }
         public Guid OwnerId { get; set; }
         public Guid AuthenticationTypeId { get; set; }
         public Guid ApplicationTemplateId { get; set; }

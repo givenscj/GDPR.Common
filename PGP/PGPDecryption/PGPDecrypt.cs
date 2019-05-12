@@ -1,4 +1,5 @@
-﻿using GDPR.Common.Exceptions;
+﻿using GDPR.Common.Encryption;
+using GDPR.Common.Exceptions;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Security;
@@ -37,7 +38,7 @@ namespace PGPSnippet.PGPDecryption
                         PgpUtilities.WriteFileToLiteralData(comData.Open(bOut), PgpLiteralData.Binary, new FileInfo(inputFile));
 
                         comData.Close();
-                        PgpEncryptedDataGenerator cPk = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+                        PgpEncryptedDataGenerator cPk = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
 
                         cPk.AddMethod(encKey);
                         byte[] bytes = bOut.ToArray();

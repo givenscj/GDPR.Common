@@ -7,9 +7,9 @@ namespace GDPR.Common
 {
     public class BasePhone
     {
-        public string CountryCode { get; set; }
-        public string NationalNumber { get; set; }
-        public string Raw { get; set; }
+        virtual public string CountryCode { get; set; }
+        virtual public string NationalNumber { get; set; }
+        virtual public string Raw { get; set; }
 
         //ideally all phone numbers should be in E.164 format in order for them to be searched
         public static BasePhone Parse(string phoneNumber)

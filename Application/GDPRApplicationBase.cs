@@ -57,6 +57,10 @@ namespace GDPR.Applications
         protected bool _supportsWebHookDelete;
         protected bool _supportsWebHookUpdate;
 
+        //hashing support
+        protected bool _supportsHash;
+        protected string _hashAlgorithm;
+
         //basic properties
         protected string _version;
         protected string _shortName;
@@ -72,6 +76,9 @@ namespace GDPR.Applications
         public EncryptionContext ctx { get; set; }
 
         public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
+
+        public bool SupportsHash { get { return this._supportsHash; } }
+        public string HashAlgorithm { get { return this._hashAlgorithm; } }
 
         public bool SupportsMFA { get { return this._supportsMFA; } }
         public bool SupportsGDPRDelete { get { return this._supportsGDPRDelete; } }
@@ -96,6 +103,9 @@ namespace GDPR.Applications
         public bool SupportsRecords { get { return this._supportsRecords; } }
 
         public int Tier { get; set; }
+
+        protected bool _isActive = true;
+        public bool IsActive { get { return this._isActive; } }
 
         public bool ZipAndLock { get; set; }
 
@@ -175,6 +185,7 @@ namespace GDPR.Applications
         public GDPRApplicationBase()
         {
             _version = "1.0.0.0";
+            _isActive = true;
         }
 
         public bool SupportsOAuth { get; set; }
@@ -657,6 +668,7 @@ namespace GDPR.Applications
 
             if (ept != null)
             {
+                ep.DisplayName = ept.DisplayName;
                 ep.EntityPropertyTypeId = ept.EntityPropertyTypeId;
                 ep.Options = ept.Options;
             }

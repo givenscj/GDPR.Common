@@ -14,7 +14,12 @@
 
         public override string ToString()
         {
-            return string.Format("{0} {1} {2} {3} {4} {5}", this.Address1, this.Address2, this.City, this.State, this.Zip, this.Country);
+            string temp = string.Format("{0} {1} {2} {3} {4} {5}", this.Address1, this.Address2, this.City, this.State, this.Zip, this.Country);
+
+            if (string.IsNullOrEmpty(temp.Trim()))
+                temp = this.Raw;
+
+            return temp;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GDPR.Common.Classes;
 using GDPR.Common.Core;
 using GDPR.Common.Messages;
+using HtmlAgilityPack;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Azure.Services.AppAuthentication;
@@ -26,6 +27,21 @@ namespace GDPR.Common
 {
     public class Utility
     {
+        public static string GetInputValue(HtmlNode homeNode, string name)
+        {
+            //HtmlNodeCollection posts = homeNode.SelectNodes(".//cpde[contains(@id, 'jumper_')]");
+            HtmlNodeCollection postVals = homeNode.SelectNodes(".//input[contains(@type, 'hidden')]");
+
+            foreach (HtmlNode postVal in postVals)
+            {
+                if (postVal.Attributes["name"] != null && postVal.Attributes["name"].Value == name)
+                {
+                    return postVal.Attributes["value"].Value;
+                }
+            }
+
+            return null;
+        }
         public static List<string> GetInternetIp()
         {
             List<string> items = new List<string>();

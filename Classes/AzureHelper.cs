@@ -225,7 +225,6 @@ namespace GDPR.Common.Classes
 
             try
             {
-
                 IDeployment deploy = AzureInstance.Deployments.Define(id.ToString())
                         .WithExistingResourceGroup(AzureResourceGroup.Name)
                         .WithTemplate(templateJson)

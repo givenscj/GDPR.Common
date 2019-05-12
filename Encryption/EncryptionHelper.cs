@@ -37,6 +37,8 @@ namespace GDPR.Common.Encryption
 
     public class EncryptionHelper
     {
+        static public SymmetricKeyAlgorithmTag Algorithm = SymmetricKeyAlgorithmTag.Aes256;
+
         private static byte[][] GetHashKeys(string key)
         {
             byte[][] result = new byte[2][];
@@ -244,7 +246,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             //dataCompressor.Close();
             byte[] dataBytes = File.ReadAllBytes(inputFile);
 
-            PgpEncryptedDataGenerator dataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Aes256, withIntegrityCheck, new SecureRandom());
+            PgpEncryptedDataGenerator dataGenerator = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             dataGenerator.AddMethod(pubKey);
 
             using (Stream outputStream = new MemoryStream())
@@ -328,7 +330,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         public static string EncryptPGP3(string key, string code)
         {
             //create the PGPKey object
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(key);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(key, true);
             
             Stream inputData = Utility.GenerateStreamFromString(code);
             Stream encryptedMessageStream = new MemoryStream();
@@ -369,7 +371,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 passPhrase = EncryptionContext.Default.Password;
             }
 
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr, false);
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
 
             return SignAndEncrypt(publicKey, secretKey, passPhrase, data);
@@ -427,7 +429,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 outputStream = new ArmoredOutputStream(outputStream);
 
             // Init encrypted data generator
-            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             encryptedDataGenerator.AddMethod(pubKey);
             Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
 
@@ -480,7 +482,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 outputStream = new ArmoredOutputStream(outputStream);
 
             // Init encrypted data generator
-            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             encryptedDataGenerator.AddMethod(pubKey);
             Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
 
@@ -611,7 +613,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
 
         public static string SignAndEncrypt(string publicKeyStr, string privateKeyStr, string passPhrase, string message)
         {
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr, false);
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
 
             return SignAndEncrypt(publicKey, secretKey, passPhrase, message);
@@ -619,7 +621,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
 
         public static string DecryptAndVerify(string publicKeyStr, string privateKeyStr, string passPhrase, string encMessage)
         {
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr,false);
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
 
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);

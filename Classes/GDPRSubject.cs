@@ -23,6 +23,7 @@ namespace GDPR.Common
         public Guid TokenId { get; set; }
         public decimal VerificationScore { get; set; }
         public bool IsMinor { get; set; }
+        public bool HasPin { get; set; }
         public bool IsEmployee { get; set; }
         public DateTime BirthDate { get; set; }
         public string TimeZone { get; set; }

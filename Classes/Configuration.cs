@@ -100,6 +100,11 @@ namespace GDPR.Common
         private static string _speechApiUri;
         private static string _speechApiKey;
 
+        private static string _textAnalyticsServiceName;
+        private static string _textAnalyticsApiUri;
+        private static string _textAnalyticsApiKey;
+
+
         private static string _faceServiceName;
         private static string _faceApiUri;
         private static string _faceApiKey;
@@ -296,14 +301,19 @@ namespace GDPR.Common
 
         static public string SaveToKeyVault(string name, string value)
         {
-            var result = Task.Run(async () =>
+            if (value != null)
             {
-                return await kv.SetSecretAsync(AzureKeyVaultUrl, name, value);
-            }).Result;
+                var result = Task.Run(async () =>
+                {
+                    return await kv.SetSecretAsync(AzureKeyVaultUrl, name, value);
+                }).Result;
 
-            SetProperty(name, value);
+                SetProperty(name, value);
 
-            return result.Id.Replace(Configuration.AzureKeyVaultUrl + "/secrets/" + name + "/", "");
+                return result.Id.Replace(Configuration.AzureKeyVaultUrl + "/secrets/" + name + "/", "");
+            }
+
+            return "";
         }
 
         static public void LoadFromKeyVault()
@@ -972,7 +982,15 @@ namespace GDPR.Common
 
         public static string VisionApiUri
         {
-            get { return _visionApiUri; }
+            get
+            {
+                if (string.IsNullOrEmpty(_visionApiUri))
+                {
+                    _visionApiUri = LoadFromKeyVault("VisionApiUri");
+                }
+
+                return _visionApiKey;
+            }
             set { _visionApiUri = value; }
         }
 
@@ -1479,6 +1497,33 @@ namespace GDPR.Common
             get { return _azurePassword; }
             set { _azurePassword = value; }
         }
+        //
+
+        public static string TextAnalyticsServiceName
+        {
+            get { return _textAnalyticsServiceName; }
+            set { _textAnalyticsServiceName = value; }
+        }
+
+        public static string TextAnalyticsApiUri
+        {
+            get { return _textAnalyticsApiUri; }
+            set { _textAnalyticsApiUri = value; }
+        }
+
+        public static string TextAnalyticsApiKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_textAnalyticsApiKey))
+                {
+                    _textAnalyticsApiKey = LoadFromKeyVault("TextAnalyticsApiKey");
+                }
+
+                return _textAnalyticsApiKey;
+            }
+            set { _textAnalyticsApiKey = value; }
+        }
 
         public static string FaceServiceName
         {
@@ -1624,6 +1669,30 @@ namespace GDPR.Common
         {
             get { return _isManaged; }
             set { _isManaged = value; }
+        }
+
+        static bool _enablePersonalVerfication;
+
+        public static bool EnablePersonalVerification
+        {
+            get { return _enablePersonalVerfication; }
+            set { _enablePersonalVerfication = value; }
+        }
+
+        static bool _enableGeoLocation;
+
+        public static bool EnableGeoLocation
+        {
+            get { return _enableGeoLocation; }
+            set { _enableGeoLocation = value; }
+        }
+
+        static bool _enableUserPin;
+
+        public static bool EnableUserPin
+        {
+            get { return _enableUserPin; }
+            set { _enableUserPin = value; }
         }
 
         static string _surveyLink;
