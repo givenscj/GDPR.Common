@@ -380,7 +380,28 @@ namespace GDPR.Common.Core
 
         public string GetApplicationEventHub(string applicationId)
         {
-            throw new NotImplementedException();
+            //get the event hub info
+            HttpHelper hh = new HttpHelper();
+
+            //get this information locally first...
+            string eventHubConnectionString = Configuration.GetSetting("QueueUri");
+
+            //if not set, try to get from remote admin site...
+            if (string.IsNullOrEmpty(eventHubConnectionString))
+            {
+                try
+                {
+                    eventHubConnectionString = hh.DoGet($"{Configuration.ExternalDns}/Home/GetApplicationQueue?ApplicationId{applicationId}", "");
+                }
+                catch (Exception ex)
+                {
+                    GDPRCore.Current.Log($"{Configuration.ExternalDns} did not respond with application queue. Falling back to local configuration.");
+
+                    eventHubConnectionString = Configuration.EventHubConnectionString;
+                }
+            }
+
+            return eventHubConnectionString;
         }
 
         public string GetEventHubConnectionString(string eventHubName)
@@ -410,7 +431,12 @@ namespace GDPR.Common.Core
 
         public string GetSystemPin(int keyVersion)
         {
-            return Configuration.GetProperty("SystemPassword").ToString();
+            object pwd = Configuration.GetProperty("SystemPassword");
+
+            if (pwd != null)
+                return pwd.ToString();
+
+            return "";
         }
 
         public string GetApplicationPin(string applicationId, int keyVersion)

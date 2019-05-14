@@ -410,7 +410,7 @@ namespace GDPR.Common
             return val;
         }
 
-        public string GetSetting(string name)
+        public static string GetSetting(string name)
         {
             if (_settings.ContainsKey(name.ToLower()))
                 return _settings[name.ToLower()].ToString();

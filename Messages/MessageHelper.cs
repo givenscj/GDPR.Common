@@ -245,6 +245,9 @@ namespace GDPR.Common.Messages
             if (!message.IsSystem)
             {
                 connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+
+                if (!connectionStringBuilder.Contains("EntityPath"))
+                    connectionStringBuilder += $";EntityPath={message.ApplicationId}";
             }
 
             //pick a different queue based on the message type..
