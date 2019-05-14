@@ -239,16 +239,24 @@ namespace GDPR.Common.Messages
             if (message.IsError)
                 eventHubName = Configuration.EventErrorHubName;
 
-            string connectionStringBuilder = GDPRCore.Current.GetEventHubConnectionString(eventHubName);
-            //Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+            string connectionStringBuilder = null;
 
-            if (!message.IsSystem)
+            //only do this if we didn't have something coming in...
+            if (string.IsNullOrEmpty(connectionString))
             {
-                connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+                connectionStringBuilder = GDPRCore.Current.GetEventHubConnectionString(eventHubName);
+                //Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
 
-                if (!connectionStringBuilder.Contains("EntityPath"))
-                    connectionStringBuilder += $";EntityPath={message.ApplicationId}";
+                if (!message.IsSystem)
+                {
+                    connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+
+                    if (!connectionStringBuilder.Contains("EntityPath"))
+                        connectionStringBuilder += $";EntityPath={message.ApplicationId}";
+                }
             }
+            else
+                connectionStringBuilder = connectionString;
 
             //pick a different queue based on the message type..
             switch (message.Type)
