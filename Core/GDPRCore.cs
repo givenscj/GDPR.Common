@@ -167,7 +167,7 @@ namespace GDPR.Common.Core
             {
                 try
                 {
-                    File.AppendAllText($"{DateTime.Now}\t{fi.Directory.FullName}\\Log.txt", message + "\n");
+                    File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", $"[{DateTime.Now}]\t{message}\n");
                     wasWritten = true;
                 }
                 catch (Exception ex)
