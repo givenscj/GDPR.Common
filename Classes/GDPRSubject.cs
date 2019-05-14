@@ -5,18 +5,25 @@ namespace GDPR.Common
 {
     public class GDPRSubject
     {
-        public List<GDPRSubjectPhone> Phones { get; set; }
+        public List<GDPRSubjectAlias> Aliases { get; set; }
         public List<GDPRSubjectAddress> Addresses { get; set; }
-        public List<GDPRSubjectIdentity> Identities { get; set; }
+        public List<GDPRSubjectBiometric> Biometrics { get; set; }
+        public List<GDPRSubjectDna> Dnas { get; set; }
         public List<GDPRSubjectEmail> EmailAddresses { get; set; }
-        public List<GDPRSubjectSocialIdentity> SocialIdentities { get; set; }
+        public List<GDPRSubjectIdentity> Identities { get; set; }
         public List<GDPRSubjectIpAddress> IpAddresses { get; set; }
+        public List<GDPRSubjectPhone> Phones { get; set; }
+        public List<GDPRSubjectSocialIdentity> SocialIdentities { get; set; }
+        
         public string ApplicationSubjectId { get; set; }
         public string ProcessorId { get; set; }
         public bool IsLocked { get; set; }
         public DateTime LockedDate { get; set; }
         public Guid SubjectId { get; set; }
+        public Guid TokenId { get; set; }
+        public decimal VerificationScore { get; set; }
         public bool IsMinor { get; set; }
+        public bool HasPin { get; set; }
         public bool IsEmployee { get; set; }
         public DateTime BirthDate { get; set; }
         public string TimeZone { get; set; }
@@ -35,12 +42,15 @@ namespace GDPR.Common
         
         public GDPRSubject()
         {
+            this.Aliases = new List<GDPRSubjectAlias>();
             this.Addresses = new List<GDPRSubjectAddress>();
             this.EmailAddresses = new List<GDPRSubjectEmail>();
             this.Phones = new List<GDPRSubjectPhone>();
             this.Identities = new List<GDPRSubjectIdentity>();
             this.SocialIdentities = new List<GDPRSubjectSocialIdentity>();
             this.IpAddresses = new List<GDPRSubjectIpAddress>();
+            this.Dnas = new List<GDPRSubjectDna>();
+            this.Biometrics = new List<GDPRSubjectBiometric>();
         }
 
         public void AddEmail(string email)
@@ -59,7 +69,14 @@ namespace GDPR.Common
             this.Identities = subject.Identities;
             this.Addresses = subject.Addresses;
             this.SocialIdentities = subject.SocialIdentities;
+            this.Dnas = subject.Dnas;
+            this.Biometrics = subject.Biometrics;
 
+        }
+
+        public void AddPhone(string phone)
+        {
+            this.Phones.Add(new GDPRSubjectPhone { Raw = phone });
         }
     }
 }

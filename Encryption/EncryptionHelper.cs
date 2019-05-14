@@ -13,11 +13,126 @@ using PGPSnippet.PGPEncryption;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace GDPR.Common.Encryption
 {
+    public static class EncryptionExtension
+    {
+        public static byte[] ReadAllBytes(this BinaryReader reader)
+        {
+            const int bufferSize = 4096;
+            using (var ms = new MemoryStream())
+            {
+                byte[] buffer = new byte[bufferSize];
+                int count;
+                while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                    ms.Write(buffer, 0, count);
+                return ms.ToArray();
+            }
+
+        }
+    }
+
     public class EncryptionHelper
     {
+        static public SymmetricKeyAlgorithmTag Algorithm = SymmetricKeyAlgorithmTag.Aes256;
+
+        private static byte[][] GetHashKeys(string key)
+        {
+            byte[][] result = new byte[2][];
+            Encoding enc = Encoding.UTF8;
+
+            SHA256 sha2 = new SHA256CryptoServiceProvider();
+
+            byte[] rawKey = enc.GetBytes(key);
+            byte[] rawIV = enc.GetBytes(key);
+
+            byte[] hashKey = sha2.ComputeHash(rawKey);
+            byte[] hashIV = sha2.ComputeHash(rawIV);
+
+            Array.Resize(ref hashIV, 16);
+
+            result[0] = hashKey;
+            result[1] = hashIV;
+
+            return result;
+        }
+
+        public static byte[] EncryptStream(string key, byte[] data)
+        {
+            byte[] encrypted = null;
+
+            byte[][] keys = GetHashKeys(key);
+
+            try
+            {
+                encrypted = EncryptStream(data, keys[0], keys[1]);
+            }
+            catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+
+            return encrypted;
+        }
+
+        public static byte[] DecryptStream(string key, byte[] data)
+        {
+            byte[] unEnc = null;
+
+            byte[][] keys = GetHashKeys(key);
+
+            try
+            {
+                unEnc = DecryptStream(data, keys[0], keys[1]);
+            }
+            catch (CryptographicException) { }
+            catch (ArgumentNullException) { }
+
+            return unEnc;
+        }
+        
+        public static byte[] EncryptStream(byte[] plain, byte[] Key, byte[] IV)
+        {
+            byte[] encrypted;
+            using (MemoryStream mstream = new MemoryStream())
+            {
+                using (AesManaged aesProvider = new AesManaged())
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream(mstream,
+                        aesProvider.CreateEncryptor(Key, IV), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(plain, 0, plain.Length);
+                    }
+                    encrypted = mstream.ToArray();
+                }
+            }
+            return encrypted;
+        }
+        public static byte[] DecryptStream(byte[] encrypted, byte[] Key, byte[] IV)
+        {
+            byte[] data = null;
+            using (MemoryStream mStream = new MemoryStream(encrypted)) //add encrypted
+            {
+                using (AesManaged aesProvider = new AesManaged())
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream,
+                        aesProvider.CreateDecryptor(Key, IV), CryptoStreamMode.Read))
+                    {
+                        //cryptoStream.Read(encrypted, 0, encrypted.Length);
+                        using (BinaryReader stream = new BinaryReader(cryptoStream))
+                        {
+                            data = stream.ReadAllBytes();
+                        }
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        
+
         public static void GenerateKeys(string username, string password, string keyStoreUrl, string applicationId)
         {
             IAsymmetricCipherKeyPairGenerator kpg = new RsaKeyPairGenerator();
@@ -131,7 +246,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             //dataCompressor.Close();
             byte[] dataBytes = File.ReadAllBytes(inputFile);
 
-            PgpEncryptedDataGenerator dataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Aes256, withIntegrityCheck, new SecureRandom());
+            PgpEncryptedDataGenerator dataGenerator = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             dataGenerator.AddMethod(pubKey);
 
             using (Stream outputStream = new MemoryStream())
@@ -215,7 +330,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         public static string EncryptPGP3(string key, string code)
         {
             //create the PGPKey object
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(key);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(key, true);
             
             Stream inputData = Utility.GenerateStreamFromString(code);
             Stream encryptedMessageStream = new MemoryStream();
@@ -224,50 +339,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             
             string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
             return encryptedMessage;
-        }
-
-        public static string EncryptPGP4(string key, string code)
-        {
-            string filePath = @"c:\temp\code.txt";
-
-            //create temp file...
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-
-            File.AppendAllText(filePath, code);
-
-            //create the PGPKey object
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(File.ReadAllText(@"c:\KeyBase\publickey.txt"));
-            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(File.ReadAllText(@"c:\KeyBase\privatekey.txt"));
-            PgpPrivateKey privKey = PgpEncryptionKeys.ReadPrivateKey(secretKey, "Seattle123");
-
-            FileInfo fi = new FileInfo(@"c:\temp\code.txt");
-            FileStream outputStream = new FileStream(@"c:\temp\encrypted_code.txt", FileMode.Create);
-            EncryptFile(outputStream, fi, publicKey, true, true);
-            outputStream.Close();
-
-            return File.ReadAllText(@"c:\temp\encrypted_code.txt");
-        }
-
-        public static string GetSystemKey(string id, string version)
-        {
-            //send the message to the processor endpoint...
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
-            var result = client.GetAsync($"/Home/GetSystemPublicKey?SystemId={id}&Version={version}");
-            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
-            return resultContent.Trim();
-        }
-
-        public static string GetApplicationKey(string applicationId, string version)
-        {
-            //send the message to the processor endpoint...
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
-            var result = client.GetAsync($"/Home/GetApplicationPublicKey?ApplicationId={applicationId}&Version={version}");
-            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
-            return resultContent.Trim();
-        }
+        }        
 
         public static string GetPrivateKey(string filePath, string id, string version)
         {
@@ -283,46 +355,26 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             if (isSystem)
             {
                 //encrypt key
-                publicKeyStr = GetSystemKey(GDPRCore.Current.GetSystemId().ToString(), Configuration.SystemKeyVersion.ToString());
+                publicKeyStr = GDPRCore.Current.GetSystemKey(GDPRCore.Current.GetSystemId().ToString(), Configuration.SystemKeyVersion);
 
                 //signing key is system...
-                privateKeyStr = GetPrivateKey(keyPath, GDPRCore.Current.GetSystemId().ToString(), Configuration.SystemKeyVersion.ToString());
+                privateKeyStr = GetPrivateKey(keyPath, GDPRCore.Current.GetSystemId().ToString(), Configuration.SystemKeyVersion);
                 passPhrase = EncryptionContext.Default.Password;
-                passPhrase = GDPRCore.Current.GetSystemKey(GDPRCore.Current.GetSystemId().ToString(), Configuration.SystemKeyVersion);
             }
             else
             {
                 //encrypt key
-                publicKeyStr = GetApplicationKey(id, version);
+                publicKeyStr = GDPRCore.Current.GetApplicationKey(id, version);
 
                 //signing key is system..
                 privateKeyStr = GetPrivateKey(keyPath, GDPRCore.Current.GetSystemId().ToString(), version);
                 passPhrase = EncryptionContext.Default.Password;
             }
 
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr, false);
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
 
-            try
-            {
-                PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
-                PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
-
-                Stream inputData = Utility.GenerateStreamFromString(data);
-                Stream encryptedMessageStream = new MemoryStream();
-
-                encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
-
-                string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
-                return encryptedMessage;
-            }
-            catch (Exception e)
-            {
-                if (e.Message.Contains("Checksum mismatch"))
-                    throw new GDPRException("Private Key Password is invalid");
-            }
-
-            return null;
+            return SignAndEncrypt(publicKey, secretKey, passPhrase, data);
         }
 
         public static string Encrypt(string data, EncryptionContext ctx)
@@ -377,7 +429,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 outputStream = new ArmoredOutputStream(outputStream);
 
             // Init encrypted data generator
-            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             encryptedDataGenerator.AddMethod(pubKey);
             Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
 
@@ -430,7 +482,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 outputStream = new ArmoredOutputStream(outputStream);
 
             // Init encrypted data generator
-            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Cast5, withIntegrityCheck, new SecureRandom());
+            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(EncryptionHelper.Algorithm, withIntegrityCheck, new SecureRandom());
             encryptedDataGenerator.AddMethod(pubKey);
             Stream encryptedOut = encryptedDataGenerator.Open(outputStream, new byte[BUFFER_SIZE]);
 
@@ -500,7 +552,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
                 //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
                 Stream outputStream = new MemoryStream();
-                PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
+                PGPDecrypt.Decrypt(inputStream, null, keyIn, passPhrase, outputStream);
                 return Utility.StreamToString(outputStream);
             }
             catch (Exception ex)
@@ -508,6 +560,73 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 GDPRCore.Current.Log(ex, Enums.LogLevel.Error);
                 return null;
             }
+        }
+
+        public static string SignAndEncrypt(PgpPublicKey publicKey, PgpSecretKey secretKey, string passPhrase, string data)
+        {
+            try
+            {
+                PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+                PgpEncrypt encrypter = new PgpEncrypt(encryptionKeys);
+
+                Stream inputData = Utility.GenerateStreamFromString(data);
+                Stream encryptedMessageStream = new MemoryStream();
+
+                encrypter.SignAndEncryptStream(inputData, encryptedMessageStream, passPhrase.ToCharArray(), true, true, publicKey, secretKey);
+
+                string encryptedMessage = Utility.StreamToString(encryptedMessageStream);
+                return encryptedMessage;
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("Checksum mismatch"))
+                    throw new GDPRException("Private Key Password is invalid");
+            }
+
+            return null;
+        }
+
+        public static string DecryptAndVerify(PgpPublicKey publicKey, Stream secretKey, string passPhrase, string data)
+        {
+            try
+            {
+                //PgpEncryptionKeys encryptionKeys = new PgpEncryptionKeys(publicKey, secretKey, passPhrase);
+                
+                Stream inputData = Utility.GenerateStreamFromString(data);
+                Stream decryptedMessageStream = new MemoryStream();
+
+                PGPDecrypt.Decrypt(inputData, publicKey, secretKey, passPhrase, decryptedMessageStream);
+                
+                string message = Utility.StreamToString(decryptedMessageStream);
+                return message;
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("Checksum mismatch"))
+                    throw new GDPRException("Private Key Password is invalid");
+                else
+                    throw;
+            }
+
+            return null;
+        }
+
+        public static string SignAndEncrypt(string publicKeyStr, string privateKeyStr, string passPhrase, string message)
+        {
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr, false);
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+
+            return SignAndEncrypt(publicKey, secretKey, passPhrase, message);
+        }
+
+        public static string DecryptAndVerify(string publicKeyStr, string privateKeyStr, string passPhrase, string encMessage)
+        {
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr,false);
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+
+            Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
+
+            return DecryptAndVerify(publicKey, keyIn, passPhrase, encMessage);
         }
     }
 }

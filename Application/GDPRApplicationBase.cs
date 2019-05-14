@@ -2,8 +2,10 @@
 using GDPR.Common.Classes;
 using GDPR.Common.Core;
 using GDPR.Common.Data;
+using GDPR.Common.EntityProperty;
 using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
+using GDPR.Common.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,8 +15,9 @@ using Configuration = GDPR.Common.Configuration;
 
 namespace GDPR.Applications
 {
-    public abstract class BaseGDPRApplication : GDPRApplicationCore, IGDPRDataSubjectActions
+    public abstract class GDPRApplicationBase : GDPRApplicationCore, IGDPRDataSubjectActions
     {
+        //application search support 
         protected bool _supportsPersonalSearch;
         protected bool _supportsEmailSearch;
         protected bool _supportsPhoneSearch;
@@ -23,36 +26,62 @@ namespace GDPR.Applications
         protected bool _supportsSocialSearch;
         protected bool _supportsIpAddressSearch;
         protected bool _supportsBioidentitySearch;
+        protected bool _supportsDeviceSearch;
+        protected bool _supportsDnaSearch;
 
+        protected bool _supportsMFA;
+
+        //misc search 
+        //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
         protected bool _enableNameSearch;
         protected bool _enablePhoneFormatsSearch;
 
+        //GDPR
+        protected bool _supportsGDPRQuery;
+        protected bool _supportsGDPRDelete;
         protected bool _supportsGDPRUpdate;
         protected bool _supportsGDPRHold;
         protected bool _supportsGDPRInsert;
 
+        //records
         protected bool _supportsRecords;
+        protected bool _supportsAnonymization;
+        protected bool _allowUnverifiedRecords;
 
+        //Approval
         protected bool _manualApprovalOnly;
         protected bool _manualDataExportOnly;
 
-        protected bool _supportsAnonymization;
+        //webhook support
+        protected bool _supportsWebHookCreate;
+        protected bool _supportsWebHookDelete;
+        protected bool _supportsWebHookUpdate;
 
-        protected bool _allowUnverifiedRecords;
+        //hashing support
+        protected bool _supportsHash;
+        protected string _hashAlgorithm;
 
-        //allowing and implementing "name" search is in general a bad idea (if you do this, ensure that pre and post approval is enabled)
+        //basic properties
         protected string _version;
         protected string _shortName;
         protected string _longName;
+        protected string _link;
         protected IGDPRCore core;
 
+        //in and out message for higher level processing
         protected BaseApplicationMessage _request;
         protected BaseApplicationMessage _response;
 
+        //how to encrypt the messasges that are outgoing
         public EncryptionContext ctx { get; set; }
 
         public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
 
+        public bool SupportsHash { get { return this._supportsHash; } }
+        public string HashAlgorithm { get { return this._hashAlgorithm; } }
+
+        public bool SupportsMFA { get { return this._supportsMFA; } }
+        public bool SupportsGDPRDelete { get { return this._supportsGDPRDelete; } }
         public bool SupportsGDPRUpdate { get { return this._supportsGDPRUpdate; } }
         public bool SupportsGDPRHold { get { return this._supportsGDPRHold; } }
         public bool SupportsGDPRInsert { get { return this._supportsGDPRInsert; } }
@@ -63,12 +92,20 @@ namespace GDPR.Applications
         public bool SupportsAddressSearch { get { return this._supportsAddressSearch; } }
         public bool SupportsIdentitySearch { get { return this._supportsIdentitySearch; } }
         public bool SupportsBioidentitySearch { get { return this._supportsBioidentitySearch; } }
+        public bool SupportsDeviceSearch { get { return this._supportsDeviceSearch; } }
+
+        public bool SupportsDnaSearch { get { return this._supportsDnaSearch; } }
         public bool SupportsSocialSearch { get { return this._supportsSocialSearch; } }
         public bool SupportsIpAddressSearch { get { return this._supportsIpAddressSearch; } }
 
         public bool SupportsAnonymization { get { return this._supportsAnonymization; } }
 
         public bool SupportsRecords { get { return this._supportsRecords; } }
+
+        public int Tier { get; set; }
+
+        protected bool _isActive = true;
+        public bool IsActive { get { return this._isActive; } }
 
         public bool ZipAndLock { get; set; }
 
@@ -79,7 +116,15 @@ namespace GDPR.Applications
                 return this._version;
             }
         }
-        
+
+        public string Link
+        {
+            get
+            {
+                return this._link;
+            }
+        }
+
         public string ShortName
         {
             get
@@ -137,9 +182,10 @@ namespace GDPR.Applications
             }
         }
 
-        public BaseGDPRApplication()
+        public GDPRApplicationBase()
         {
             _version = "1.0.0.0";
+            _isActive = true;
         }
 
         public bool SupportsOAuth { get; set; }
@@ -164,24 +210,24 @@ namespace GDPR.Applications
             set { _enablePhoneFormatsSearch = value; }
         }
 
-        public virtual void Consent()
+        public virtual void Consent(string applicationSubjectId)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void Unconsent()
+        public virtual void Unconsent(string applicationSubjectId)
         {
             throw new NotImplementedException();
         }
 
         public virtual ExportInfo ExportData(string applicationSubjectId, GDPRSubject s)
         {
-            throw new GDPRException("ExportData[string,GDPRSubject] is not implemented.  Check the SupportsRecords flag on the applicaiton");
+            throw new GDPRException("ExportData[string,GDPRSubject] is not implemented.  Check the SupportsRecords flag on the application");
         }
 
         public virtual ExportInfo ExportData(string applicationSubjectId)
         {
-            throw new GDPRException("ExportData[string]  is not implemented.  Check the SupportsRecords flag on the applicaiton");
+            throw new GDPRException("ExportData[string]  is not implemented.  Check the SupportsRecords flag on the application");
         }
 
         public virtual List<GDPRSubject> GetAllSubjects(int skip, int count, DateTime? changeDate)
@@ -207,6 +253,11 @@ namespace GDPR.Applications
         public virtual void Discover()
         {
             Discover(null);
+        }
+
+        public virtual void PhoneNormalization()
+        {
+            throw new NotImplementedException();
         }
 
         public virtual void ProcessRequest(BaseGDPRMessage message, EncryptionContext ctx)
@@ -238,7 +289,46 @@ namespace GDPR.Applications
                     Discover();
                     break;
                 case "DeleteMessage":
-                    RecordDeleteIn(message.Subject);
+                    
+                    //delete based on the records user submitted...
+                    if (message.Records != null && message.Records.Records.Count > 0)
+                    {
+                        foreach(Record r in message.Records.Records)
+                        {
+                            RecordDelete(r);
+                        }
+                    }
+                    else
+                        SubjectDeleteIn(message.Subject);
+
+                    //create a destruction certification
+                    string url = GDPRCore.Current.GenerateDestructionCertificate(this.Request.SubjectRequestApplicationId, message.Records);
+
+                    BaseDeleteMessage msgD = new BaseDeleteMessage
+                    {
+                        Status = "Delete Processed",
+                        ApplicationId = Request.ApplicationId,
+                        ApplicationSubjectId = Guid.Empty.ToString(), //no id on the app side...
+                        SubjectRequestId = Request.SubjectRequestId,
+                        Subject = Request.Subject,
+                        ProcessorId = Request.ProcessorId,
+                        SystemId = Request.SystemId
+                    };
+
+                    Response = msgD;
+
+                    DeleteInfo di = new DeleteInfo();
+                    di.Urls.Add(url);
+                    msgD.Info = di;
+
+                    MessageHelper.SendMessage(msgD, ctx);
+
+                    break;
+                case "UpdateMessage":
+                    SubjectUpdateIn(message.Subject);
+                    break;
+                case "HoldMessage":
+                    SubjectHoldIn(message.Subject);
                     break;
                 case "DataRequestMessage":
                     BaseExportMessage em = null;
@@ -255,7 +345,7 @@ namespace GDPR.Applications
                         em.ApplicationSubjectId = Guid.Empty.ToString(); //no id on the app side...
 
                         ExportInfo ei = new ExportInfo();
-                        ei.Url = "http://empty";
+                        ei.Urls.Add("http://empty");
                         em.Info = ei;
                     }
                     else
@@ -278,32 +368,20 @@ namespace GDPR.Applications
             }
         }
 
-        public virtual bool RecordCreateIn(GDPRSubject subject)
+        public virtual bool TestApi()
         {
             throw new NotImplementedException();
         }
 
-        public virtual bool RecordCreateOut(GDPRSubject subject)
+        public virtual ApplicationStatusModel CheckStatus()
         {
-            throw new NotImplementedException();
+            ApplicationStatusModel asm = new ApplicationStatusModel();
+            asm.ApplicationId = this.ApplicationId;
+            asm.Status = "CheckStatus not implemented";
+            return asm;            
         }
 
-        public virtual bool RecordDeleteIn(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RecordDeleteOut(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void RecordHold(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void RecordNotify(GDPRSubject subject)
+        public virtual void SubjectNotify(GDPRSubject subject)
         {
             throw new NotImplementedException();
         }
@@ -312,16 +390,6 @@ namespace GDPR.Applications
         {
             var results = new List<Record>();
             return results;
-        }
-
-        public virtual bool RecordUpdateIn(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RecordUpdateOut(GDPRSubject subject)
-        {
-            throw new NotImplementedException();
         }
 
         public virtual void ValidateSubject(GDPRSubject subject)
@@ -335,6 +403,7 @@ namespace GDPR.Applications
             AddProperty(
                 new BaseEntityProperty
                 {
+                    EntityId = this.ApplicationId,
                     DisplayName = "Username", Category = "Security",
                     Type = "textbox", Name = "Username", Value = "", IsMasked = false,
                     IsSecure = true
@@ -342,27 +411,37 @@ namespace GDPR.Applications
             AddProperty(
                 new BaseEntityProperty
                 {
+                    EntityId = this.ApplicationId,
                     DisplayName = "Password", Category = "Security",
                     Type = "textbox", Name = "Password", Value = "", IsMasked = true,
                     IsSecure = true
                 }, overwrite);
+
+            if (this.SupportsMFA)
+            {
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityId = this.ApplicationId,
+                    DisplayName = "MFA Secret",
+                    Category = "Security",
+                    Type = "textbox",
+                    Name = "MFASecret",
+                    Value = "",
+                    IsMasked = true,
+                    IsSecure = true
+                }, overwrite);
+            }
         }
 
         public void CreateRequestProperties(bool overwrite)
         {
-            /*
-            this._supportsAddressSearch = true;
-            this._supportsEmailSearch = true;
-            this._supportsIdentitySearch = true;
-            this._supportsPhoneSearch = true;
-            this._supportsPersonalSearch = true;
-            this._supportsSocialSearch = true;
-            */
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsAddressSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsAddressSearch",
                      Value = "",
                      Type = "checkbox",
@@ -372,30 +451,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
-                     DisplayName = "SupportsEmailSearch",
-                     Category = "Search",
-                     Name = "SupportsEmailSearch",
-                     Value = "false",
-                     Type = "checkbox",
-                     IsMasked = false,
-                     IsSecure = false
-                 }, overwrite);
-            AddProperty(
-                 new BaseEntityProperty
-                 {
-                     DisplayName = "SupportsIdentitySearch",
-                     Category = "Search",
-                     Name = "SupportsIdentitySearch",
-                     Value = "false",
-                     Type = "checkbox",
-                     IsMasked = false,
-                     IsSecure = false
-                 }, overwrite);
-            AddProperty(
-                 new BaseEntityProperty
-                 {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsBioidentitySearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsBioidentitySearch",
                      Value = "false",
                      Type = "checkbox",
@@ -405,8 +463,81 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "SupportsDeviceSearch",
+                     Category = "Supported Data",
+                     Name = "SupportsDeviceSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "SupportsDnaSearch",
+                     Category = "Supported Data",
+                     Name = "SupportsDnaSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "SupportsEmailSearch",
+                     Category = "Supported Data",
+                     Name = "SupportsEmailSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "SupportsIdentitySearch",
+                     Category = "Supported Data",
+                     Name = "SupportsIdentitySearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "SupportsIpAddressSearch",
+                     Category = "Supported Data",
+                     Name = "SupportsIpAddressSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
+                     DisplayName = "SupportsPersonalSearch",
+                     Category = "Supported Data",
+                     Name = "SupportsPersonalSearch",
+                     Value = "false",
+                     Type = "checkbox",
+                     IsMasked = false,
+                     IsSecure = false
+                 }, overwrite);
+            AddProperty(
+                 new BaseEntityProperty
+                 {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsPhoneSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsPhoneSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -416,8 +547,9 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
+                     EntityId = this.ApplicationId,
                      DisplayName = "SupportsSocialSearch",
-                     Category = "Search",
+                     Category = "Supported Data",
                      Name = "SupportsSocialSearch",
                      Value = "false",
                      Type = "checkbox",
@@ -427,9 +559,10 @@ namespace GDPR.Applications
             AddProperty(
                  new BaseEntityProperty
                  {
-                     DisplayName = "SupportsPersonalSearch",
+                     EntityId = this.ApplicationId,
+                     DisplayName = "EnablePhoneFormatsSearch",
                      Category = "Search",
-                     Name = "SupportsPersonalSearch",
+                     Name = "EnablePhoneFormatsSearch",
                      Value = "false",
                      Type = "checkbox",
                      IsMasked = false,
@@ -439,28 +572,23 @@ namespace GDPR.Applications
 
         public void CreateOAuthProperties(bool overwrite)
         {
-            AddProperty(
-                new BaseEntityProperty
-                {
-                    DisplayName = "ClientId", Name = "ClientId", Category = "Security", Type = "textbox", Value = "",
-                    IsMasked = false, IsSecure = true
-                }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
-                {
-                    DisplayName = "ClientSecret", Name = "ClientSecret", Category = "Security", Type = "textbox",
+            AddProperty(new BaseEntityProperty() { EntityId = this.ApplicationId, EntityPropertyId = Guid.NewGuid(), DisplayName = "ClientId", Name = "ClientId", Category = "Security", Type = "textbox", Value = "",IsMasked = false, IsSecure = true}, overwrite);
+            AddProperty(new BaseEntityProperty() {EntityId = this.ApplicationId, EntityPropertyId = Guid.NewGuid(),
+                    DisplayName = "Client Secret", Name = "ClientSecret", Category = "Security", Type = "textbox",
                     Value = "", IsMasked = true, IsSecure = true
                 }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
+            AddProperty(new BaseEntityProperty()
                 {
-                    DisplayName = "ApiKey", Name = "ApiKey", Category = "Security", Type = "textbox", Value = "",
+                    EntityId = this.ApplicationId,
+                    EntityPropertyId = Guid.NewGuid(),
+                    DisplayName = "Api Key", Name = "ApiKey", Category = "Security", Type = "textbox", Value = "",
                     IsMasked = false, IsSecure = true
                 }, overwrite);
-            AddProperty(
-                new BaseEntityProperty
+            AddProperty(new BaseEntityProperty()
                 {
-                    DisplayName = "AccessToken", Name = "AccessToken", Category = "Security", Type = "textbox",
+                    EntityId = this.ApplicationId,
+                    EntityPropertyId = Guid.NewGuid(),
+                    DisplayName = "Access Token", Name = "AccessToken", Category = "Security", Type = "textbox",
                     Value = "", IsMasked = true, IsSecure = true
                 }, overwrite);
         }
@@ -521,8 +649,33 @@ namespace GDPR.Applications
             BuildProperties(overwrite);
         }
 
+        public Guid GetEntityPropertyTypeId(string name, string category)
+        {
+            List<EntityPropertyTypeBase> types = this.GetEntityPropertyDefinitions();
+            types.AddRange(GDPRCore.Current.GetEntityPropertyDefinitions());
+
+            EntityPropertyTypeBase b = types.Find(e => e.Name == name && e.Category == category);
+
+            if (b != null)
+                return b.EntityPropertyTypeId;
+
+            return Guid.Empty;
+        }
+
         public void AddProperty(BaseEntityProperty ep, bool overwrite)
         {
+            BaseEntityProperty ept = GDPRCore.Current.GetEntityPropertyType(ep.Name, ep.Category);
+
+            if (ept != null)
+            {
+                ep.DisplayName = ept.DisplayName;
+                ep.EntityPropertyTypeId = ept.EntityPropertyTypeId;
+                ep.Options = ept.Options;
+            }
+
+            if (string.IsNullOrEmpty(ep.DisplayName))
+                ep.DisplayName = ep.Name;
+
             if (Properties.ContainsKey(ep.Name))
             {
                 if (overwrite)
@@ -588,17 +741,31 @@ namespace GDPR.Applications
                     EntityPropertyId = Guid.NewGuid(), Name = "DeleteRequiresApproval", Type = "checkbox",
                     Value = "true", Category = "Compliance", IsMasked = false, IsSecure = false
                 }, overwrite);
+
             AddProperty(
                 new BaseEntityProperty
                 {
                     EntityPropertyId = Guid.NewGuid(), Name = "ExportRequiresApproval", Type = "checkbox",
                     Value = "true", Category = "Compliance", IsMasked = false, IsSecure = false
                 }, overwrite);
+
             AddProperty(
                 new BaseEntityProperty
                 {
                     EntityPropertyId = Guid.NewGuid(), Name = "AllowUnverifiedData", Type = "checkbox", Value = "true",
                     Category = "Compliance", IsMasked = false, IsSecure = false
+                }, overwrite);
+
+            AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityPropertyId = Guid.NewGuid(),
+                    Name = "RemoveMinors",
+                    Type = "checkbox",
+                    Value = "true",
+                    Category = "Configuration",
+                    IsMasked = false,
+                    IsSecure = false
                 }, overwrite);
         }
 
@@ -684,7 +851,7 @@ namespace GDPR.Applications
             //upload to azure...
             StorageContext.Current.TenantId = this.Request.TenantId;
             string url = StorageContext.Current.UploadExportBlob(this.ApplicationId, fileName);
-            ei.Url = url;
+            ei.Urls.Add(url);
 
             return ei;
         }
@@ -715,11 +882,13 @@ namespace GDPR.Applications
                     if (newSubjects.Count == BatchSize)
                     {
                         //create a new message with the batch size...
-                        var discoverMsg = new BaseDiscoverResponsesMessage();
-                        discoverMsg.ApplicationId = ApplicationId;
-                        discoverMsg.Subjects = newSubjects;
-                        discoverMsg.SystemId = GDPRCore.Current.GetSystemId();
-                        discoverMsg.ProcessorId = GDPRCore.Current.GetSystemId();
+                        var discoverMsg = new BaseDiscoverResponsesMessage
+                        {
+                            ApplicationId = ApplicationId,
+                            Subjects = newSubjects,
+                            SystemId = GDPRCore.Current.GetSystemId(),
+                            ProcessorId = GDPRCore.Current.GetSystemId()
+                        };
 
                         //have to wrap this in case the message is too big and it needs to be split...
                         SendDiscoveryMessage(discoverMsg);
@@ -731,17 +900,29 @@ namespace GDPR.Applications
             else
             {
                 //create a new message with the batch size...
-                BaseDiscoverResponsesMessage discoverMsg = new BaseDiscoverResponsesMessage();
-                discoverMsg.ApplicationId = ApplicationId;
-                discoverMsg.Subjects = subjects;
-                discoverMsg.SystemId = GDPRCore.Current.GetSystemId();
-                discoverMsg.ProcessorId = GDPRCore.Current.GetSystemId();
+                BaseDiscoverResponsesMessage discoverMsg = new BaseDiscoverResponsesMessage
+                {
+                    ApplicationId = ApplicationId,
+                    Subjects = subjects,
+                    SystemId = GDPRCore.Current.GetSystemId(),
+                    ProcessorId = GDPRCore.Current.GetSystemId()
+                };
 
                 MessageHelper.SendMessage(discoverMsg, ctx);
             }
         }
 
         public abstract List<Record> GetAllRecordTypes();
+
+        public virtual List<EntityPropertyTypeBase> GetEntityPropertyDefinitions()
+        {
+            List<EntityPropertyTypeBase> types = new List<EntityPropertyTypeBase>();
+
+            //default application properties
+            //types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse(""), DisplayName = "", Name = "", Type = "checkbox", DefaultValue = "", Category = "", IsMasked = false, IsSecure = false, Description = "" });
+
+            return types;
+        }
 
         public virtual List<BaseApplicationPolicy> GetRecordPolicy()
         {
@@ -763,6 +944,101 @@ namespace GDPR.Applications
             }
 
             return policies;
+        }
+
+        public virtual void AnonymizeSubject(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectCreateIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectCreateOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual RecordCollection SubjectDeleteIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectDeleteOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectUpdateIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectUpdateOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectHoldIn(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool SubjectHoldOut(GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool RecordCreateIn(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool RecordCreateOut(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool RecordDeleteIn(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool RecordDeleteOut(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void RecordHold(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool RecordUpdateIn(Record old, Record update)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool RecordUpdateOut(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void RecordDelete(Record r)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void RecordUpdate(Record r, GDPRSubject subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void DeleteRecord(Record r)
+        {
+            throw new NotImplementedException();
         }
     }
 }

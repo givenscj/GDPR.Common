@@ -10,32 +10,32 @@ namespace GDPR.Common.Services
         virtual public string Url { get; set; }
         virtual public string Key { get; set; }
 
-        public object StartLogBlob(Guid applicationId)
+        public virtual object StartLogBlob(Guid applicationId)
         {
             throw new NotImplementedException();
         }
 
-        public string UploadBlob(FileInfo fi)
+        public virtual string UploadBlob(FileInfo fi)
         {
             throw new NotImplementedException();
         }
 
-        public string UploadBlob(BlobContext ctx)
+        public virtual string UploadBlob(BlobContext ctx)
         {
             throw new NotImplementedException();
         }
 
-        public string UploadBlob(string name, byte[] data)
+        public virtual string UploadBlob(string name, byte[] data)
         {
             throw new NotImplementedException();
         }
 
-        public string UploadBlob(string containerName, byte[] data, string name)
+        public virtual string UploadBlob(string containerName, byte[] data, string name)
         {
             throw new NotImplementedException();
         }
 
-        public string UploadExportBlob(Guid applicationId, string fileName)
+        public virtual string UploadExportBlob(Guid applicationId, string fileName)
         {
             throw new NotImplementedException();
         }

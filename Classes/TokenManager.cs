@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 
 namespace GDPR.Common.Classes
 {
@@ -12,7 +13,14 @@ namespace GDPR.Common.Classes
 
         public TokenManager(Hashtable tokens)
         {
-            this.tokenHashTable = tokens;
+            if (tokens == null)
+                this.tokenHashTable = new Hashtable();
+            else
+                this.tokenHashTable = tokens;
+        }
+
+        public TokenManager(Guid entityId)
+        {
         }
 
         public TokenManager(string[] keys, string[] values)

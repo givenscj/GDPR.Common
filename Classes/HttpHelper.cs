@@ -24,6 +24,7 @@ namespace GDPR.Common
         public String fileName = "";
         public String acceptOverride = String.Empty;
         public String contentTypeOverride = "";
+        public bool ignoreContentDisposition = false;
         public String methodOverride = "";
         public Hashtable headers = new Hashtable();
         public String Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36";
@@ -196,6 +197,19 @@ namespace GDPR.Common
             return DoPut(url, data, cookies);
         }
 
+        public string DoPatch(string url, string postData, string cookies)
+        {
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            byte[] data = encoding.GetBytes(postData);
+
+            return DoPatch(url, data, cookies);
+        }
+
+        public string DoPatch(string url, byte[] data, string cookies)
+        {
+            return DoPostWork(url, data, "PATCH", cookies);
+        }
+
         public string DoPut(string url, byte[] data, string cookies)
         {
             return DoPostWork(url, data, "PUT", cookies);
@@ -250,13 +264,17 @@ namespace GDPR.Common
         {
             Hashtable ht = new Hashtable();
 
+            if (string.IsNullOrEmpty(html))
+                return ht;
+
             String[] cookies = html.Split(';');
 
             foreach (String c in cookies)
             {
-                String c1 = c.Replace("HttpOnly,", "");
+                String c1 = c.Replace("HttpOnly,", "").Replace("httponly,", "").Replace("HTTPOnly,", ""); ;
 
                 c1 = c1.Replace("secure,", "");
+                c1 = c1.Replace("Secure,", "");
 
                 if (c1.Trim().Contains("HttpOnly"))
                     continue;
@@ -265,6 +283,9 @@ namespace GDPR.Common
                 c1 = c1.Replace("expires=" + expireText + "GMT,", "");
 
                 if (c1.Contains("expires="))
+                    continue;
+
+                if (c1.Contains("Expires="))
                     continue;
 
                 if (c1.Contains("domain="))
@@ -357,6 +378,8 @@ namespace GDPR.Common
 
         public String ProcessResponse(HttpWebRequest req)
         {
+            this.fileName = "";
+
             try
             {
                 HttpWebResponse res = (HttpWebResponse)req.GetResponse();
@@ -421,7 +444,7 @@ namespace GDPR.Common
                     fileName = "";
                 }
 
-                if (fileName.Length > 0)
+                if (fileName.Length > 0 && !ignoreContentDisposition)
                 {
                     // Define buffer and buffer size
                     int bufferSize = 2048;

@@ -1,10 +1,13 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Data;
+using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Messages;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net.Http;
 
 namespace GDPR.Common.Core
 {
@@ -43,6 +46,11 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
+        public string GetApplicationEventHub(string applicationId)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetApplicationKey(string applicationId)
         {
             return Configuration.ApplicationPassword;
@@ -68,12 +76,13 @@ namespace GDPR.Common.Core
             return "";
         }
 
-        public DateTime GetOffset(string hubName, string partitionId)
+        
+        public void GetOffset(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
         {
             throw new NotImplementedException();
         }
 
-        public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
+        public bool SetOffSet(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, DateTime lastMessageDate, string offset)
         {
             throw new NotImplementedException();
         }
@@ -95,7 +104,7 @@ namespace GDPR.Common.Core
 
         public int GetSystemKeyVersion(Guid systemId)
         {
-            return Configuration.SystemKeyVersion;
+            return int.Parse(Configuration.SystemPinVersion);
         }
 
         public bool IsValidEmail(string email)
@@ -186,11 +195,6 @@ namespace GDPR.Common.Core
             throw new NotImplementedException();
         }
 
-        public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
-        {
-            throw new NotImplementedException();
-        }
-
         public void SetSystemOAuth(OAuthContext ctx, string type)
         {
             switch (type)
@@ -203,9 +207,70 @@ namespace GDPR.Common.Core
             }
         }
 
+        public void UpdateApplicationStatus(Guid applicationId, string v)
+        {
+            throw new NotImplementedException();
+        }
+
         public string UploadBlob(Guid applicationId, string filePath)
         {
             return StorageContext.Current.UploadExportBlob(applicationId, filePath);
+        }
+
+        public string GetEventHubConnectionString(string eventHubName)
+        {
+            return Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+        }
+
+        public string GetSystemKey(string id, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetSystemPublicKey?SystemId={id}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public string GetApplicationKey(string applicationId, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetApplicationPublicKey?ApplicationId={applicationId}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public string GetSystemPin(int keyVersion)
+        {
+            return Configuration.GetProperty("SystemPassword").ToString();
+        }
+
+        public string GetApplicationPin(string applicationId, int keyVersion)
+        {
+            return Configuration.GetProperty("ApplicationPassword").ToString();
+        }
+
+        public List<EntityPropertyTypeBase> GetEntityPropertyDefinitions()
+        {
+            return new List<EntityPropertyTypeBase>();
+        }
+
+        public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId)
+        {
+            //TODO - get the subject via the token...
+            throw new NotImplementedException();
+        }
+
+        public string GenerateDestructionCertificate(Guid requestId, RecordCollection records)
+        {
+            throw new NotImplementedException();
+        }
+
+        public BaseEntityProperty GetEntityPropertyType(string name, string category)
+        {
+            throw new NotImplementedException();
         }
     }
 }

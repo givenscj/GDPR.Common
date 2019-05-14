@@ -133,7 +133,7 @@ namespace PGPSnippet.Keys
 
                 PgpPublicKeyRingBundle publicKeyRingBundle = new PgpPublicKeyRingBundle(inputStream);
 
-                PgpPublicKey foundKey = GetFirstPublicKey(publicKeyRingBundle);
+                PgpPublicKey foundKey = GetFirstPublicKey(publicKeyRingBundle, false);
 
                 if (foundKey != null)
 
@@ -146,46 +146,38 @@ namespace PGPSnippet.Keys
         }
 
 
-        static public PgpPublicKey ReadPublicKeyFromString(string publicKey)
+        static public PgpPublicKey ReadPublicKeyFromString(string publicKey, bool validOnly)
         {
-
             using (Stream keyIn = Utility.GenerateStreamFromString(publicKey))
-
             using (Stream inputStream = PgpUtilities.GetDecoderStream(keyIn))
             {
-
                 PgpPublicKeyRingBundle publicKeyRingBundle = new PgpPublicKeyRingBundle(inputStream);
 
-                PgpPublicKey foundKey = GetFirstPublicKey(publicKeyRingBundle);
+                PgpPublicKey foundKey = GetFirstPublicKey(publicKeyRingBundle, validOnly);
 
                 if (foundKey != null)
-
                     return foundKey;
-
             }
 
             throw new ArgumentException("No encryption key found in public key ring.");
-
         }
 
-        static private PgpPublicKey GetFirstPublicKey(PgpPublicKeyRingBundle publicKeyRingBundle)
+        static private PgpPublicKey GetFirstPublicKey(PgpPublicKeyRingBundle publicKeyRingBundle, bool validOnly)
         {
 
             foreach (PgpPublicKeyRing kRing in publicKeyRingBundle.GetKeyRings())
             {
+                foreach(PgpPublicKey key in kRing.GetPublicKeys().Cast<PgpPublicKey>())
+                {
+                    if (validOnly && key != null && key.GetValidSeconds() > 0)
+                        return key;
 
-                PgpPublicKey key = kRing.GetPublicKeys()
+                    //return first key...
+                    if (!validOnly && key != null)
+                        return key;
+                }
 
-                    .Cast<PgpPublicKey>()
-
-                    .Where(k => k.IsEncryptionKey && k.GetValidSeconds() > 0)
-
-                    .FirstOrDefault();
-
-                if (key != null)
-
-                    return key;
-
+                //.Cast<PgpPublicKey>().Where(k => k.IsEncryptionKey && k.GetValidSeconds() > 0).FirstOrDefault();
             }
 
             return null;

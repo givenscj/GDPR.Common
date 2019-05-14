@@ -3,8 +3,13 @@ using GDPR.Common.Core;
 using GDPR.Common.Exceptions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GDPR.Common.Services
 {
@@ -17,22 +22,57 @@ namespace GDPR.Common.Services
         {
             get
             {
-                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.StorageAccountName, Configuration.StorageAccountKey);
+                return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", Configuration.ResourcePrefix.ToLower() + Configuration.StorageAccountName, Key);
             }
             set
             {
                 _url = value;
             }
         }
+
+        string _token;
+
         public override string Key
         {
             get
             {
-                return Configuration.StorageAccountKey;
+                if (Configuration.IsManaged && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
+                {
+                    if (string.IsNullOrEmpty(_token))
+                    {
+                        string token = Utility.GetMSIToken("", "https://management.azure.com", "").Result;
+                        dynamic keys = GetStorageKeysAsync(token).Result;
+                        _token = keys.keys[0].value;
+                        return _token;
+                    }
+                    else
+                        return _token;
+                }
+                else
+                    return Configuration.StorageAccountKey;
             }
             set
             {
                 _key = value;
+            }
+        }
+
+        internal async Task<dynamic> GetStorageKeysAsync(string token)
+        {
+            var uri = new Uri($"{Constants.AzureManagementApi}/subscriptions/{Configuration.SubscriptionId}/resourceGroups/{Configuration.ResourceGroupName}/providers/Microsoft.Storage/storageAccounts/{Configuration.ResourcePrefix + Configuration.StorageAccountName}/listKeys?api-version=2016-01-01");
+            var content = new StringContent(string.Empty, Encoding.UTF8, "text/html");
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization
+                    = new AuthenticationHeaderValue("Bearer", token);
+
+                using (var response = await httpClient.PostAsync(uri, content))
+                {
+                    var responseText = await response.Content.ReadAsStringAsync();
+                    var keys = JsonConvert.DeserializeObject(responseText);
+                    return keys;
+                }
             }
         }
 
@@ -109,13 +149,16 @@ namespace GDPR.Common.Services
 
                     if (ctx.FileInfo != null)
                     {
-                        name = ctx.Name;
+                        name = ctx.FileInfo.Name;
                         data = File.ReadAllBytes(ctx.FileInfo.FullName);
+
+                        if (string.IsNullOrEmpty(ctx.Name))
+                            ctx.Name = ctx.FileInfo.Name;
                     }
 
                     //tenantid is the container...
                     //name should be in format of tenantid\applicationid\subjectrequestid.blah...
-                    name = string.Format("{0}\\{1}.{2}", ctx.ApplicationId, ctx.ApplicationRequestId, ctx.Type);
+                    name = string.Format("{0}\\{1}.{2}.{3}", ctx.ApplicationId, ctx.ApplicationRequestId, ctx.Type, ctx.Name);
 
                     CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(name);
                     cloudBlockBlob.UploadFromByteArray(data, 0, data.Length);

@@ -3,15 +3,16 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class BaseApplication
+    public partial class ApplicationBase
     {
-        public BaseApplication()
+        public ApplicationBase()
         {
         }
 
         public System.Guid ApplicationId { get; set; }
         public string ShortName { get; set; }
         public string LongName { get; set; }
+        public string Url { get; set; }
         public bool IsActive { get; set; }
         public string ProcessorClass { get; set; }
         public System.DateTime ModifyDate { get; set; }

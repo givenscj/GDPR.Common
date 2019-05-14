@@ -1,6 +1,7 @@
 ﻿using GDPR.Common.Core;
 using GDPR.Common.Encryption;
 using GDPR.Common.Exceptions;
+using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Bcpg.OpenPgp;
@@ -24,7 +25,7 @@ namespace GDPR.Common.Messages
             HttpHelper hh = new HttpHelper();
 
             //testing...
-            message.Source.ApiEndPoint = "www.thegdprregistry.com";
+            message.Source.ApiEndPoint = Configuration.ExternalDns;
 
             //ignore SSL
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
@@ -83,13 +84,28 @@ namespace GDPR.Common.Messages
 
         static public string DecryptMessage(string message, EncryptionContext ctx)
         {
+            string publicKeyStr = "";
+            string privateKeyStr = "";
+
+            if (!ctx.IsApplication)
+                publicKeyStr = GDPRCore.Current.GetSystemKey(ctx.Id, ctx.Version);
+            else
+                publicKeyStr = GDPRCore.Current.GetApplicationKey(ctx.Id, ctx.Version);
+            
+
+            privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
+
+            /*
             Stream inputStream = Utility.GenerateStreamFromString(message);
             string passPhrase = ctx.Password;
-            string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
             Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
             Stream outputStream = new MemoryStream();
-            PGPDecrypt.Decrypt(inputStream, keyIn, passPhrase, outputStream);
-            return Utility.StreamToString(outputStream);
+            PGPDecrypt.Decrypt(inputStream, null, keyIn, passPhrase, outputStream);
+            */
+
+            return EncryptionHelper.DecryptAndVerify(publicKeyStr, privateKeyStr, ctx.Password, message);
+
+            //return Utility.StreamToString(outputStream);
         }
 
         static public string SignAndEncryptMessage(BaseGDPRMessage message, EncryptionContext ctx)
@@ -98,14 +114,14 @@ namespace GDPR.Common.Messages
             string publicKeyStr = "";
 
             if (ctx.IsApplication)
-                publicKeyStr = EncryptionHelper.GetApplicationKey(message.ApplicationId.ToString(), ctx.Version.ToString());
+                publicKeyStr = GDPRCore.Current.GetApplicationKey(message.ApplicationId.ToString(), ctx.Version.ToString());
             else
-                publicKeyStr = EncryptionHelper.GetSystemKey(message.SystemId.ToString(), ctx.Version.ToString());
+                publicKeyStr = GDPRCore.Current.GetSystemKey(message.SystemId.ToString(), ctx.Version.ToString());
 
             string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
 
             PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
-            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr);
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr, false);
 
             string passPhrase = ctx.Password;
 
@@ -124,11 +140,13 @@ namespace GDPR.Common.Messages
         {
             ctx.Encrypt = Configuration.EnableEncryption;
 
-            GDPRMessageWrapper w = new GDPRMessageWrapper();
-            w.IsEncrypted = ctx.Encrypt;
-            w.IsSystem = message.IsSystem;
-            w.KeyVersion = ctx.Version;
-            w.SystemId = message.SystemId.ToString();
+            GDPRMessageWrapper w = new GDPRMessageWrapper
+            {
+                IsEncrypted = ctx.Encrypt,
+                IsSystem = message.IsSystem,
+                KeyVersion = ctx.Version,
+                SystemId = message.SystemId.ToString()
+            };
 
             if (ctx.Encrypt)
             {
@@ -139,6 +157,10 @@ namespace GDPR.Common.Messages
             //BaseProcessor p = Utility.GetProcessor<BaseProcessor>(core.GetSystemId());
             //w.Source = Utility.TrimObject<BaseProcessor>(p, 1);
 
+            //this should not go...
+            message.Database = null;
+
+            //send the message
             string toSend = JsonConvert.SerializeObject(message);
 
             if (ctx.Encrypt)
@@ -150,7 +172,7 @@ namespace GDPR.Common.Messages
             w.Type = message.GetType().AssemblyQualifiedName;
             w.Object = toSend;
             w.QueueUri = message.QueueUri;
-            w.MessageDate = DateTime.Now;
+            w.MessageDate = DateTime.Now.AddMinutes(5);
 
             //throw message if message is not encrypted...
             if (!ctx.Encrypt)
@@ -180,7 +202,7 @@ namespace GDPR.Common.Messages
 
             //send the message to the processor endpoint...
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://admin.thegdprregistry.com");
+            client.BaseAddress = new Uri(GDPR.Common.Configuration.ExternalDns);
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("", post)
@@ -205,14 +227,58 @@ namespace GDPR.Common.Messages
             SendMessage(message, connectionString);
         }
 
-        static public void SendMessage(GDPRMessageWrapper message, string connectionString)
+        static public bool SendMessage(GDPRMessageWrapper message, string connectionString)
         {
-            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionString);
+            //set the ipaddress for tenant and application logging (used for firewall rule evaluation reporting)
+            message.IpAddress = Utility.GetInternetIp()[0];
+
+            GDPRCore.Current.Log($"Sending message wrapper : {message.Type}");
+
+            string eventHubName = Configuration.EventHubName;
+
+            if (message.IsError)
+                eventHubName = Configuration.EventErrorHubName;
+
+            string connectionStringBuilder = GDPRCore.Current.GetEventHubConnectionString(eventHubName);
+            //Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+
+            if (!message.IsSystem)
+            {
+                connectionStringBuilder = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+            }
+
+            //pick a different queue based on the message type..
+            switch (message.Type)
+            {
+                case "DiscoverResponsesMessage":
+                    break;
+                case "DiscoverMessage":
+                    break;
+                case "PreApprovalMessage":
+                    break;
+                case "PostApprovalMessage":
+                    break;
+            }
+
+            EventHubClient eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder);
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
-            eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+
+            try
+            {
+                eventHubClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            //eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
+            //eventHubClient.CloseAsync();
+
+            return true;
         }
 
-        static public void SendMessage(GDPRMessageWrapper message)
+        static public bool SendMessage(GDPRMessageWrapper message)
         {
             string connString = Configuration.EventHubConnectionString;
 
@@ -220,6 +286,34 @@ namespace GDPR.Common.Messages
                 connString = message.QueueUri;
 
             SendMessage(message, connString);
+
+            return true;
+        }
+
+        /*
+        static public bool SendMessage(GDPRMessageWrapper message)
+        {
+            return true;
+        }
+        */
+
+        static public void SendMessageViaQueueMSI(GDPRMessageWrapper message, string eventHubName)
+        {
+            MessagingFactorySettings messagingFactorySettings = new MessagingFactorySettings
+            {
+                //TokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider(new Uri("https://servicesbus.microsoft.net")),
+                TokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider(ServiceAudience.EventHubsAudience),
+                TransportType = TransportType.Amqp
+            };
+
+            MessagingFactory messagingFactory = MessagingFactory.Create($"sb://{Configuration.ResourcePrefix + "ns-" + GDPRCore.Current.GetSystemId()}.servicebus.windows.net/",
+                messagingFactorySettings);
+
+            EventHubClient ehClient = messagingFactory.CreateEventHubClient(eventHubName);
+            string msg = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+            ehClient.Send(new EventData(Encoding.UTF8.GetBytes(msg)));
+            ehClient.Close();
+            messagingFactory.Close();
         }
 
         static public void SendMessageViaQueue(GDPRMessageWrapper message, string connectionString)
@@ -243,8 +337,17 @@ namespace GDPR.Common.Messages
         static public void SendMessageViaQueue(GDPRMessageWrapper inMsg)
         {
             string hubName = Utility.GetConfigurationValue("EventHubName");
+
             string connectionStringBuilder = Utility.GetConfigurationValue("EventHubConnectionString") + ";EntityPath=" + hubName;
-            SendMessageViaQueue(inMsg, connectionStringBuilder);
+
+            if (Configuration.IsManaged && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
+            {
+                SendMessageViaQueueMSI(inMsg, hubName);
+            }
+            else
+                SendMessageViaQueue(inMsg, connectionStringBuilder);
         }
+
+        
     }
 }

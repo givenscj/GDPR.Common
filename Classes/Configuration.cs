@@ -1,10 +1,14 @@
 ﻿using GDPR.Common.Core;
+using GDPR.Common.Enums;
+using GDPR.Common.Exceptions;
 using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Newtonsoft.Json;
 using PayPal.Api;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,10 +18,220 @@ namespace GDPR.Common
 {
     public class Configuration
     {
+        private static string _dbLogLevel = "Verbose";
+        private static string _eventLogLevel = "Verbose";
+        private static string _consoleLogLevel = "Verbose";
+
+        static Hashtable _settings;
+        static readonly KeyVaultClient kv;
+        private static string _gdprSqlConnectionString;
+        private static string _eventHubConnectionString;
+        private static string _mode;
+        private static string _eventHubConnectionStringWithPath;
+        private static string _storageAccountKey;
+        private static string _storageAccountSecret;
+        private static string _storageService;
+        private static string _searchService;
+        private static string _searchServiceName;
+        private static string _searchKey;
+        private static bool _enableEncryption;
+        private static string _storageRegion;
+
+        private static bool _allowTrials;
+        private static bool _notHosted;
+        private static string _siteName;
+        private static string _companyName;
+        private static string _companyShortName;
+
+        private static string _appStubPath;
+
+        private static string _applicationId;
+        private static string _applications;
+
+        private static string _adminAzureClientId;
+        private static string _adminAzureClientSecret;
+
+        private static string _azureClientId;
+        private static string _azureClientSecret;
+
+        private static string _dynamicsClientId;
+        private static string _dynamicsClientSecret;
+
+        private static string _gitHubUrl;
+        private static string _systemPin;
+        private static Guid _systemId;
+        private static string _externalDns;
+        private static string _consumerSystemUrl;
+        private static string _hashSalt;
+        private static int _hashVersion;
+        private static string _certKeyPath;
+        private static string _certKeyDirectory;
+        private static string _registrationPassword;
+
+        private static string _tenantId;
+        private static string _subscriptionId;
+        private static string _resourceGroupName;
+        private static string _region;
+        private static string _sqlServerName;
+        private static string _sqlUsername;
+        private static string _sqlPassword;
+        private static string _applicationPassword;
+        private static string _databaseName;
+
+        private static string _keyVaultName;
+
+        private static string _azureUsername;
+        private static string _azurePassword;
+
+        private static string _webType;
+
+        private static string _resourcePrefix;
+
+        private static string _appServicePlan;
+        private static string _adminWebName;
+        private static string _subjectWebName;
+        private static string _ivrWebName;
+
+        private static string _visionServiceName;
+        private static string _visionApiUri;
+        private static string _visionApiKey;
+
+        private static string _speechServiceName;
+        private static string _speechApiUri;
+        private static string _speechApiKey;
+
+        private static string _textAnalyticsServiceName;
+        private static string _textAnalyticsApiUri;
+        private static string _textAnalyticsApiKey;
+
+
+        private static string _faceServiceName;
+        private static string _faceApiUri;
+        private static string _faceApiKey;
+
+        private static string graphResourceId = "https://graph.microsoft.com";
+        private static string graphUrl = "https://graph.microsoft.com";
+        private static string graphVersion = "v1.0";
+
+        private static string _systemKeyVersion;
+        private static string _systemPinVersion;
+
+        /*event hub processing*/
+        private static string _eventHubNamespacePrefix;
+        private static string _eventHubNamespace;
+        private static string _eventHubName;
+        private static string _eventErrorHubName;
+        private static string _eventNotificationHubName;
+
+        /* blog storage account */
+        private static string _storageAccountName;
+
+        /* IVR settings */
+        private static string _twilioAccountSid;
+        private static string _twilioAuthToken;
+        private static string _twilioNumber;
+
+        /* mail settings */
+        private static string _emailTemplatesDirectory;
+        private static string _mailServer;
+        private static string _mailServerPort;
+        private static string _useSecurity;
+        private static string _mailServerUserName;
+        private static string _mailServerPassword;
+        private static string _noReplyEmailAddress;
+
+        private static string _coreSystemUrl;
+        private static string _ivrUrl;
+        private static Guid _coreApplicationId;
+        private static string _tenantSystemUrl;
+
+        /* captcha */
+        private static string _recaptchaPublicKey;
+        private static string _recaptchaPrivateKey;
+        private static string _recaptchaApiVersion;
+
+        /* maps apis */
+        private static string _azureMapsApiKey;
+        private static string _bingMapsApiKey;
+        private static string _googleMapsApiKey;
+
+        /* payment api */
+        private static string _paypalClientId;
+        private static string _paypalClientSecret;
+        private static string _paypalMode;
+
+        private static string liveClientId;
+        private static string liveClientSecret;
+
+        private static string twitterClientId;
+        private static string twitterClientSecret;
+
+        private static string dropboxClientId;
+        private static string dropboxClientSecret;
+
+        private static string docusignClientId;
+        private static string docusignClientSecret;
+
+        private static string constantContactClientId;
+        private static string constantContactClientSecret;
+
+        private static string facebookClientId;
+        private static string facebookClientSecret;
+
+        private static string googleClientId;
+        private static string googleClientSecret;
+
+        private static string githubClientId;
+        private static string githubClientSecret;
+
+        private static string instagramClientId;
+        private static string instagramClientSecret;
+
+        private static string _dripClientId;
+
+        private static string _lionDeskClientId;
+        private static string _lionDeskClientSecret;
+
+        private static string amazonClientId;
+        private static string amazonClientSecretId;
+
+        private static string linkedInClientId;
+        private static string linkedInClientSecret;
+
+        private static string salesForceClientId;
+        private static string salesForceClientSecret;
+        private static string salesForceSecurityToken;
+
+        private static string auth0ClientId = "";
+        private static string auth0ClientSecret = "";
+
+        private static string yammerClientId = "";
+        private static string yammerClientSecret = "";
+
         static Configuration()
-        {  
+        {
+            _settings = new Hashtable();
+
+            string mode = ConfigurationManager.AppSettings["Mode"];
+            Configuration.LoadWithMode(mode);
+
             //Get an access token for the Key Vault to get the secret out...
-            kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(Utility.GetToken));
+            //https://azure.microsoft.com/en-us/resources/samples/app-service-msi-keyvault-dotnet/
+            try
+            {
+                if (Configuration.IsManaged && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
+                {
+                    AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
+                    //this is for managed service identities...
+                    kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+                }
+                else
+                    kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(Utility.GetToken));
+            }
+            catch (Exception ex)
+            {
+                GDPRCore.Current.Log(ex, Enums.LogLevel.Error);
+            }
         }
 
         static public void SaveToKeyVault()
@@ -63,7 +277,7 @@ namespace GDPR.Common
             }
             catch (Exception ex)
             {
-                //GDPRCore.Current.Log(new GDPRException($"{name} was not found in {AzureKeyVaultUrl}"), LogLevel.Error);
+                GDPRCore.Current.Log(ex, LogLevel.Error);
                 return null;
             }
         }
@@ -87,14 +301,19 @@ namespace GDPR.Common
 
         static public string SaveToKeyVault(string name, string value)
         {
-            var result = Task.Run(async () =>
+            if (value != null)
             {
-                return await kv.SetSecretAsync(AzureKeyVaultUrl, name, value);
-            }).Result;
+                var result = Task.Run(async () =>
+                {
+                    return await kv.SetSecretAsync(AzureKeyVaultUrl, name, value);
+                }).Result;
 
-            SetProperty(name, value);
+                SetProperty(name, value);
 
-            return result.Id.Replace(Configuration.AzureKeyVaultUrl + "/secrets/" + name + "/", "");
+                return result.Id.Replace(Configuration.AzureKeyVaultUrl + "/secrets/" + name + "/", "");
+            }
+
+            return "";
         }
 
         static public void LoadFromKeyVault()
@@ -123,17 +342,12 @@ namespace GDPR.Common
             }
         }
 
-        public static void Load()
+        public static void LoadWithMode(string mode, string filePath)
         {
-            GDPRCore.Current = new GDPRCore();
+            if (GDPRCore.Current == null)
+                GDPRCore.Current = new GDPRCore();
 
-            string filePath = HostingEnvironment.MapPath("~/configuration.json");
-
-            if (string.IsNullOrEmpty(filePath))
-            {
-                FileInfo fi = new FileInfo(filePath = Assembly.GetExecutingAssembly().Location);
-                filePath = fi.Directory.FullName + "\\configuration.json";
-            }
+            filePath += $"/configuration.{mode}.json";
 
             //load configuartion
             _settings = LoadConfiguration(filePath);
@@ -157,26 +371,64 @@ namespace GDPR.Common
             }
         }
 
+        public static void LoadWithMode(string mode)
+        {
+            //may have loaded previously...
+            if (GDPRCore.Current == null)
+                GDPRCore.Current = new GDPRCore();
+
+            string filePath = HostingEnvironment.MapPath($"~/");
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                FileInfo fi = new FileInfo(filePath = Assembly.GetExecutingAssembly().Location);
+                filePath = fi.Directory.FullName + $"\\";
+            }
+
+            LoadWithMode(mode, filePath);
+        }
+
         public static object GetProperty(string name)
         {
+            object val = null;
+
             PropertyInfo[] props = typeof(Configuration).GetProperties();
 
             foreach (PropertyInfo pi in props)
             {
                 if (pi.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
-                    return pi.GetValue(null);
+                    val = pi.GetValue(null);
                 }
             }
 
-            return null;
+            if (val == null)
+            {
+                val = _settings[name.ToLower()];
+            }
+
+            return val;
+        }
+
+        public string GetSetting(string name)
+        {
+            if (_settings.ContainsKey(name.ToLower()))
+                return _settings[name.ToLower()].ToString();
+            else
+                return null;
         }
 
         private static void SetProperty(string name, string value)
         {
             PropertyInfo prop = typeof(Configuration).GetProperty(name);
 
-            SetProperty(prop, value);
+            if (prop != null)
+                SetProperty(prop, value);
+
+            if (_settings.ContainsKey(name.ToLower()))
+                _settings[name.ToLower()] = value;
+            else
+                _settings.Add(name.ToLower(), value);
         }
 
         private static void SetProperty(PropertyInfo pi, string inValue)
@@ -188,16 +440,35 @@ namespace GDPR.Common
                 switch (pi.PropertyType.FullName)
                 {
                     case "System.Int32":
-                        value = int.Parse(inValue);
-                        pi.SetValue(null, value);
+                        if (!string.IsNullOrEmpty(inValue))
+                        {
+                            value = int.Parse(inValue);
+                            pi.SetValue(null, value);
+                        }
+                        break;
+                    case "System.Decimal":
+                        if (!string.IsNullOrEmpty(inValue))
+                        {
+                            value = decimal.Parse(inValue);
+                            pi.SetValue(null, value);
+                        }
                         break;
                     case "System.Guid":
-                        value = Guid.Parse(inValue);
-                        pi.SetValue(null, value);
+                        if (!string.IsNullOrEmpty(inValue))
+                        {
+                            value = Guid.Parse(inValue);
+                            pi.SetValue(null, value);
+                        }
                         break;
                     case "System.String":
                         value = inValue;
                         pi.SetValue(null, value);
+                        break;
+                    case "System.Boolean":
+                        pi.SetValue(null, Boolean.Parse(inValue));
+                        break;
+                    default:
+                        GDPRCore.Current.Log($"Configuration property type not supported {pi.PropertyType.FullName}");
                         break;
                 }
             }
@@ -241,7 +512,7 @@ namespace GDPR.Common
 
             foreach (dynamic setting in json)
             {
-                ht.Add(setting.Name, setting.Value);
+                ht.Add(setting.Name.ToString().ToLower(), setting.Value);
             }
 
             return ht;
@@ -257,12 +528,15 @@ namespace GDPR.Common
             {
                 if (_apiContext == null)
                 {
-                    Dictionary<string, string> config = new Dictionary<string, string>();
-                    config.Add("clientId", PaypalClientId);
-                    config.Add("clientSecret", PaypalClientSecret);
-                    config.Add("mode", "sandbox");
-                    config.Add("requestRetries", "1");
-                    config.Add("connectionTimeout", "360000");
+                    Dictionary<string, string> config = new Dictionary<string, string>
+                    {
+                        { "clientId", PaypalClientId },
+                        { "clientSecret", PaypalClientSecret },
+                        { "mode", "sandbox" },
+                        { "requestRetries", "1" },
+                        { "connectionTimeout", "360000" }
+                    };
+
                     ConfigManager.GetConfigWithDefaults(config);
 
                     try
@@ -285,6 +559,37 @@ namespace GDPR.Common
             }
         }
 
+        public static string SystemKeyVersion
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_systemKeyVersion))
+                {
+                    _systemKeyVersion = LoadFromKeyVault("SystemKeyVersion");
+                }
+
+                return _systemKeyVersion;
+            }
+            set { _systemKeyVersion = value; }
+        }
+
+        public static string SystemPinVersion
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_systemPinVersion))
+                {
+                    _systemPinVersion = LoadFromKeyVault("SystemPinVersion");
+                }
+
+                if (string.IsNullOrEmpty(_systemPinVersion))
+                    _systemPinVersion = "1";
+
+                return _systemPinVersion;
+            }
+            set { _systemPinVersion = value; }
+        }
+
         public static string GDPRSQLConnectionString
         {
             get
@@ -292,26 +597,16 @@ namespace GDPR.Common
                 if (string.IsNullOrEmpty(_gdprSqlConnectionString))
                 {
                     _gdprSqlConnectionString = LoadFromKeyVault("GDPRSQLConnectionString");
+
+                    if (string.IsNullOrEmpty(_gdprSqlConnectionString))
+                        throw new GDPRException("Database connection string is empty.  Check the configuration, keyvault firewall or azure credentials.");
                 }
 
                 return _gdprSqlConnectionString;
             }
-        }
-
-        public static string AesKey
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_aesKey))
-                {
-                    _aesKey = LoadFromKeyVault("AesKey");
-                }
-
-                return _aesKey;
-            }
             set
             {
-                _aesKey = value;
+                _gdprSqlConnectionString = value;
             }
         }
 
@@ -387,6 +682,11 @@ namespace GDPR.Common
         {
             get
             {
+                if (string.IsNullOrEmpty(_searchKey))
+                {
+                    _searchKey = LoadFromKeyVault("SearchKey");
+                }
+
                 return _searchKey;
             }
             set
@@ -463,8 +763,11 @@ namespace GDPR.Common
                 }
             }
 
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Formatting = Formatting.Indented;
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented
+            };
+
             string json = JsonConvert.SerializeObject(obj, settings);
             File.AppendAllText(filePath, json);
         }
@@ -480,6 +783,10 @@ namespace GDPR.Common
 
                 return _eventHubConnectionString;
             }
+            set
+            {
+                _eventHubConnectionString = value;
+            }
         }
 
         public static string Mode
@@ -488,19 +795,19 @@ namespace GDPR.Common
             set { _mode = value; }
         }
 
-        public static string DbLogLevel
+        
+
+
+        public static string AdminAzureClientId
         {
-            get { return _dbLogLevel; }
-            set { _dbLogLevel = value; }
+            get { return _adminAzureClientId; }
+            set { _adminAzureClientId = value; }
         }
 
-
-        public string GetSetting(string name)
+        public static string AdminAzureClientSecret
         {
-            if (_settings.ContainsKey(name))
-                return _settings[name].ToString();
-            else
-                return null;
+            get { return _adminAzureClientSecret; }
+            set { _adminAzureClientSecret = value; }
         }
 
         public static string AzureClientId
@@ -513,6 +820,24 @@ namespace GDPR.Common
         {
             get { return _azureClientSecret; }
             set { _azureClientSecret = value; }
+        }
+
+        public static string DynamicsClientId
+        {
+            get { return _dynamicsClientId; }
+            set { _dynamicsClientId = value; }
+        }
+
+        public static string DynamicsClientSecret
+        {
+            get { return _dynamicsClientSecret; }
+            set { _dynamicsClientSecret = value; }
+        }
+
+        public static string ConsumerSystemUrl
+        {
+            get { return _consumerSystemUrl; }
+            set { _consumerSystemUrl = value; }
         }
 
         public static string ExternalDns
@@ -625,6 +950,12 @@ namespace GDPR.Common
             set { _resourcePrefix = value; }
         }
 
+        public static string AppServicePlan
+        {
+            get { return _appServicePlan; }
+            set { _appServicePlan = value; }
+        }
+
         public static string AdminWebName
         {
             get { return _adminWebName; }
@@ -651,13 +982,28 @@ namespace GDPR.Common
 
         public static string VisionApiUri
         {
-            get { return _visionApiUri; }
+            get
+            {
+                if (string.IsNullOrEmpty(_visionApiUri))
+                {
+                    _visionApiUri = LoadFromKeyVault("VisionApiUri");
+                }
+
+                return _visionApiKey;
+            }
             set { _visionApiUri = value; }
         }
 
         public static string VisionApiKey
         {
-            get { return _visionApiKey; }
+            get {
+                if (string.IsNullOrEmpty(_visionApiKey))
+                {
+                    _visionApiKey = LoadFromKeyVault("VisionApiKey");
+                }
+
+                return _visionApiKey;
+            }
             set { _visionApiKey = value; }
         }
 
@@ -675,8 +1021,21 @@ namespace GDPR.Common
 
         public static string SpeechApiKey
         {
-            get { return _speechApiKey; }
+            get {
+                if (string.IsNullOrEmpty(_speechApiKey))
+                {
+                    _speechApiKey = LoadFromKeyVault("SpeechApiKey");
+                }
+
+                return _speechApiKey;
+            }
             set { _speechApiKey = value; }
+        }
+
+        public static string EventHubNamespacePrefix
+        {
+            get { return _eventHubNamespacePrefix; }
+            set { _eventHubNamespacePrefix = value; }
         }
 
         public static string EventHubNamespace
@@ -775,10 +1134,28 @@ namespace GDPR.Common
             set { _coreSystemUrl = value; }
         }
 
+        public static string IvrUrl
+        {
+            get { return _ivrUrl; }
+            set { _ivrUrl = value; }
+        }
+
         public static Guid CoreApplicationId
         {
             get { return _coreApplicationId; }
             set { _coreApplicationId = value; }
+        }
+
+        public static string DbLogLevel
+        {
+            get { return _dbLogLevel; }
+            set { _dbLogLevel = value; }
+        }
+
+        public static string EventLogLevel
+        {
+            get { return _eventLogLevel; }
+            set { _eventLogLevel = value; }
         }
 
         public static string ConsoleLogLevel
@@ -835,42 +1212,6 @@ namespace GDPR.Common
             set { _recaptchaApiVersion = value; }
         }
 
-        public static string FacebookRedirect
-        {
-            get { return facebookRedirect; }
-            set { facebookRedirect = value; }
-        }
-
-        public static string TwitterRedirect
-        {
-            get { return twitterRedirect; }
-            set { twitterRedirect = value; }
-        }
-
-        public static string LinkedInRedirect
-        {
-            get { return linkedInRedirect; }
-            set { linkedInRedirect = value; }
-        }
-
-        public static string AzureRedirect
-        {
-            get { return azureRedirect; }
-            set { azureRedirect = value; }
-        }
-
-        public static string AmazonRedirect
-        {
-            get { return amazonRedirect; }
-            set { amazonRedirect = value; }
-        }
-
-        public static string GoogleRedirect
-        {
-            get { return googleRedirect; }
-            set { googleRedirect = value; }
-        }
-
         public static string PaypalClientId
         {
             get { return _paypalClientId; }
@@ -901,16 +1242,17 @@ namespace GDPR.Common
             set { _lionDeskClientSecret = value; }
         }
 
-        public static string LionDeskRedirect
-        {
-            get { return _lionDeskRedirect; }
-            set { _lionDeskRedirect = value; }
-        }
-
+        
         public static string PaypalMode
         {
             get { return _paypalMode; }
             set { _paypalMode = value; }
+        }
+
+        public static string AzureMapsApiKey
+        {
+            get { return _azureMapsApiKey; }
+            set { _azureMapsApiKey = value; }
         }
 
         public static string BingMapsApiKey
@@ -923,30 +1265,6 @@ namespace GDPR.Common
         {
             get { return _googleMapsApiKey; }
             set { _googleMapsApiKey = value; }
-        }
-
-        public static string LiveRedirect
-        {
-            get { return liveRedirect; }
-            set { liveRedirect = value; }
-        }
-
-        public static string GithubRedirect
-        {
-            get { return githubRedirect; }
-            set { githubRedirect = value; }
-        }
-
-        public static string InstagramRedirect
-        {
-            get { return instagramRedirect; }
-            set { instagramRedirect = value; }
-        }
-
-        public static string SalesForceRedirect
-        {
-            get { return salesForceRedirect; }
-            set { salesForceRedirect = value; }
         }
 
         public static string LiveClientId
@@ -985,12 +1303,6 @@ namespace GDPR.Common
             set { constantContactClientSecret = value; }
         }
 
-        public static string ConstantContactRedirect
-        {
-            get { return _constantContactRedirect; }
-            set { _constantContactRedirect = value; }
-        }
-
         public static string DropboxClientId
         {
             get { return dropboxClientId; }
@@ -1003,12 +1315,6 @@ namespace GDPR.Common
             set { dropboxClientSecret = value; }
         }
 
-        public static string DropboxRedirect
-        {
-            get { return _dropboxRedirect; }
-            set { _dropboxRedirect = value; }
-        }
-
         public static string DocusignClientId
         {
             get { return docusignClientId; }
@@ -1019,12 +1325,6 @@ namespace GDPR.Common
         {
             get { return docusignClientSecret; }
             set { docusignClientSecret = value; }
-        }
-
-        public static string DocusignRedirect
-        {
-            get { return _docusignRedirect; }
-            set { _docusignRedirect = value; }
         }
 
         public static string FacebookClientId
@@ -1135,15 +1435,42 @@ namespace GDPR.Common
             set { yammerClientSecret = value; }
         }
 
-        public static string YammerRedirect
+        public static string SystemPin
         {
-            get { return _yammerRedirect; }
-            set { _yammerRedirect = value; }
+            get
+            {
+                if (string.IsNullOrEmpty(_systemPin))
+                {
+                    _systemPin = LoadFromKeyVault("SystemPin");
+                }
+
+                return _systemPin;
+            }
+            set
+            {
+                _systemPin = value;
+            }
         }
 
         public static Guid SystemId
         {
-            get { return _systemId; }
+            get
+            {
+                if (_systemId == Guid.Empty)
+                {
+                    try
+                    {
+                        _systemId = Guid.Parse(LoadFromKeyVault("SystemId"));
+                    }
+                    catch (Exception ex)
+                    {
+                        return Guid.Empty;
+                    }
+                }
+
+                return _systemId;
+            }
+
             set { _systemId = value; }
         }
 
@@ -1170,6 +1497,33 @@ namespace GDPR.Common
             get { return _azurePassword; }
             set { _azurePassword = value; }
         }
+        //
+
+        public static string TextAnalyticsServiceName
+        {
+            get { return _textAnalyticsServiceName; }
+            set { _textAnalyticsServiceName = value; }
+        }
+
+        public static string TextAnalyticsApiUri
+        {
+            get { return _textAnalyticsApiUri; }
+            set { _textAnalyticsApiUri = value; }
+        }
+
+        public static string TextAnalyticsApiKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_textAnalyticsApiKey))
+                {
+                    _textAnalyticsApiKey = LoadFromKeyVault("TextAnalyticsApiKey");
+                }
+
+                return _textAnalyticsApiKey;
+            }
+            set { _textAnalyticsApiKey = value; }
+        }
 
         public static string FaceServiceName
         {
@@ -1185,212 +1539,183 @@ namespace GDPR.Common
 
         public static string FaceApiKey
         {
-            get { return _faceApiKey; }
+            get {
+                if (string.IsNullOrEmpty(_faceApiKey))
+                {
+                    _faceApiKey = LoadFromKeyVault("FaceApiKey");
+                }
+
+                return _faceApiKey;
+            }
             set { _faceApiKey = value; }
         }
 
-        public static int SystemKeyVersion
+        
+
+        public static string SiteName
         {
-            get { return _systemKeyVersion; }
-            set { _systemKeyVersion = value; }
+            get { return _siteName; }
+            set { _siteName = value; }
         }
 
-        public static string EventLogLevel
+
+        public static string CompanyName
         {
-            get { return _eventLogLevel; }
-            set { _eventLogLevel = value; }
+            get { return _companyName; }
+            set { _companyName = value; }
+        }
+
+        public static string CompanyShortName
+        {
+            get { return _companyShortName; }
+            set { _companyShortName = value; }
+        }
+
+        public static bool AllowTrials
+        {
+            get { return _allowTrials; }
+            set { _allowTrials = value; }
+        }
+
+        public static bool NotHosted
+        {
+            get { return _notHosted; }
+            set { _notHosted = value; }
+        }
+
+        static string _linkSecurity;
+
+        public static string LinkSecurity
+        {
+            get { return _linkSecurity; }
+            set { _linkSecurity = value; }
+        }
+
+        static string _linkSupport;
+
+        public static string LinkSupport
+        {
+            get { return _linkSupport; }
+            set { _linkSupport = value; }
+        }
+
+        static string _linkTerms;
+
+        public static string LinkTerms
+        {
+            get { return _linkTerms; }
+            set { _linkTerms = value; }
+        }
+
+        static string _linkEula;
+
+        public static string LinkEula
+        {
+            get { return _linkEula; }
+            set { _linkEula = value; }
+        }
+
+        static string _linkPrivacy;
+
+        public static string LinkPrivacy
+        {
+            get { return _linkPrivacy; }
+            set { _linkPrivacy = value; }
+        }
+
+        static string _linkFeedback;
+
+        public static string LinkFeedback
+        {
+            get { return _linkFeedback; }
+            set { _linkFeedback = value; }
+        }
+
+        static string _linkContact;
+
+        public static string LinkContact
+        {
+            get { return _linkContact; }
+            set { _linkContact = value; }
+        }
+
+        static string _linkPhone;
+
+        public static string LinkPhone
+        {
+            get { return _linkPhone; }
+            set { _linkPhone = value; }
+        }
+
+        static string _emailDomain;
+
+        public static string EmailDomain
+        {
+            get { return _emailDomain; }
+            set { _emailDomain = value; }
+        }
+
+        static string _appInsightsKey;
+
+        public static string AppInsightsKey
+        {
+            get { return _appInsightsKey; }
+            set { _appInsightsKey = value; }
+        }
+
+        static bool _isManaged;
+
+        public static bool IsManaged
+        {
+            get { return _isManaged; }
+            set { _isManaged = value; }
+        }
+
+        static bool _enablePersonalVerfication;
+
+        public static bool EnablePersonalVerification
+        {
+            get { return _enablePersonalVerfication; }
+            set { _enablePersonalVerfication = value; }
+        }
+
+        static bool _enableGeoLocation;
+
+        public static bool EnableGeoLocation
+        {
+            get { return _enableGeoLocation; }
+            set { _enableGeoLocation = value; }
+        }
+
+        static bool _enableUserPin;
+
+        public static bool EnableUserPin
+        {
+            get { return _enableUserPin; }
+            set { _enableUserPin = value; }
+        }
+
+        static string _surveyLink;
+
+        public static string SurveyLink
+        {
+            get { return _surveyLink; }
+            set { _surveyLink = value; }
+        }
+
+        static decimal _creditPrice;
+
+        public static decimal CreditPrice
+        {
+            get { return _creditPrice; }
+            set { _creditPrice = value; }
         }
 
         public static string AzureKeyVaultUrl
-        {
-            get { return _azureKeyVaultUrl; }
-            set { _azureKeyVaultUrl = value; }
+        { 
+            get { return string.Format("https://{0}{1}.vault.azure.net", ResourcePrefix.ToLower(), KeyVaultName.ToLower()); }
         }
 
-        private static string _dbLogLevel = "Verbose";
-
-        static Hashtable _settings;
-        static readonly KeyVaultClient kv;
-        private static string _gdprSqlConnectionString;
-        private static string _eventHubConnectionString;
-        private static string _mode;
-        private static string _aesKey;
-        private static string _eventHubConnectionStringWithPath;
-        private static string _storageAccountKey;
-        private static string _storageAccountSecret;
-        private static string _storageService;
-        private static string _searchService;
-        private static string _searchServiceName;
-        private static string _searchKey;
-        private static bool _enableEncryption;
-        private static string _storageRegion;
-        private static string _azureKeyVaultUrl;
-
-        private static string _eventLogLevel;
-        private static string _consoleLogLevel;
-        private static string _appStubPath;
-
-        private static string _applicationId;
-        private static string _applications;
-
-        private static string _azureClientId;
-        private static string _azureClientSecret;
-
-        private static string _gitHubUrl;
-        private static Guid _systemId;
-        private static string _externalDns;
-        private static string _hashSalt;
-        private static int _hashVersion;
-        private static string _certKeyPath;
-        private static string _certKeyDirectory;
-        private static string _registrationPassword;
-
-        private static string _tenantId;
-        private static string _subscriptionId;
-        private static string _resourceGroupName;
-        private static string _region;
-        private static string _sqlServerName;
-        private static string _sqlUsername;
-        private static string _sqlPassword;
-        private static string _applicationPassword;
-        private static string _databaseName;
-
-        private static string _keyVaultName;
-
-        private static string _azureUsername;
-        private static string _azurePassword;
-
-        private static string _webType;
-
-        private static string _resourcePrefix;
-
-        private static string _adminWebName;
-        private static string _subjectWebName;
-        private static string _ivrWebName;
-
-        private static string _visionServiceName;
-        private static string _visionApiUri;
-        private static string _visionApiKey;
-
-        private static string _speechServiceName;
-        private static string _speechApiUri;
-        private static string _speechApiKey;
-
-        private static string _faceServiceName;
-        private static string _faceApiUri;
-        private static string _faceApiKey;
-
-        private static string graphResourceId = "https://graph.microsoft.com";
-        private static string graphUrl = "https://graph.microsoft.com";
-        private static string graphVersion = "v1.0";
-
-        private static int _systemKeyVersion = 1;
-
-        /*event hub processing*/
-        private static string _eventHubNamespace;
-        private static string _eventHubName;
-        private static string _eventErrorHubName;
-        private static string _eventNotificationHubName;
-
-        /* blog storage account */
-        private static string _storageAccountName;
-
-        /* IVR settings */
-        private static string _twilioAccountSid;
-        private static string _twilioAuthToken;
-        private static string _twilioNumber;
-
-        /* mail settings */
-        private static string _emailTemplatesDirectory;
-        private static string _mailServer;
-        private static string _mailServerPort;
-        private static string _useSecurity;
-        private static string _mailServerUserName;
-        private static string _mailServerPassword;
-        private static string _noReplyEmailAddress;
-
-        private static string _coreSystemUrl;
-        private static Guid _coreApplicationId;
-        private static string _tenantSystemUrl;
-
-        /* captcha */
-        private static string _recaptchaPublicKey;
-        private static string _recaptchaPrivateKey;
-        private static string _recaptchaApiVersion;
-
-        /* maps apis */
-        private static string _bingMapsApiKey;
-        private static string _googleMapsApiKey;
-
-        /* payment api */
-        private static string _paypalClientId;
-        private static string _paypalClientSecret;
-        private static string _paypalMode;
-        
-        /* social settings */
-        private static string facebookRedirect = CoreSystemUrl + "/Home/FacebookAuthorize";
-        private static string twitterRedirect = CoreSystemUrl + "/Home/TwitterAuthorize";
-        private static string linkedInRedirect = CoreSystemUrl + "/Home/LinkedInAuthorize";
-        private static string azureRedirect = CoreSystemUrl + "/Home/AzureAuthorize";
-        private static string amazonRedirect = CoreSystemUrl + "/Home/AmazonAuthorize";
-        private static string googleRedirect = CoreSystemUrl + "/Home/GoogleAuthorize";
-        private static string liveRedirect = CoreSystemUrl + "/Home/LiveAuthorize";
-        private static string githubRedirect = CoreSystemUrl + "/Home/GitHubAuthorize";
-        private static string instagramRedirect = CoreSystemUrl + "/Home/InstagramAuthorize";
-        private static string salesForceRedirect = CoreSystemUrl + "/Home/SalesForceAuthorize";
-        private static string _constantContactRedirect = CoreSystemUrl + "/Home/ConstantContactAuthorize";
-        private static string _dropboxRedirect = CoreSystemUrl + "/Home/DropboxAuthorize";
-        private static string _docusignRedirect = CoreSystemUrl + "/Home/DocusignAuthorize";
-        private static string _yammerRedirect = CoreSystemUrl + "/Home/YammerAuthorize";
-        private static string _lionDeskRedirect = CoreSystemUrl + "/Home/LionDeskAuthorize";
-
-        private static string liveClientId;
-        private static string liveClientSecret;
-
-        private static string twitterClientId;
-        private static string twitterClientSecret;
-
-        private static string dropboxClientId;
-        private static string dropboxClientSecret;
-
-        private static string docusignClientId;
-        private static string docusignClientSecret;
-
-        private static string constantContactClientId;
-        private static string constantContactClientSecret;
-
-        private static string facebookClientId;
-        private static string facebookClientSecret;
-
-        private static string googleClientId;
-        private static string googleClientSecret;
-
-        private static string githubClientId;
-        private static string githubClientSecret;
-
-        private static string instagramClientId;
-        private static string instagramClientSecret;
-
-        private static string _dripClientId;
-
-        private static string _lionDeskClientId;
-        private static string _lionDeskClientSecret;
-
-        private static string amazonClientId;
-        private static string amazonClientSecretId;
-
-        private static string linkedInClientId;
-        private static string linkedInClientSecret;
-
-        private static string salesForceClientId;
-        private static string salesForceClientSecret;
-        private static string salesForceSecurityToken;
-
-        private static string auth0ClientId = "";
-        private static string auth0ClientSecret = "";
-
-        private static string yammerClientId = "";
-        private static string yammerClientSecret = "";
 
     }
 }

@@ -1,4 +1,6 @@
 ﻿using GDPR.Common.Classes;
+using GDPR.Common.Data;
+using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
@@ -7,14 +9,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 
 namespace GDPR.Common.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GDPRCore : IGDPRCore
     {
-        public static IGDPRCore Current;
+        static private IGDPRCore _current;
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IGDPRCore Current
+        {
+            get
+            {
+                return _current;
+            }
+            set
+            {
+                _current = value;
+            }
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="systemKeyVersion"></param>
+        /// <returns></returns>
         public string Decrypt(string input, int systemKeyVersion)
         {
             return input;
@@ -71,15 +97,15 @@ namespace GDPR.Common.Core
             return "";
         }
 
-        public DateTime GetOffset(string hubName, string partitionId)
-        {
-            return DateTime.Now.AddMinutes(-60);
-        }
-
-        public void GetOffset(string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
+        public void GetOffset(string eventHubNamespace, string hubName, string consumerGroupName, string partitionId, out DateTime checkPoint, out string offSet)
         {
             checkPoint = DateTime.Now;
             offSet = "0";
+        }
+
+        public bool SetOffSet(string eventHubNamespace, string hubName, string consumerGroup, string partitionId, DateTime lastMessageDate, string offset)
+        {
+            return true;
         }
 
         public Guid GetSystemId()
@@ -99,7 +125,7 @@ namespace GDPR.Common.Core
 
         public int GetSystemKeyVersion(Guid systemId)
         {
-            return Configuration.SystemKeyVersion;
+            return int.Parse(Configuration.SystemPinVersion);
         }
 
         public bool IsValidEmail(string email)
@@ -323,10 +349,7 @@ namespace GDPR.Common.Core
             MessageHelper.SendMessage(msg);            
         }
 
-        public bool SetOffSet(string hubName, string partitionId, DateTime lastMessageDate, string offset)
-        {
-            return true;
-        }
+        
 
         public void SetSystemOAuth(OAuthContext ctx, string type)
         {
@@ -337,12 +360,85 @@ namespace GDPR.Common.Core
                     ctx.ClientId = Configuration.AzureClientId;
                     ctx.ClientSecret = Configuration.AzureClientSecret;
                     break;
+                case "Dynamics":
+                    //fall back to the system application...
+                    ctx.ClientId = Configuration.DynamicsClientId;
+                    ctx.ClientSecret = Configuration.DynamicsClientSecret;
+                    break;
             }
         }
 
         public string UploadBlob(Guid applicationId, string filePath)
         {
             return StorageContext.Current.UploadExportBlob(applicationId, filePath);
+        }
+
+        public void UpdateApplicationStatus(Guid applicationId, string status)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetApplicationEventHub(string applicationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetEventHubConnectionString(string eventHubName)
+        {
+            return Configuration.EventHubConnectionString + ";EntityPath=" + eventHubName;
+        }
+
+        public string GetSystemKey(string id, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetSystemPublicKey?SystemId={id}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public string GetApplicationKey(string applicationId, string version)
+        {
+            //send the message to the processor endpoint...
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Utility.GetConfigurationValue("CoreSystemUrl"));
+            var result = client.GetAsync($"/Home/GetApplicationPublicKey?ApplicationId={applicationId}&Version={version}");
+            string resultContent = result.Result.Content.ReadAsStringAsync().Result;
+            return resultContent.Trim();
+        }
+
+        public string GetSystemPin(int keyVersion)
+        {
+            return Configuration.GetProperty("SystemPassword").ToString();
+        }
+
+        public string GetApplicationPin(string applicationId, int keyVersion)
+        {
+            return Configuration.GetProperty("ApplicationPassword").ToString();
+        }
+
+        public List<EntityPropertyTypeBase> GetEntityPropertyDefinitions()
+        {
+            return new List<EntityPropertyTypeBase>();
+        }
+
+        public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId)
+        {
+            return new GDPRSubject();
+        }
+
+        public string GenerateDestructionCertificate(Guid requestId, RecordCollection records)
+        {
+            //create a PDF or word document...
+
+            //return the URL to that documents
+            throw new NotImplementedException();
+        }
+
+        public BaseEntityProperty GetEntityPropertyType(string name, string category)
+        {
+            throw new NotImplementedException();
         }
     }
 }
