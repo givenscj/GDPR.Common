@@ -236,6 +236,10 @@ namespace GDPR.Common.Messages
 
             string eventHubName = Configuration.EventHubName;
 
+            //these need to be seperated out to keep system messages fast...
+            if (message.Type.Contains("DiscoverResponseMessage"))
+                eventHubName = Configuration.EventDiscoveryHubName;
+
             if (message.IsError)
                 eventHubName = Configuration.EventErrorHubName;
 

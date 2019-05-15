@@ -6,6 +6,7 @@
     {
         public System.Guid AddressId { get; set; }
         override public string Raw { get; set; }
+        public string Hash { get; set; }
         public System.Guid SubjectId { get; set; }
         public Guid ObjectId { get; set; }
         public bool IsVerified { get; set; }

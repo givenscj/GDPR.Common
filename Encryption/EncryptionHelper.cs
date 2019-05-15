@@ -539,6 +539,7 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
         public static string DecryptPGP(string publicKey, string check)
         {
             EncryptionContext ctx = EncryptionContext.Default;
+            ctx.PublicKey = publicKey;
             return DecryptPGP(check, ctx);
         }
 
@@ -551,8 +552,9 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
                 string privateKeyStr = EncryptionHelper.GetPrivateKey(ctx.Path, ctx.Id, ctx.Version.ToString());
                 Stream keyIn = Utility.GenerateStreamFromString(privateKeyStr);
                 //PgpSecretKey keyIn = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+                PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(ctx.PublicKey, false);
                 Stream outputStream = new MemoryStream();
-                PGPDecrypt.Decrypt(inputStream, null, keyIn, passPhrase, outputStream);
+                PGPDecrypt.Decrypt(inputStream, publicKey, keyIn, passPhrase, outputStream);
                 return Utility.StreamToString(outputStream);
             }
             catch (Exception ex)

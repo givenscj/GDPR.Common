@@ -121,6 +121,7 @@ namespace GDPR.Common
         private static string _eventHubNamespace;
         private static string _eventHubName;
         private static string _eventErrorHubName;
+        private static string _eventDiscoveryHubName;
         private static string _eventNotificationHubName;
 
         /* blog storage account */
@@ -347,7 +348,15 @@ namespace GDPR.Common
             if (GDPRCore.Current == null)
                 GDPRCore.Current = new GDPRCore();
 
-            filePath += $"/configuration.{mode}.json";
+            filePath = filePath + $"/configuration.{mode}.json";
+
+            FileInfo fi = new FileInfo(filePath);
+
+            if (!fi.Exists)
+            {
+                //try some manual paths...(function app)
+                filePath = $"D:/home/site/wwwroot/configuration.{mode}.json";
+            }
 
             //load configuartion
             _settings = LoadConfiguration(filePath);
@@ -1054,6 +1063,12 @@ namespace GDPR.Common
         {
             get { return _eventErrorHubName; }
             set { _eventErrorHubName = value; }
+        }
+
+        public static string EventDiscoveryHubName
+        {
+            get { return _eventDiscoveryHubName; }
+            set { _eventDiscoveryHubName = value; }
         }
 
         public static string EventNotificationHubName

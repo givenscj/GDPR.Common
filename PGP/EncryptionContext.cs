@@ -9,6 +9,8 @@ namespace GDPR.Common
         public bool Encrypt { get; set; }
         public string Path { get; set; }
         public string Password { get; set; }
+        public string PublicKey { get; set; }
+        public string PrivateKey { get; set; }
         public int Version { get; set; }
         public string Id { get; set; }
         public bool IsApplication { get; set; }
