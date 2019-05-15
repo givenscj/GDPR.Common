@@ -283,7 +283,9 @@ namespace GDPR.Applications
                 ctx = EncryptionContext.CreateForApplication(message.ApplicationId, message.Version);
             }
 
-            if (message.Subject != null)
+            s = GDPRCore.Current.GetSubjectWithToken(Guid.Empty, message.ApplicationId, message.TenantId, message.Subject.SubjectId, message.TokenId);
+
+            if (s == null && message.Subject != null)
                 s = new GDPRSubject(message.Subject);
 
             string action = message.GetType().Name;

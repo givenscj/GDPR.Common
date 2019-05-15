@@ -1,5 +1,6 @@
 ﻿using GDPR.Common.Classes;
 using GDPR.Common.Data;
+using GDPR.Common.Encryption;
 using GDPR.Common.EntityProperty;
 using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
@@ -69,7 +70,7 @@ namespace GDPR.Common.Core
 
         public string GetApplicationClass(Guid applicationId)
         {
-            throw new NotImplementedException();
+            return "";
         }
 
         public string GetApplicationKey(string applicationId)
@@ -167,7 +168,7 @@ namespace GDPR.Common.Core
             {
                 try
                 {
-                    File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", message + "\n");
+                    File.AppendAllText($"{fi.Directory.FullName}\\Log.txt", $"[{DateTime.Now}]\t{message}\n");
                     wasWritten = true;
                 }
                 catch (Exception ex)
@@ -314,12 +315,12 @@ namespace GDPR.Common.Core
 
         public void SaveApplicationRequest(Guid subjectRequestId, Guid applicationId, string status, string errorMessage)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SaveApplicationRequest(BaseApplicationMessage am, string v)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void SaveEntityProperties(Guid applicationId, Hashtable properties, bool overwrite)
@@ -375,12 +376,33 @@ namespace GDPR.Common.Core
 
         public void UpdateApplicationStatus(Guid applicationId, string status)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public string GetApplicationEventHub(string applicationId)
         {
-            throw new NotImplementedException();
+            //get the event hub info
+            HttpHelper hh = new HttpHelper();
+
+            //get this information locally first...
+            string eventHubConnectionString = Configuration.GetSetting("QueueUri");
+
+            //if not set, try to get from remote admin site...
+            if (string.IsNullOrEmpty(eventHubConnectionString))
+            {
+                try
+                {
+                    eventHubConnectionString = hh.DoGet($"{Configuration.ExternalDns}/Home/GetApplicationQueue?ApplicationId{applicationId}", "");
+                }
+                catch (Exception ex)
+                {
+                    GDPRCore.Current.Log($"{Configuration.ExternalDns} did not respond with application queue. Falling back to local configuration.");
+
+                    eventHubConnectionString = Configuration.EventHubConnectionString;
+                }
+            }
+
+            return eventHubConnectionString;
         }
 
         public string GetEventHubConnectionString(string eventHubName)
@@ -410,7 +432,12 @@ namespace GDPR.Common.Core
 
         public string GetSystemPin(int keyVersion)
         {
-            return Configuration.GetProperty("SystemPassword").ToString();
+            object pwd = Configuration.GetProperty("SystemPassword");
+
+            if (pwd != null)
+                return pwd.ToString();
+
+            return "";
         }
 
         public string GetApplicationPin(string applicationId, int keyVersion)
@@ -425,7 +452,14 @@ namespace GDPR.Common.Core
 
         public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId)
         {
-            return new GDPRSubject();
+            string password = EncryptionHelper.EncryptPGP3(Configuration.GetSetting("PrivateKey"), "GDPRROCKS");
+            string auth = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{applicationId}:{password}"));
+
+            HttpHelper hh = new HttpHelper();
+            hh.headers.Add("Basic", auth);
+            string data = hh.DoGet($"{Configuration.ExternalDns}/Home/GetSubjectWithToken?applicationId={applicationId}&subjectid={subjectId}&tokenId={tokenId}", "");
+            GDPRSubject s = JsonConvert.DeserializeObject<GDPRSubject>(data);
+            return s;
         }
 
         public string GenerateDestructionCertificate(Guid requestId, RecordCollection records)
@@ -438,7 +472,7 @@ namespace GDPR.Common.Core
 
         public BaseEntityProperty GetEntityPropertyType(string name, string category)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }
