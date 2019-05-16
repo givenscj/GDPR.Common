@@ -347,6 +347,14 @@ public static byte[] encrypt(byte[] clearData, PgpPublicKey encKey, String fileN
             return File.ReadAllText(path);
         }
 
+        public static string Encrypt(string publicKeyStr, string privateKeyStr, string data, string passPhrase)
+        {
+            PgpPublicKey publicKey = PgpEncryptionKeys.ReadPublicKeyFromString(publicKeyStr, false);
+            PgpSecretKey secretKey = PgpEncryptionKeys.ReadSecretKeyFromString(privateKeyStr);
+
+            return SignAndEncrypt(publicKey, secretKey, passPhrase, data);
+        }
+
         public static string Encrypt(string data, string keyPath, string id, string passPhrase, bool isSystem, string version)
         {
             string publicKeyStr = "";

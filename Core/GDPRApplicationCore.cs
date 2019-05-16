@@ -257,7 +257,7 @@ namespace GDPR.Common.Core
             return new List<EntityPropertyTypeBase>();
         }
 
-        public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId)
+        public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId, string url, int systemKey)
         {
             //TODO - get the subject via the token...
             throw new NotImplementedException();

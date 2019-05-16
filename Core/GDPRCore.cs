@@ -450,13 +450,18 @@ namespace GDPR.Common.Core
             return new List<EntityPropertyTypeBase>();
         }
 
-        public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId)
+        public GDPRSubject GetSubjectWithToken(Guid userId, Guid applicationId, Guid tenantId, Guid subjectId, Guid tokenId, string url, int systemKey)
         {
-            string password = EncryptionHelper.EncryptPGP3(Configuration.GetSetting("PrivateKey"), "GDPRROCKS");
-            string auth = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{applicationId}:{password}"));
-
             HttpHelper hh = new HttpHelper();
-            hh.headers.Add("Basic", auth);
+
+            //get the system public key...
+            string publicKey = Configuration.GetSetting("PublicKey").Replace("<br/>","\n");
+            string systemPublicKey = hh.DoGet($"{url}/Home/GetSystemPublicKey?{systemKey}", "");
+            string privateKey = Configuration.GetSetting("PrivateKey").Replace("<br/>", "\n");
+            string password = EncryptionHelper.Encrypt(systemPublicKey, privateKey, "GDPRROCKS", Configuration.GetSetting("ApplicationPassword"));
+            string auth = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{applicationId}:{password}"));
+            
+            hh.headers.Add("Authorization", $"Basic {auth}");
             string data = hh.DoGet($"{Configuration.ExternalDns}/Home/GetSubjectWithToken?applicationId={applicationId}&subjectid={subjectId}&tokenId={tokenId}", "");
             GDPRSubject s = JsonConvert.DeserializeObject<GDPRSubject>(data);
             return s;

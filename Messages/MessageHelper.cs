@@ -64,6 +64,7 @@ namespace GDPR.Common.Messages
         static public void SendMessage(BaseGDPRMessage msg, EncryptionContext ctx)
         {
             string mode = Utility.GetConfigurationValue("Mode");
+
             SendMessage(msg, mode, ctx);
         }
 

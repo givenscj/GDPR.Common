@@ -275,10 +275,18 @@ namespace GDPR.Applications
                 ctx = EncryptionContext.CreateForApplication(message.ApplicationId, message.Version);
             }
 
-            s = GDPRCore.Current.GetSubjectWithToken(Guid.Empty, message.ApplicationId, message.TenantId, message.Subject.SubjectId, message.TokenId);
 
-            if (s == null && message.Subject != null)
-                s = new GDPRSubject(message.Subject);
+            try
+            {
+                s = GDPRCore.Current.GetSubjectWithToken(Guid.Empty, message.ApplicationId, message.TenantId, message.Subject.SubjectId, message.TokenId, Configuration.ExternalDns, -1);
+
+                if (s == null && message.Subject != null)
+                    s = new GDPRSubject(message.Subject);
+            }
+            catch (Exception ex)
+            {
+                GDPRCore.Current.Log(ex, Common.Enums.LogLevel.Error);
+            }
 
             string action = message.GetType().Name;
 
@@ -363,6 +371,11 @@ namespace GDPR.Applications
                     em.Subject = Request.Subject;
                     em.ProcessorId = Request.ProcessorId;
                     em.SystemId = Request.SystemId;
+                    em.QueueUri = Request.QueueUri;
+
+                    //this has to be set so we know what key was used to encrypt...
+                    em.Version = ctx.Version;
+
                     Response = em;
 
                     MessageHelper.SendMessage(em, ctx);
@@ -889,7 +902,9 @@ namespace GDPR.Applications
                             ApplicationId = ApplicationId,
                             Subjects = newSubjects,
                             SystemId = GDPRCore.Current.GetSystemId(),
-                            ProcessorId = GDPRCore.Current.GetSystemId()
+                            ProcessorId = GDPRCore.Current.GetSystemId(),
+                            QueueUri = this.Request.QueueUri
+
                         };
 
                         //have to wrap this in case the message is too big and it needs to be split...
@@ -907,7 +922,8 @@ namespace GDPR.Applications
                     ApplicationId = ApplicationId,
                     Subjects = subjects,
                     SystemId = GDPRCore.Current.GetSystemId(),
-                    ProcessorId = GDPRCore.Current.GetSystemId()
+                    ProcessorId = GDPRCore.Current.GetSystemId(),
+                    QueueUri = this.Request.QueueUri
                 };
 
                 MessageHelper.SendMessage(discoverMsg, ctx);
