@@ -6,7 +6,9 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using GDPR.Common;
+using GDPR.Common.Classes;
 using GDPR.Common.Core;
 using GDPR.Util.GDPRVerificationService;
 
@@ -27,7 +29,7 @@ namespace GDPR.Common
         public bool ignoreContentDisposition = false;
         public String methodOverride = "";
         public Hashtable headers = new Hashtable();
-        public String Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36";
+        public String Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36";
 
         public String username = "";
         public String password = "";
@@ -45,6 +47,7 @@ namespace GDPR.Common
         public String cookies = "";
         public String location = "";
         public String statusCode = "";
+        public int httpCode = -1;
 
         bool isAmazon = false;
         AwsV4SignatureHelper amazonHelper;
@@ -114,8 +117,8 @@ namespace GDPR.Common
             headers.Clear();
 
             req.Headers.Add("Accept-Language", language);
-            req.Headers.Add("Accept-Encoding", "gzip, deflate");            
-        }        
+            req.Headers.Add("Accept-Encoding", "gzip, deflate");
+        }
 
         public string DoPost(string url, string postData, string cookies)
         {
@@ -259,7 +262,7 @@ namespace GDPR.Common
             return securePassword;
         }
 
-        
+
         static public Hashtable ParseCookies(String html)
         {
             Hashtable ht = new Hashtable();
@@ -273,6 +276,7 @@ namespace GDPR.Common
             {
                 String c1 = c.Replace("HttpOnly,", "").Replace("httponly,", "").Replace("HTTPOnly,", ""); ;
 
+                c1 = c1.Replace("SameSite=Lax,", "");
                 c1 = c1.Replace("secure,", "");
                 c1 = c1.Replace("Secure,", "");
 
@@ -302,7 +306,7 @@ namespace GDPR.Common
 
                 if (c1.Trim() == "secure")
                     continue;
-                
+
                 if (c1.Contains("="))
                 {
                     String value = c1.Substring(c1.IndexOf("=") + 1);
@@ -405,6 +409,7 @@ namespace GDPR.Common
             try
             {
                 statusCode = res.StatusCode.ToString();
+                httpCode = (int)res.StatusCode;
                 cookieC = res.Cookies;
 
                 try
@@ -506,6 +511,132 @@ namespace GDPR.Common
             catch (Exception) { }
 
             return response;
-        }        
+        }
+
+        public void SaveCacheValue(string html, HtmlCacheSetting cs)
+        {
+            string fileName = GetCacheFileName(cs);
+            System.IO.File.AppendAllText(fileName, html);
+        }
+
+        public string DoGetCache(string url, string strCookies, HtmlCacheSetting cs)
+        {
+            string fileName = GetCacheFileName(cs);
+
+            if (System.IO.File.Exists(fileName) && !cs.Overwrite)
+            {
+                headers.Clear();
+                return System.IO.File.ReadAllText(fileName);
+            }
+            else
+            {
+                string html = DoGet(url, strCookies);
+
+                if (httpCode == 200)
+                {
+                    try
+                    {
+                        System.IO.File.AppendAllText(fileName, html);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.Message);
+                    }
+                    return html;
+                }
+            }
+
+            return null;
+        }
+
+        public string DoPostCache(string url, string post, string strCookies, HtmlCacheSetting cs)
+        {
+            string fileName = GetCacheFileName(cs);
+
+            if (System.IO.File.Exists(fileName) && !cs.Overwrite)
+            {
+                this.headers.Clear();
+                return System.IO.File.ReadAllText(fileName);
+            }
+            else
+            {
+                string html = DoPost(url, post, strCookies);
+
+                if (httpCode == 200)
+                {
+                    FileInfo fi = new FileInfo(fileName);
+                    System.IO.Directory.CreateDirectory(fi.Directory.FullName);
+                    System.IO.File.AppendAllText(fileName, html);
+                    return html;
+                }
+            }
+
+            return null;
+        }
+
+        public string GetCacheFileName(HtmlCacheSetting cs)
+        {
+            string cachePath = $"c:\\temp\\HttpCache\\{cs.Category}\\";
+
+            try
+            {
+                System.IO.Directory.CreateDirectory(cachePath);
+            }
+            catch { }
+
+            string fileName = "";
+            string prefix = "";
+
+            DateTime check = DateTime.Now;
+
+            if (cs.DateOverride != DateTime.MinValue)
+            {
+                check = cs.DateOverride;
+            }
+
+            switch (cs.Frequency.ToString())
+            {
+                case "Daily":
+                    {
+                        prefix = "D" + check.ToString("MM-dd-yyyy");
+                        break;
+                    }
+                case "Hourly":
+                    {
+                        prefix = "H" + check.ToString("hh-MM-dd-yyyy");
+                        break;
+                    }
+                case "Monthly":
+                    {
+                        prefix = "M" + check.ToString("MM-yyyy");
+                        break;
+                    }
+                case "Weekly":
+                    {
+                        prefix = "W" + check.ToString("w");
+                        break;
+                    }
+                case "Yearly":
+                    {
+                        prefix = "Y" + check.ToString("yyyy");
+                        break;
+                    }
+            }
+
+            string regexSearch = new string(Path.GetInvalidPathChars());
+            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            cachePath = r.Replace(cachePath, "");
+
+            fileName = prefix + "_" + cs.Category + "_" + cs.Id + ".html";
+
+            //parse bad characters...
+            regexSearch = new string(Path.GetInvalidFileNameChars());
+            r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            fileName = r.Replace(fileName, "");
+
+            fileName = cachePath + fileName;
+
+            return fileName;
+        }
     }
 }

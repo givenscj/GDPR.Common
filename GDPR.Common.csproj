@@ -291,6 +291,7 @@
     <Compile Include="Classes\Configuration.cs" />
     <Compile Include="Classes\Constants.cs" />
     <Compile Include="Classes\Answer.cs" />
+    <Compile Include="Classes\HtmlCacheSetting.cs" />
     <Compile Include="Classes\RequestInfo.cs" />
     <Compile Include="Classes\ErrorContext.cs" />
     <Compile Include="Classes\DeleteInfo.cs" />
