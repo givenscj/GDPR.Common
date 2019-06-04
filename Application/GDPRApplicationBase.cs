@@ -3,6 +3,7 @@ using GDPR.Common.Classes;
 using GDPR.Common.Core;
 using GDPR.Common.Data;
 using GDPR.Common.EntityProperty;
+using GDPR.Common.Enums;
 using GDPR.Common.Exceptions;
 using GDPR.Common.Messages;
 using GDPR.Common.Models;
@@ -17,6 +18,10 @@ namespace GDPR.Applications
 {
     public abstract class GDPRApplicationBase : GDPRApplicationCore, IGDPRDataSubjectActions
     {
+        //search query support...
+        protected bool _supportsPreQuery;
+        protected bool _supportsPostQuery;
+
         //application search support 
         protected bool _supportsPersonalSearch;
         protected bool _supportsEmailSearch;
@@ -59,7 +64,7 @@ namespace GDPR.Applications
 
         //hashing support
         protected bool _supportsHash;
-        protected string _hashAlgorithm;
+        protected HashType _hashAlgorithm;
 
         //basic properties
         protected string _version;
@@ -77,8 +82,11 @@ namespace GDPR.Applications
 
         public bool AllowUnverifiedRecords { get { return this._allowUnverifiedRecords; } set { this._allowUnverifiedRecords = value; } }
 
+        public bool SupportsPreQuery { get { return this._supportsPreQuery; } set { this._supportsPreQuery = value; } }
+        public bool SupportsPostQuery { get { return this._supportsPostQuery; } set { this._supportsPostQuery = value; } }
+
         public bool SupportsHash { get { return this._supportsHash; } }
-        public string HashAlgorithm { get { return this._hashAlgorithm; } }
+        public HashType HashAlgorithm { get { return this._hashAlgorithm; } }
 
         public bool SupportsMFA { get { return this._supportsMFA; } }
         public bool SupportsGDPRDelete { get { return this._supportsGDPRDelete; } }
@@ -432,6 +440,19 @@ namespace GDPR.Applications
                     IsSecure = true
                 }, overwrite);
 
+            AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityId = this.ApplicationId,
+                    DisplayName = "Email Domain",
+                    Category = "Security",
+                    Type = "textbox",
+                    Name = "EmailDomain",
+                    Value = "",
+                    IsMasked = false,
+                    IsSecure = false
+                }, overwrite);
+
             if (this.SupportsMFA)
             {
                 AddProperty(
@@ -446,6 +467,49 @@ namespace GDPR.Applications
                     IsMasked = true,
                     IsSecure = true
                 }, overwrite);
+            }
+
+            
+            if (this.SupportsHash)
+            {
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityId = this.ApplicationId,
+                    DisplayName = "Hash Support",
+                    Category = "Security",
+                    Type = "checkbox",
+                    Name = "HashSupport",
+                    Value = "",
+                    IsMasked = true,
+                    IsSecure = true
+                }, overwrite);
+
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityId = this.ApplicationId,
+                    DisplayName = "Hash Type",
+                    Category = "Security",
+                    Type = "textbox",
+                    Name = "HashType",
+                    Value = "",
+                    IsMasked = false,
+                    IsSecure = false
+                }, overwrite);
+
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityId = this.ApplicationId,
+                    DisplayName = "Hash Salt",
+                    Category = "Security",
+                    Type = "textbox",
+                    Name = "HashSalt",
+                    Value = "",
+                    IsMasked = true,
+                    IsSecure = true
+                }, overwrite);                
             }
         }
 
@@ -782,6 +846,37 @@ namespace GDPR.Applications
                     IsMasked = false,
                     IsSecure = false
                 }, overwrite);
+
+            if (SupportsPreQuery)
+            {
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityPropertyId = Guid.NewGuid(),
+                    Name = "PreQuery",
+                    Type = "textbox",
+                    Value = "",
+                    Category = "Search",
+                    IsMasked = false,
+                    IsSecure = false
+                }, overwrite);
+            }
+
+            if (SupportsPostQuery)
+            {
+                AddProperty(
+                new BaseEntityProperty
+                {
+                    EntityPropertyId = Guid.NewGuid(),
+                    Name = "PostQuery",
+                    Type = "textbox",
+                    Value = "",
+                    Category = "Search",
+                    IsMasked = false,
+                    IsSecure = false
+                }, overwrite);
+            }
+
         }
 
         public override void SetProperty(string name, string value, bool isHidden, bool persist)

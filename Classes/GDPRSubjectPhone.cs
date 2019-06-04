@@ -8,6 +8,7 @@
         public System.Guid SubjectId { get; set; }
         public System.Guid ObjectId { get; set; }
         public bool IsVerified { get; set; }
+        public string Hash { get; set; }
         public int PhoneTypeId { get; set; }
         public System.DateTime ModifyDate { get; set; }
         public System.DateTime CreateDate { get; set; }

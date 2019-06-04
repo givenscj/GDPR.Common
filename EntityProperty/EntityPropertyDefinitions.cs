@@ -24,7 +24,6 @@ namespace GDPR.Common.EntityProperty
 
             //temp
 
-
             //default application properties
             types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("5a45b15f-7d44-47de-96f8-b4baa94c3d71"), DisplayName = "Allow Unverified Data", Name = "AllowUnverifiedData", Type = "checkbox", DefaultValue = "true", Category = "Compliance", IsMasked = false, IsSecure = false, Description = "Specifies if you should allow unverified data to be submitted to your tenant/application." });
             types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("3af231bd-a7ec-4922-8ad7-78b234705223"), DisplayName = "Batch Size", Name = "BatchSize", DefaultValue = "100", Type = "textbox", Category = "General", IsMasked = false, IsSecure = false, Description = "The size of the items that should be retrieved on each API call" });
@@ -57,33 +56,19 @@ namespace GDPR.Common.EntityProperty
             types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("1a7eb7de-dc79-42bb-89ff-d55b673f2bf4"), DisplayName = "Enable Auto Upgrade", Category = "Configuration", Type = "checkbox", Name = "EnableAutoUpgrade", DefaultValue = "0", IsMasked = false, IsSecure = false, Description = "This setting will ensure that users are able to submit requests if you go over your data subject limit" });
 
             //OAuth properties
-            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("039a78ba-802a-4155-9126-b43931197afd"),DisplayName = "Client Id",Name = "ClientId",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = false,IsSecure = true, Description = "The application's client id for OAuth" });
-            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("7bc7d139-bf37-44a1-ae51-c0f989dfb634"),DisplayName = "Client Secret",Name = "ClientSecret",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true, Description = "The application's client secret for OAuth" });
-            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("7ead7711-918b-473b-b742-f498e9e12443"),DisplayName = "Api Key",Name = "ApiKey",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = false,IsSecure = true,Description = "The account API key to make API calls with (typically in absense of OAuth)"});
-            types.Add(
-                new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("4408690c-8e81-40fe-9de2-d3a8c85704b4"),
-                    DisplayName = "Access Token",
-                    Name = "AccessToken",
-                    Category = "Security",
-                    Type = "textbox",
-                    DefaultValue = "",
-                    IsMasked = true,
-                    IsSecure = true,
-                    Description = "The access token that is retrieved during the OAuth process"
-                });
-            types.Add(
-                new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("2c24c170-2330-4224-9b64-cf347806ec63"),
-                    DisplayName = "Username",
-                    Name = "Username",
-                    Category = "Security",
-                    Type = "textbox",
-                    DefaultValue = "",
-                    IsMasked = true,
-                    IsSecure = true,
-                    Description = "The username used for auth events"
-                });
-            types.Add(new EntityPropertyTypeBase(){EntityPropertyTypeId = Guid.Parse("89340c3a-80f3-4913-abe0-5d3a76e9815c"),DisplayName = "Password",Name = "Password",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true, Description = "The password used for auth events"});
-            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("0ec6bb9b-8bcf-4935-af63-7bb01fa80dc4"), DisplayName = "Mfa Secret", Name = "MfaSecret", Category = "Security", Type = "textbox", DefaultValue = "", IsMasked = true, IsSecure = true, Description = "The TOTP MFA Secret for MFA logins" });
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("039a78ba-802a-4155-9126-b43931197afd"),DisplayName = "Client Id",Name = "ClientId",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = false,IsSecure = true, Description = "The application's client id for OAuth" });
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("7bc7d139-bf37-44a1-ae51-c0f989dfb634"),DisplayName = "Client Secret",Name = "ClientSecret",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true, Description = "The application's client secret for OAuth" });
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("7ead7711-918b-473b-b742-f498e9e12443"),DisplayName = "Api Key",Name = "ApiKey",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = false,IsSecure = true,Description = "The account API key to make API calls with (typically in absense of OAuth)"});
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("4408690c-8e81-40fe-9de2-d3a8c85704b4"),DisplayName = "Access Token",Name = "AccessToken",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true,Description = "The access token that is retrieved during the OAuth process"});
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("2c24c170-2330-4224-9b64-cf347806ec63"),DisplayName = "Username",Name = "Username",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true,Description = "The username used for auth events"});
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("89340c3a-80f3-4913-abe0-5d3a76e9815c"),DisplayName = "Password",Name = "Password",Category = "Security",Type = "textbox",DefaultValue = "",IsMasked = true,IsSecure = true, Description = "The password used for auth events"});
+            types.Add(new EntityPropertyTypeBase() {EntityPropertyTypeId = Guid.Parse("0ec6bb9b-8bcf-4935-af63-7bb01fa80dc4"), DisplayName = "Mfa Secret", Name = "MfaSecret", Category = "Security", Type = "textbox", DefaultValue = "", IsMasked = true, IsSecure = true, Description = "The TOTP MFA Secret for MFA logins" });
+
+            //security
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("b3e06ea6-0c40-4e65-8ed3-d311f802dbcd"), DisplayName = "Hash Support", Name = "HashSupport", DefaultValue = "", Type = "checkbox", Category = "Security", IsMasked = false, IsSecure = false, Description = "If your application supports hashing subject data" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("7d6d21dc-a3b0-4c20-8791-4124d42fdf1b"), DisplayName = "Hash Type", Name = "HashType", DefaultValue = "", Type = "singleselect", Options = "MD5|RIPEMD160|SHA1|SHA256|SHA384|SHA512", Category = "Security", IsMasked = false, IsSecure = false, Description = "The Hash algorithm used" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("5b0e96bf-3ee3-4215-8a20-67225febc4f7"), DisplayName = "Hash Salt", Name = "HashSalt", DefaultValue = "", Type = "textbox", Category = "Security", IsMasked = true, IsSecure = true, Description = "The salt for your hash algo" });
+            types.Add(new EntityPropertyTypeBase() { EntityPropertyTypeId = Guid.Parse("a9f7ce9d-1960-431d-80f9-06154f8909e3"), DisplayName = "Email Domain", Name = "EmailDomain", DefaultValue = "", Type = "textbox", Category = "Security", IsMasked = false, IsSecure = false, Description = "The domain subject requests are restricted too" });
 
             //maps type...
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("783962fd-238b-46ef-a01d-ec83c1e2524e"), Category = "Maps", Type = "textbox", DisplayName = "Bing Maps ApiKey", Name = "BingMapsApiKey",DefaultValue = "", IsMasked = true, IsSecure = true, Description = "Your Bing maps API key for geolocation lookups" });
@@ -122,10 +107,14 @@ namespace GDPR.Common.EntityProperty
             types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("1aaf343c-cff4-44a1-8085-4962c26bacd9"), Category = "Mail", Type = "textbox", Name = "MailReplyTo", DisplayName = "Mail Reply To", DefaultValue = "", IsMasked = false, IsSecure = false, Description = "The REPLY address for outgoing emails" });
 
             //azure storage
-            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("315448a3-b834-4890-aeb9-5bfffe3328c3"), Category = "Azure", Type = "checkbox", Name = "SubscriptionId", DefaultValue = "", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("b5bbbf26-8e78-4d01-9ffd-acc5ca7eea29"), Category = "Azure", Type = "checkbox", Name = "ResourceGroup", DefaultValue = "", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("b97e9b6e-40d3-4556-8293-3b9c712244b6"), Category = "Azure", Type = "checkbox", Name = "StorageAccountName", DefaultValue = "", IsMasked = false, IsSecure = false });
-            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("fcf5ffe6-a532-4e03-b8a6-c747a642a995"), Category = "Azure", Type = "checkbox", Name = "StorageAccountKey", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("315448a3-b834-4890-aeb9-5bfffe3328c3"), Category = "Azure", Type = "checkbox", Name = "SubscriptionId", DisplayName="Subscription Id", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("b5bbbf26-8e78-4d01-9ffd-acc5ca7eea29"), Category = "Azure", Type = "checkbox", Name = "ResourceGroup", DisplayName="Resource Group", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("b97e9b6e-40d3-4556-8293-3b9c712244b6"), Category = "Azure", Type = "checkbox", Name = "StorageAccountName", DisplayName="Storage Account Name", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("fcf5ffe6-a532-4e03-b8a6-c747a642a995"), Category = "Azure", Type = "checkbox", Name = "StorageAccountKey", DisplayName="Storage Account Key", DefaultValue = "", IsMasked = false, IsSecure = false });
+
+            //search
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("fcf5ffe6-a532-4e03-b8a6-c747a642a995"), Category = "Search", Type = "checkbox", Name = "PreQuery", DisplayName="Pre Query", DefaultValue = "", IsMasked = false, IsSecure = false });
+            types.Add(new EntityPropertyTypeBase { EntityPropertyTypeId = Guid.Parse("fcf5ffe6-a532-4e03-b8a6-c747a642a995"), Category = "Search", Type = "checkbox", Name = "PostQuery", DisplayName="Post Query", DefaultValue = "", IsMasked = false, IsSecure = false });
 
             return types;
         }

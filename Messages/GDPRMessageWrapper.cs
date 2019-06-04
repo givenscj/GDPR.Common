@@ -9,6 +9,7 @@ namespace GDPR.Common.Messages
         public string SystemId { get; set; }
         public string Authentication { get; set; }
         public string QueueUri { get; set; }
+        public string EventHubName { get; set; }
         public string Type { get; set; }
         public string IpAddress { get; set; }
         public string Check { get; set; }

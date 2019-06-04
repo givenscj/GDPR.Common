@@ -237,6 +237,16 @@ namespace GDPR.Common.Messages
 
             string eventHubName = Configuration.EventHubName;
 
+            //these need to be seperated out to keep system messages fast...
+            if (message.Type.Contains("DiscoverResponseMessage"))
+                eventHubName = Configuration.EventDiscoveryHubName;
+
+            //these go directly to the applications queue...
+            if (!message.IsSystem && message.Object.Contains("\"Type\":\"DiscoverMessage\""))
+            {
+                connectionString = GDPRCore.Current.GetApplicationEventHub(message.ApplicationId);
+            }
+
             if (message.IsError)
                 eventHubName = Configuration.EventErrorHubName;
 
@@ -258,6 +268,9 @@ namespace GDPR.Common.Messages
             }
             else
                 connectionStringBuilder = connectionString;
+
+            if (!connectionStringBuilder.Contains("EntityPath"))
+                connectionStringBuilder += $";EntityPath={Configuration.EventHubName}";
 
             //pick a different queue based on the message type..
             switch (message.Type)
